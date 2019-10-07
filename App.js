@@ -1,5 +1,8 @@
+
 import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, View } from 'react-native';
+
+import MainNaivigator from './components/ScreenContainer'
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -9,11 +12,7 @@ const instructions = Platform.select({
 export default class App extends Component {
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>GotNXT!</Text>
-        <Text style={styles.instructions}>To get started, edit App.js</Text>
-        <Text style={styles.instructions}>{instructions}</Text>
-      </View>
+    <MainNaivigator/>     
     );
   }
 }
@@ -36,3 +35,11 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
 });
+
+
+ // <View style={styles.container}>
+ //        <Text style={styles.welcome}>Got000000000000NXT!</Text>
+ //        <Text style={styles.instructions}>To get started, edit App.js</Text>
+ //        <Text style={styles.instructions}>{instructions}</Text>
+ //        <MainNaivigator/>
+ //      </View>

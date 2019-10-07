@@ -1,8 +1,8 @@
 {
-  "name": "gotNext",
-  "displayName": "gotNext",
+  "name": "GotNXT",
+  "displayName": "GotNXT",
   "expo": {
-    "name": "gotNext",
+    "name": "GotNXT",
     "slug": "expo-template-bare",
     "privacy": "unlisted",
     "sdkVersion": "34.0.0",
