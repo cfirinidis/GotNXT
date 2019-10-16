@@ -22,8 +22,8 @@ export default class Setup extends React.Component {
        super(props);
        this.state = {
          Arena: [],
-         CourtsNum: '',
-         Capacity: '',
+         CourtsNum: 0,
+         Capacity: 0,
        };
     
      }
@@ -31,35 +31,20 @@ export default class Setup extends React.Component {
   SetupCourts=()=>{
     var courts = {}
     for (var i = 0; i<this.state.CourtsNum; i++){
-      
+      courts['Num'] = i+1
       courts['teamA'] = new Array()
       courts['teamB'] = new Array()
       console.log("TEAMS: ", courts)
-      console.log(courts, " I ",i)
       this.state.Arena.push(courts)
+      courts={}
     }
     console.log("FINAL: ",this.state.Arena)
-    this.props.navigation.navigate("List", {arena: this.state.Arena });
+    this.props.navigation.navigate("List", {arena: this.state.Arena, cap:this.state.Capacity, courtsNum:this.state.CourtsNum });
     console.log("HERE")
-    return this.state.Arena
+    this.setState({Arena:this.state.Arena})
       
   }
 
-  AddMaster=()=>{
-    console.log(this.state.SampleArray);
-
-    this.state.masterList.push(this.state.SampleArray);
-    this.state.SampleArray = []
-    console.log("master LIST :", this.state.masterList );
-    // Alert.alert(masterList.toString());   
-    return this.state.masterList
-  }
-
-  ShowAddress=()=>{
-  	console.log(this.state.masterList)
-  	alert(this.state.masterList)
-
-  }
  
  render() {
  

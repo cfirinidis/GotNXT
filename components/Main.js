@@ -24,54 +24,54 @@ export default class MainActivity extends React.Component {
        this.state = {
          plist: [],
          ps: [],
-         Name: [],
-         SampleArray : ["Jason", "Jim", "Ed"],
+         Name: '',
+         SampleArray : ["Jason", "Jim", "Ed", "TOM", "Eric", "WILL"],
          masterList : [],
-         Arena: JSON.stringify(this.props.navigation.getParam("arena", "blank"))
+         cap: (this.props.navigation.getParam("cap", "blank")),
+         Arena: this.props.navigation.getParam("arena", "blank"),
+         courtsNum: this.props.navigation.getParam("courtsNum", "blank")
 
        };
     
      }
  
   AddItemsToArray=()=>{
- 
       //Adding Items To Array.
       if (this.state.Name.length != 0 ){
-       
-      // Showing the complete Array on Screen Using Alert.
-      // Alert.alert(SampleArray.toString());
-      
       this.state.SampleArray.push(this.state.Name);
- 
       console.log("WHYYYY", this.state.Arena)
       console.log(this.state.SampleArray, this.state.SampleArray.length);
     }
     else{
       Alert.alert("Please Enter A Name")
     }
-    return this.state.SampleArray
+    this.setState({Name:''})
+    this.setState({SampleArray: this.state.SampleArray})
   }
 
   AddMaster=()=>{
     console.log(this.state.SampleArray);
-
     this.state.masterList.push(this.state.SampleArray);
-    this.state.SampleArray = []
+    this.setState({SampleArray : []})
     console.log("master LIST :", this.state.masterList );
     // Alert.alert(masterList.toString());   
-    return this.state.masterList
   }
 
   ShowAddress=()=>{
   	console.log(this.state.masterList)
   	alert(this.state.masterList)
-
   }
 
   StartGame=()=>{
-  	for (var i = 0; i<2; i++){
-  		console.log(this.state.Arena[i], this.state.Arena.length)
+    console.log('START GAME', this.state.Arena[1], "CAP:", this.state.cap, parseInt(this.state.cap))
+  	for (var i = 0; i< this.state.courtsNum; i++){
+  		console.log("inside FOR: ",this.state.Arena[i], this.state.Arena)
+      // console.log(i, "i")
+     // this.state.Arena
   	}
+    for(i in this.state.Arena){
+      console.log("for in :", i , this.state.Arena[i])
+    }
   }
 
   GoToLists=()=>{
@@ -89,19 +89,20 @@ export default class MainActivity extends React.Component {
 
           <TextInput
               placeholder="NAME"
-              onChangeText={TextInputValue => this.setState({ Name: TextInputValue }) }
-				style={styles.textInput}    
+              onChangeText={(Name) => this.setState({ Name}) }
+              value={this.state.Name}
+				      style={styles.textInput} 
+              placeholderTextColor='gray'   
           />
  
-          < Button color="red" 
-           title="Click Here To Add Value To Array" onPress={this.AddItemsToArray}
- 	
-           />
-           <Text>"SOME GARBAGE HERE" </Text>
+    <TouchableOpacity  onPress={this.AddItemsToArray.bind(this)} style={styles.addButton} >
+    <Text style={styles.addButtonText}>Add Name(s)</Text>
+    </TouchableOpacity>
+          
 
-          <Button title="Click When Done" onPress={this.AddMaster}
-         
-          />
+    <TouchableOpacity  onPress={this.AddMaster.bind(this)} style={styles.addButton} >
+    <Text style={styles.addButtonText}> +  LIST </Text>
+    </TouchableOpacity>
 
          <Button title="See List" onPress={this.ShowAddress}
             style={styles.btn}
@@ -156,6 +157,10 @@ const styles = StyleSheet.create({
 		marginBottom: 25,
 		backgroundColor: 'yellow',
 	},
+    addButtonText: {
+    color: '#fff',
+    fontSize: 17,
+  },
 	btn: {
 		alignSelf: 'stretch',
 		backgroundColor: 'green',
@@ -165,6 +170,20 @@ const styles = StyleSheet.create({
 	
 
 	},
+   addButton: {
+    // position : 'absolute',
+    zIndex: 11,
+    // right: 20,
+    // bottom: 90,
+    backgroundColor: '#E91E63',
+    width: 90,
+    height: 90,
+    borderRadius: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 8,
+
+  },
 	  item: {
     padding: 10,
     fontSize: 18,
