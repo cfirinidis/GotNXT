@@ -1,9 +1,5 @@
 
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
-
-import MainNaivigator from './components/ScreenContainer'
-
 
 
 export default class App extends Component {
@@ -40,3 +36,6 @@ const styles = StyleSheet.create({
  //        <Text style={styles.instructions}>{instructions}</Text>
  //        <MainNaivigator/>
  //      </View>
+import { Platform, StyleSheet, Text, View } from 'react-native';
+
+import MainNaivigator from './components/ScreenContainer'
