@@ -14,18 +14,15 @@ import{
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator} from 'react-navigation-stack'; 
 
-
 export default class Setup extends React.Component {
  
   constructor(props) {
-    
        super(props);
        this.state = {
          Arena: [],
          CourtsNum: 0,
          Capacity: 0,
        };
-    
      }
  
   SetupCourts=()=>{
@@ -39,20 +36,16 @@ export default class Setup extends React.Component {
       courts={}
     }
     console.log("FINAL: ",this.state.Arena)
-    this.props.navigation.navigate("List", {arena: this.state.Arena, cap:this.state.Capacity, courtsNum:this.state.CourtsNum });
+    this.props.navigation.navigate("List", {arena: this.state.Arena, cap:this.state.Capacity, 
+      courtsNum:this.state.CourtsNum });
     console.log("HERE")
-    this.setState({Arena:this.state.Arena})
-      
+    this.setState({Arena:this.state.Arena}) 
   }
-
  
  render() {
- 
    return (
- 
       <KeyboardAvoidingView style={styles.wrapper} behavior="padding" enabled>
    		<View>
- 
           <TextInput
               placeholder="Number of courts "
               onChangeText={CourtsNum => this.setState({ CourtsNum: CourtsNum}) }
@@ -66,11 +59,8 @@ export default class Setup extends React.Component {
           < Button color="red" 
            title="Click When Done" onPress={this.SetupCourts}
            />
-
       </View>
       </KeyboardAvoidingView>
-
- 
    );
  }
 }

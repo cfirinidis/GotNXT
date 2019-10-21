@@ -7,6 +7,7 @@ import{
 	Button,
 	TextInput,
 	FlatList,
+  ScrollView,
 	KeyboardAvoidingView,
 	TouchableOpacity,
 	AsyncStorage,
@@ -19,84 +20,74 @@ import Setup from './Setup'
 export default class ShowList extends React.Component {
 
   constructor(props) {
-    
        super(props);
        this.state = {
          plist: [],
          ps: [],
          Name: [],
-         SampleArray : ["Jason", "Jim", "Ed"],
-         masterList : JSON.stringify(this.props.navigation.getParam("list", "blank")),
-         Arena: JSON.stringify(this.props.navigation.getParam("games", "blank"))
-
+         masterList : this.props.navigation.getParam("list", "blank"),
+         Arena: this.props.navigation.getParam("arena", "blank")
        };
     
      }
- 
-  AddItemsToArray=()=>{
- 
-      //Adding Items To Array.
-      if (this.state.Name.length != 0 ){
-       
-      // Showing the complete Array on Screen Using Alert.
-      // Alert.alert(SampleArray.toString());
-      
-      this.state.SampleArray.push(this.state.Name);
- 
-      console.log("WHYYYY", this.state.Arena)
-      console.log(this.state.SampleArray, this.state.SampleArray.length);
-    }
-    else{
-      Alert.alert("Please Enter A Name")
-    }
-    return this.state.SampleArray
-  }
-
-  AddMaster=()=>{
-    console.log(this.state.SampleArray);
-
-    this.state.masterList.push(this.state.SampleArray);
-    this.state.SampleArray = []
-    console.log("master LIST :", this.state.masterList );
-    // Alert.alert(masterList.toString());   
-    return this.state.masterList
-  }
 
   ShowAddress=()=>{
-  	console.log(this.state.masterList)
-  	alert(this.state.masterList)
-
+    console.log(this.state.masterList)
+    console.log(this.state.Arena)
   }
-
-  StartGame=()=>{
-  	for (var i = 0; i<2; i++){
-  		console.log(this.state.Arena[i], this.state.Arena.length)
-  	}
-  }
-
-SampleFunction=(item)=>{
  
-    Alert.alert(item);
- 
-  }
  render() {
- 
+  // let test = this.state.Arena;
+  // let test2 = this.state.masterList
+
+
+    // render(){
+  // let arena =  this.state.masterList.map((val, key)=>{
+  //       return <ShowList key={key} keyval={val} val={val}
+  //               deleteMethod={ ()=> this.deleteNote(key)} />
+  //     });
+
+
    return (
- 
-      <KeyboardAvoidingView style={styles.wrapper} behavior="padding" enabled>
-   		<View>
+    <View>
+    <Text>"WAIT LIST"</Text>   
+    
+    <Button title="See List" onPress={this.ShowAddress}/> 
+      {
+        this.state.Arena.map((item)=>
+        <Text>{item.teamA}
+        "IT WORKED"
+        {item.teamB}</Text>
+        )
+      }
+   
+    </View>
+    );
+    }}
 
-      <Text> this.state.Arena </Text>
-      <Text> this.state.masterList</Text>
- 
+    // <FlatList data={this.state.masterList} renderItem={
+      // ({item})=><Text> {item}</Text>
+      // }
+      // />   
 
-      </View>
-      </KeyboardAvoidingView>
+// <FlatList data={players} renderItem={({item})=> <Text> {item}</Text> }
+    // />
 
- 
-   );
- }
-}
+
+    // <ScrollView>
+    // {players}
+    // </ScrollView> 
+// render() {
+//   var sampleList = [
+//     {item: "A"},
+//     {item: "B"},
+//     {item: "C"}
+//   ];
+//    return ( <FlatList data={sampleList} renderItem={
+//             ({item}) => <ListItem element={item}/>
+//           }
+//         />);
+//     }
  
 
 const styles = StyleSheet.create({

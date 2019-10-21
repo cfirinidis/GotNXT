@@ -26,21 +26,21 @@ export default class MainActivity extends React.Component {
          plist: [],
          ps: [],
          Name: '',
-         SampleArray : [["Jason"], ["Jim"], ["Ed", "TOM"], ["Jerry"], ["WILL"], ["Mo"], ['Larry'], ['Curley'], ['COnz']],
-         masterList : [],
-         cap: (this.props.navigation.getParam("cap", "blank")),
+         SampleArray : [],
+         masterList : [[{player: "Jason"}], [{player:"Jim"}], [{player:"Ed"}, {player:"TOM"}], [{player:"Jerry"}],
+          [{player:"WILL"}], [{player:"Mo"}], [{player:'Larry'}], [{player:'Curley'}], [{player:'COnz'}]],
+         cap: this.props.navigation.getParam("cap", "blank"),
          Arena: this.props.navigation.getParam("arena", "blank"),
          courtsNum: this.props.navigation.getParam("courtsNum", "blank"),
          current: 0
 
        };
-    
      }
  
   AddItemsToArray=()=>{
       //Adding Items To Array.
       if (this.state.Name.length != 0 ){
-      this.state.SampleArray.push(this.state.Name);
+      this.state.SampleArray.push({player: this.state.Name});
       console.log("WHYYYY", this.state.Arena)
       console.log(this.state.SampleArray, this.state.SampleArray.length);
     }
@@ -52,10 +52,12 @@ export default class MainActivity extends React.Component {
   }//good
 
   AddMaster=()=>{
-    console.log(this.state.SampleArray);
-    for (i in this.state.SampleArray){
-        this.state.masterList.push(this.state.SampleArray[i]);
-      }
+    console.log("ADD TO MASTer",this.state.SampleArray);
+    // for (i in this.state.SampleArray){
+    //   console.log("The i", this.state.SampleArray[i], this.state.SampleArray[i].length)
+    //     this.state.masterList.push(this.state.SampleArray[i]);
+    //   }
+    this.state.masterList.push(this.state.SampleArray)
     this.setState({SampleArray : []})
     // console.log("WHY HAVE IT", this.state.SampleArray.length)
     // console.log("master LIST :", this.state.masterList );
@@ -65,6 +67,12 @@ export default class MainActivity extends React.Component {
   ShowAddress=()=>{
     console.log(this.state.masterList)
     alert(this.state.masterList)
+  }
+
+   GoToLists=()=>{
+  
+    this.props.navigation.navigate("Show", {arena: this.state.Arena, list: this.state.masterList});
+    console.log("HERE")
   }
 
   StartGame=()=>{
@@ -77,6 +85,7 @@ export default class MainActivity extends React.Component {
       var tempList = this.state.masterList;
       var delArray = []
       var names = 0;
+      console.log("START GAME ", tempList)
       //for (names in tempList){
       while(names< tempList.length  && tempList.length >= this.state.cap){//add full contingency
         console.log("names : ", names, this.state.masterList[names], this.state.Arena[this.state.current]["teamA"].length , tempList[names].length  )
@@ -132,9 +141,7 @@ export default class MainActivity extends React.Component {
 
   }
  render() {
- 
    return (
- 
       <KeyboardAvoidingView style={styles.wrapper} behavior="padding" enabled>
       <View>
 
