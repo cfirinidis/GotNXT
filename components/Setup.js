@@ -31,7 +31,6 @@ export default class Setup extends React.Component {
       courts['Num'] = i+1
       courts['teamA'] = new Array()
       courts['teamB'] = new Array()
-      console.log("TEAMS: ", courts)
       this.state.Arena.push(courts)
       courts={}
     }

@@ -18,76 +18,48 @@ import { createStackNavigator} from 'react-navigation-stack';
 import Setup from './Setup'
 
 export default class ShowList extends React.Component {
-
   constructor(props) {
        super(props);
        this.state = {
          plist: [],
          ps: [],
-         Name: [],
+         waiting: [],
          masterList : this.props.navigation.getParam("list", "blank"),
          Arena: this.props.navigation.getParam("arena", "blank")
        };
-    
      }
 
   ShowAddress=()=>{
-    console.log(this.state.masterList)
-    console.log(this.state.Arena)
+    // console.log(this.state.masterList)
+    // console.log(this.state.Arena)
+    masterList = this.state.masterList;
+    arena = this.state.Arena;
+    // console.log("MYTEST : ", arena[0]["teamA"]["player"])
+    for( i in masterList){
+      for(j in masterList[i]){
+      this.state.waiting.push(masterList[i][j]['player'])
+    }}
+   console.log("total:", this.state.waiting)
+
   }
  
  render() {
-  // let test = this.state.Arena;
-  // let test2 = this.state.masterList
-
-
-    // render(){
   // let arena =  this.state.masterList.map((val, key)=>{
   //       return <ShowList key={key} keyval={val} val={val}
   //               deleteMethod={ ()=> this.deleteNote(key)} />
   //     });
-
-
    return (
     <View>
     <Text>"WAIT LIST"</Text>   
     
     <Button title="See List" onPress={this.ShowAddress}/> 
-      {
-        this.state.Arena.map((item)=>
-        <Text>{item.teamA}
-        "IT WORKED"
-        {item.teamB}</Text>
-        )
-      }
+
+
    
     </View>
     );
     }}
 
-    // <FlatList data={this.state.masterList} renderItem={
-      // ({item})=><Text> {item}</Text>
-      // }
-      // />   
-
-// <FlatList data={players} renderItem={({item})=> <Text> {item}</Text> }
-    // />
-
-
-    // <ScrollView>
-    // {players}
-    // </ScrollView> 
-// render() {
-//   var sampleList = [
-//     {item: "A"},
-//     {item: "B"},
-//     {item: "C"}
-//   ];
-//    return ( <FlatList data={sampleList} renderItem={
-//             ({item}) => <ListItem element={item}/>
-//           }
-//         />);
-//     }
  
 
 const styles = StyleSheet.create({

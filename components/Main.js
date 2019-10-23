@@ -26,9 +26,12 @@ export default class MainActivity extends React.Component {
          plist: [],
          ps: [],
          Name: '',
+         totalPlayers:10,
          SampleArray : [],
-         masterList : [[{player: "Jason"}], [{player:"Jim"}], [{player:"Ed"}, {player:"TOM"}], [{player:"Jerry"}],
-          [{player:"WILL"}], [{player:"Mo"}], [{player:'Larry'}], [{player:'Curley'}], [{player:'COnz'}]],
+         masterList : [[{player: "Jason", replacement: false}], [{player:"Jim", replacement: false}], [{player:"Ed", replacement: false},
+          {player:"TOM", replacement: false}], [{player:"Jerry", replacement: false}],[{player:"WILL", replacement: false}],
+           [{player:"Mo", replacement: false}], [{player:'Larry', replacement: false}], [{player:'Curley', replacement: false}, 
+           {player:'COnz', replacement: false}]],
          cap: this.props.navigation.getParam("cap", "blank"),
          Arena: this.props.navigation.getParam("arena", "blank"),
          courtsNum: this.props.navigation.getParam("courtsNum", "blank"),
@@ -40,39 +43,29 @@ export default class MainActivity extends React.Component {
   AddItemsToArray=()=>{
       //Adding Items To Array.
       if (this.state.Name.length != 0 ){
-      this.state.SampleArray.push({player: this.state.Name});
-      console.log("WHYYYY", this.state.Arena)
-      console.log(this.state.SampleArray, this.state.SampleArray.length);
+      this.state.SampleArray.push({player: this.state.Name, replacement: false});
     }
     else{
       Alert.alert("Please Enter A Name")
     }
     this.setState({Name:''})
     this.setState({SampleArray: this.state.SampleArray})
+    this.setState({totalPlayers: this.state.totalPlayers + 1})
+    console.log(this.state.SampleArray, this.state.SampleArray.length, "total", this.state.totalPlayers);
   }//good
 
   AddMaster=()=>{
     console.log("ADD TO MASTer",this.state.SampleArray);
-    // for (i in this.state.SampleArray){
-    //   console.log("The i", this.state.SampleArray[i], this.state.SampleArray[i].length)
-    //     this.state.masterList.push(this.state.SampleArray[i]);
-    //   }
     this.state.masterList.push(this.state.SampleArray)
-    this.setState({SampleArray : []})
-    // console.log("WHY HAVE IT", this.state.SampleArray.length)
-    // console.log("master LIST :", this.state.masterList );
-    // Alert.alert(masterList.toString());   
+    this.setState({SampleArray : []})  
   }//good
 
   ShowAddress=()=>{
     console.log(this.state.masterList)
-    alert(this.state.masterList)
   }
 
    GoToLists=()=>{
-  
     this.props.navigation.navigate("Show", {arena: this.state.Arena, list: this.state.masterList});
-    console.log("HERE")
   }
 
   StartGame=()=>{
@@ -84,62 +77,63 @@ export default class MainActivity extends React.Component {
       var teamcap = (this.state.cap/2);
       var tempList = this.state.masterList;
       var delArray = []
+      var teamNumA = 0
+      var teamNumB = 0
       var names = 0;
-      console.log("START GAME ", tempList)
+      console.log("START GAME ", tempList, this.state.totalPlayers)
       //for (names in tempList){
-      while(names< tempList.length  && tempList.length >= this.state.cap){//add full contingency
-        console.log("names : ", names, this.state.masterList[names], this.state.Arena[this.state.current]["teamA"].length , tempList[names].length  )
+      while(names < tempList.length){//add full contingency
+        // console.log("names : ", names, tempList[names], this.state.Arena[this.state.current]["teamA"].length , tempList[names].length, "END")
 
-        if (this.state.Arena[this.state.current]["teamA"].length + tempList[names].length <= teamcap){ 
+        if ( teamNumA < teamcap && teamNumB < teamcap){
+            var set= []; 
+            if(tempList[names].length + teamNumA <= teamcap){
             for (name in tempList[names]){ 
-              // console.log("for name in names", tempList[names].length ,tempList[names], tempList[names][name])
-              // console.log("mlist ", this.state.Arena[court]["teamA"].length ," + ", this.state.masterList[names].length, this.state.cap/2 )
-              this.state.Arena[this.state.current]["teamA"].push(tempList[names][name]);
+              // console.log("In A: ", tempList[names][name])
+              set.push(tempList[names][name])
+              teamNumA++;
+              }
             }
-            delArray += [names]
+            this.state.Arena[this.state.current]["teamA"].push(set);
+            delArray += [names];
             names++;
+            this.state.totalPlayers -= tempList[names].length;
             //this.state.masterList.splice(names, 1);
             // console.log("for name AFTER",this.state.masterList);
           }
           //console.log(this.state.Arena[this.state.current]["teamA"].length,  this.teamcap )
-         if (this.state.Arena[this.state.current]["teamB"].length + tempList[names].length <= teamcap &&
-            this.state.Arena[this.state.current]["teamA"].length == teamcap ){ 
-            for (name in tempList[names]){ 
-              console.log("for name in names", tempList[names].length ,tempList[names], tempList[names][name])
-              // console.log("mlist ", this.state.Arena[court]["teamB"].length ," + ", this.state.masterList[names].length, this.state.cap/2 )
-              this.state.Arena[this.state.current]["teamB"].push(tempList[names][name])
-              // this.state.masterList[names].splice(name, 1)
-              
-            }
+         else{
+          //  (teamNumB< teamcap && teamNumA == teamcap ){ 
+            var set = [];
+            for (name in tempList[names]){
+              set.push(tempList[names][name])
+              teamNumB++;
+              } 
+            this.state.Arena[this.state.current]["teamB"].push(set)
             delArray += [names]
             names++
-             //this.state.masterList.splice(names, 1);
-             
-             // console.log("for name AFTER B: ",this.state.masterList)
         }
 
-        if(this.state.Arena[this.state.current]["teamB"].length ==this.state.cap/2){
+        if(teamNumB == teamcap && teamNumA == teamcap){
           this.setState({current: this.state.current++})
-          console.log("Fuckin broke out")
-          console.log(this.state.Arena, 'delete these: ', delArray)
+          console.log("GAME READY: ")
+          // console.log('delete these: ', delArray)
           for (i in delArray){
             console.log(i)
-            this.state.masterList.splice(0, 1)
+            this.state.masterList.splice(delArray[i]-i, 1)
 
           }
           console.log(this.state.masterList)
           break;
         }
 
-        if(this.state.Arena[this.state.current]["teamA"].length ==this.state.cap/2){
-          names++;
-        }
-        console.log(this.state.Arena, 'delete these: ', delArray)
+        // console.log(this.state.Arena, 'delete these: ', delArray)
         }
         console.log("Out of while: ", this.state.Arena)
         this.setState({current: this.state.current++});
-
   }
+
+
  render() {
    return (
       <KeyboardAvoidingView style={styles.wrapper} behavior="padding" enabled>
