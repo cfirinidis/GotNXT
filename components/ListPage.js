@@ -30,33 +30,69 @@ export default class ShowList extends React.Component {
      }
 
   ShowAddress=()=>{
+    console.log("FUNCTION WORLED")
     // console.log(this.state.masterList)
     // console.log(this.state.Arena)
     masterList = this.state.masterList;
     arena = this.state.Arena;
     // console.log("MYTEST : ", arena[0]["teamA"]["player"])
     for( i in masterList){
+      console.log("LENGTH: ", masterList[i].length)
       for(j in masterList[i]){
-      this.state.waiting.push(masterList[i][j]['player'])
-    }}
-   console.log("total:", this.state.waiting)
+        if(masterList[i][j]['player'] == undefined ){
+          console.log("UNDEFINED")
+          for( deep in masterList[i][j]){
+             this.state.waiting.push(masterList[i][j][deep]['player'])
 
+          }
+        }
+        else{
+      this.state.waiting.push(masterList[i][j]['player'])
+      }
+    }}
+   console.log("total:", this.state.waiting);
+   this.setState({waiting: this.state.waiting});
+   return "HELLO"
+
+  }
+  test=()=>{
+    console.log("TEST Fuunction")
   }
  
  render() {
-  // let arena =  this.state.masterList.map((val, key)=>{
-  //       return <ShowList key={key} keyval={val} val={val}
-  //               deleteMethod={ ()=> this.deleteNote(key)} />
-  //     });
+ 
+
+console.log("RENDER: ", this.state.masterList[0])
+let Game = Object.values(this.state.masterList).map(function(vals) {
+      t={};
+      console.log("vals", vals[0].player, vals.length); 
+      for (val in vals){
+        
+      t["key"] = vals[val].player;
+      console.log(t,"NEW",val, vals[val].player);
+      }
+      return t
+                    
+    
+});
+
+let Games = [{key:"test"}, {key:"test2"}, {key:"Test3"}];
+
+console.log("GAME : ", Games)
    return (
     <View>
-    <Text>"WAIT LIST"</Text>   
+    <Text></Text>   
     
-    <Button title="See List" onPress={this.ShowAddress}/> 
+    <Text>WAITING LIST</Text>
 
-
-   
+ 
+ <FlatList
+          data={Game} style={styles.textInput}
+          renderItem={({item}) => <Text>{item.key}</Text>}
+        />
     </View>
+
+
     );
     }}
 
@@ -84,7 +120,7 @@ const styles = StyleSheet.create({
 	textInput: {
 		alignSelf: 'stretch',
 		padding: 16,
-		fontSize:20,
+		fontSize:48,
 		color: "red",
 		marginBottom: 25,
 		backgroundColor: 'yellow',
@@ -100,7 +136,7 @@ const styles = StyleSheet.create({
 	},
 	  item: {
     padding: 10,
-    fontSize: 18,
+    fontSize: 46,
     height: 44,
   },
 	SignUp: {

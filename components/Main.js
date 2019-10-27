@@ -28,10 +28,10 @@ export default class MainActivity extends React.Component {
          Name: '',
          totalPlayers:10,
          SampleArray : [],
-         masterList : [[{player: "Jason", replacement: false}], [{player:"Jim", replacement: false}], [{player:"Ed", replacement: false},
-          {player:"TOM", replacement: false}], [{player:"Jerry", replacement: false}],[{player:"WILL", replacement: false}],
-           [{player:"Mo", replacement: false}], [{player:'Larry', replacement: false}], [{player:'Curley', replacement: false}, 
-           {player:'COnz', replacement: false}]],
+         masterList : [[{player: "Lebron", replacement: false}, {player:"AntDavis", replacement: false}], [{player:"Kyrie", replacement: false},
+          {player:"Durant", replacement: false}], [{player:"Majerle", replacement: false}],[{player:"Kawhi", replacement: false},
+           {player:"PG13", replacement: false}], [{player:'Larry', replacement: false}, {player:'Parish', replacement: false}], 
+           [{player:'CONZ', replacement: false}]],
          cap: this.props.navigation.getParam("cap", "blank"),
          Arena: this.props.navigation.getParam("arena", "blank"),
          courtsNum: this.props.navigation.getParam("courtsNum", "blank"),
@@ -66,6 +66,27 @@ export default class MainActivity extends React.Component {
 
    GoToLists=()=>{
     this.props.navigation.navigate("Show", {arena: this.state.Arena, list: this.state.masterList});
+  }
+
+  endGame=()=>{
+    console.log("EndGame: ", this.state.Arena)
+    // console.log("EndGame MASTER: ", this.state.masterList)
+    var ml = this.state.masterList;
+    var arena = this.state.Arena
+    var courtNum = 1
+    var loser = "teamB"
+    var temp = []
+    for(i in arena[courtNum-1][loser]){
+      //console.log("FOR LOPP : ", arena[courtNum-1][loser][i])
+      temp.push(arena[courtNum-1][loser][i])
+    }   
+    delete arena[courtNum-1][loser][0]
+    ml.push(temp)
+    this.setState({masterList:ml});
+    console.log("Back on List", arena)
+    this.setState({current: courtNum-1})
+
+
   }
 
   StartGame=()=>{
@@ -113,20 +134,16 @@ export default class MainActivity extends React.Component {
             delArray += [names]
             names++
         }
-
         if(teamNumB == teamcap && teamNumA == teamcap){
           this.setState({current: this.state.current++})
           console.log("GAME READY: ")
-          // console.log('delete these: ', delArray)
           for (i in delArray){
             console.log(i)
             this.state.masterList.splice(delArray[i]-i, 1)
-
           }
           console.log(this.state.masterList)
           break;
         }
-
         // console.log(this.state.Arena, 'delete these: ', delArray)
         }
         console.log("Out of while: ", this.state.Arena)
@@ -170,6 +187,15 @@ export default class MainActivity extends React.Component {
           <Button color="gray" 
            title="Go To Lists" onPress={this.GoToLists}
            />
+
+           <Text> End Game </Text>
+
+          <Button color="red" 
+           title="End Game" onPress={this.endGame}
+           />
+
+
+
           
 
 
