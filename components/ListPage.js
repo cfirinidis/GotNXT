@@ -78,18 +78,14 @@ let Game = Object.values(this.state.masterList).map(function(vals) {
 
 let Games = [{key:"test"}, {key:"test2"}, {key:"Test3"}];
 
-console.log("GAME : ", Games)
+// console.log("GAME : ", Games)
    return (
-    <View>
-    <Text></Text>   
-    
+    <View style={styles.TextInput} >  
     <Text>WAITING LIST</Text>
-
- 
- <FlatList
+    <FlatList fontSize={70}
           data={Game} style={styles.textInput}
           renderItem={({item}) => <Text>{item.key}</Text>}
-        />
+    />
     </View>
     );
     }}
@@ -118,7 +114,7 @@ const styles = StyleSheet.create({
 	textInput: {
 		alignSelf: 'stretch',
 		padding: 16,
-		fontSize:48,
+		fontSize:78,
 		color: "red",
 		marginBottom: 25,
 		backgroundColor: 'yellow',
