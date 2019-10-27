@@ -91,8 +91,6 @@ console.log("GAME : ", Games)
           renderItem={({item}) => <Text>{item.key}</Text>}
         />
     </View>
-
-
     );
     }}
 
