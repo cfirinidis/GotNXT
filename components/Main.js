@@ -16,6 +16,8 @@ import{
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator} from 'react-navigation-stack'; 
 import Setup from './Setup'
+import PopUp from './PopUp'
+import Dialog from "react-native-dialog";
 
 export default class MainActivity extends React.Component { 
 
@@ -68,6 +70,11 @@ export default class MainActivity extends React.Component {
     this.props.navigation.navigate("Show", {arena: this.state.Arena, list: this.state.masterList});
   }
 
+  POP=()=>{
+    console.log("POP")
+    this.props.navigation.navigate("Test");
+  }
+
   endGame=()=>{
     console.log("EndGame: ", this.state.Arena)
     // console.log("EndGame MASTER: ", this.state.masterList)
@@ -101,32 +108,50 @@ export default class MainActivity extends React.Component {
       var teamNumA = 0
       var teamNumB = 0
       var names = 0;
+      var team = ''
       console.log("START GAME ", tempList, this.state.totalPlayers)
       //for (names in tempList){
-      while(names < tempList.length){//add full contingency
-        // console.log("names : ", names, tempList[names], this.state.Arena[this.state.current]["teamA"].length , tempList[names].length, "END")
+      while(this.state.cap -(teamNumA + teamNumB) <= tempList.length){//add full contingency
 
-        if ( teamNumA < teamcap && teamNumB < teamcap){
-            var set= []; 
+
+
+
+         if(tempList[names].length + teamNumA >= teamcap){
+
+            // MAKE THEM SHOOT 
+
+
+
+
             if(tempList[names].length + teamNumA <= teamcap){
+              var set= []; 
             for (name in tempList[names]){ 
-              // console.log("In A: ", tempList[names][name])
+              console.log("Adding this to Team - A: ", tempList[names][name])
               set.push(tempList[names][name])
               teamNumA++;
               }
+              delArray += [names];
+              this.state.Arena[this.state.current]["teamA"].push(set);
+              names++;
+            }}
+
+
+
+            
+            if (names == tempList.length){
+              names = 0
+              for (i in delArray){
+                this.state.masterList.splice(delArray[i]-i, 1)
+              }
+              tempList = this.state.masterList;
+              delArray = []
+
             }
-            this.state.Arena[this.state.current]["teamA"].push(set);
-            delArray += [names];
-            names++;
-            this.state.totalPlayers -= tempList[names].length;
-            //this.state.masterList.splice(names, 1);
-            // console.log("for name AFTER",this.state.masterList);
-          }
-          //console.log(this.state.Arena[this.state.current]["teamA"].length,  this.teamcap )
-         else{
+         else if(tempList[names].length + teamNumB <= teamcap){
           //  (teamNumB< teamcap && teamNumA == teamcap ){ 
             var set = [];
             for (name in tempList[names]){
+              console.log("(B) - Adding this to Team - B: ", tempList[names][name])
               set.push(tempList[names][name])
               teamNumB++;
               } 
@@ -134,11 +159,21 @@ export default class MainActivity extends React.Component {
             delArray += [names]
             names++
         }
+        if (names == tempList.length){
+          names = 0
+            for (i in delArray){
+            this.state.masterList.splice(delArray[i]-i, 1)
+          }
+           tempList = this.state.masterList;
+           delArray = []
+
+        }
+        // GAME READY
         if(teamNumB == teamcap && teamNumA == teamcap){
           this.setState({current: this.state.current++})
           console.log("GAME READY: ")
           for (i in delArray){
-            console.log(i)
+            console.log(delArray[i],  i)
             this.state.masterList.splice(delArray[i]-i, 1)
           }
           console.log(this.state.masterList)
@@ -193,6 +228,13 @@ export default class MainActivity extends React.Component {
           <Button color="red" 
            title="End Game" onPress={this.endGame}
            />
+
+
+          <Button color="red" 
+           title="POP" onPress={this.POP}
+           />
+
+
 
 
 

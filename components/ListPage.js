@@ -72,8 +72,6 @@ let Game = Object.values(this.state.masterList).map(function(vals) {
       console.log(t,"NEW",val, vals[val].player);
       }
       return t
-                    
-    
 });
 
 let Games = [{key:"test"}, {key:"test2"}, {key:"Test3"}];
