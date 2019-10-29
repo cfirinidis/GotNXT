@@ -27,8 +27,13 @@ export default class PopUp extends Component {
   render() {
     return (
       <View>
-        <TouchableOpacity onPress={this.showDialog}>
-          <Text>Show Dialog</Text>
+        <TouchableOpacity
+      
+        
+
+         onPress={this.showDialog}>
+          <Text 
+        style={ { fontSize:38 }}   >Show Dialog</Text>
         </TouchableOpacity>
         <Dialog.Container visible={this.state.dialogVisible}>
           <Dialog.Title>Account delete</Dialog.Title>

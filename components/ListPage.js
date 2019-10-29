@@ -10,7 +10,6 @@ import{
   ScrollView,
 	KeyboardAvoidingView,
 	TouchableOpacity,
-	AsyncStorage,
 	Image,
 } from 'react-native';
 import { createAppContainer } from 'react-navigation';
@@ -21,74 +20,40 @@ export default class ShowList extends React.Component {
   constructor(props) {
        super(props);
        this.state = {
-         plist: [],
-         ps: [],
-         waiting: [],
          masterList : this.props.navigation.getParam("list", "blank"),
          Arena: this.props.navigation.getParam("arena", "blank")
        };
      }
 
-  ShowAddress=()=>{
-    console.log("FUNCTION WORLED")
-    // console.log(this.state.masterList)
-    // console.log(this.state.Arena)
-    masterList = this.state.masterList;
-    arena = this.state.Arena;
-    // console.log("MYTEST : ", arena[0]["teamA"]["player"])
-    for( i in masterList){
-      console.log("LENGTH: ", masterList[i].length)
-      for(j in masterList[i]){
-        if(masterList[i][j]['player'] == undefined ){
-          console.log("UNDEFINED")
-          for( deep in masterList[i][j]){
-             this.state.waiting.push(masterList[i][j][deep]['player'])
 
-          }
+ render() {
+
+let Game = Object.values(this.state.masterList).map(function(vals, i) {
+      var t= {} ;
+      for (val in vals){
+        if (t["key"] === undefined){
+          t["key"] = i+1 + " " + vals[val].player;
         }
         else{
-      this.state.waiting.push(masterList[i][j]['player'])
-      }
-    }}
-   console.log("total:", this.state.waiting);
-   this.setState({waiting: this.state.waiting});
-   return "HELLO"
-
-  }
-  test=()=>{
-    console.log("TEST Fuunction")
-  }
- 
- render() {
- 
-
-console.log("RENDER: ", this.state.masterList[0])
-let Game = Object.values(this.state.masterList).map(function(vals) {
-      t={};
-      console.log("vals", vals[0].player, vals.length); 
-      for (val in vals){
-        
-      t["key"] = vals[val].player;
-      console.log(t,"NEW",val, vals[val].player);
+          t["key"] += "  &  " + vals[val].player;
+        }
       }
       return t
 });
 
 let Games = [{key:"test"}, {key:"test2"}, {key:"Test3"}];
-
-// console.log("GAME : ", Games)
+console.log("GAME : ", Game)
    return (
     <View style={styles.TextInput} >  
-    <Text>WAITING LIST</Text>
-    <FlatList fontSize={70}
-          data={Game} style={styles.textInput}
-          renderItem={({item}) => <Text>{item.key}</Text>}
-    />
+    <Text style={{fontSize:40}}>WAITING LIST</Text>
+    <FlatList
+    data={Game} style={styles.textInput}
+    renderItem={({item}) => <Text style={{fontSize:24, color:'white'}} >{item.key}</Text>}/>
     </View>
     );
-    }}
+    }
 
- 
+  }
 
 const styles = StyleSheet.create({
 	wrapper: {
@@ -99,7 +64,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		alignItems: 'center',
 		justifyContent: 'center',
-		backgroundColor: 'white',
+		backgroundColor: 'yellow',
 		paddingLeft: 40,
 		paddingRight: 40,
 	},
@@ -110,12 +75,11 @@ const styles = StyleSheet.create({
 		fontWeight: 'bold',
 	},
 	textInput: {
-		alignSelf: 'stretch',
 		padding: 16,
-		fontSize:78,
+		fontSize:38,
 		color: "red",
 		marginBottom: 25,
-		backgroundColor: 'yellow',
+		backgroundColor: 'purple',
 	},
 	btn: {
 		alignSelf: 'stretch',
