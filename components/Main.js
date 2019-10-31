@@ -175,22 +175,21 @@ StartGame=()=>{
       // console.log("for in :", court , this.state.Arena[court]["teamA"])
       // console.log("for in :", court , this.state.Arena[court]["teamB"])
       // no for loop increment as you go
-      var teamcap = (this.state.cap/2);
+      var teamcap =  this.state.cap/2;
       var tempList = this.state.masterList;
       var delArray = []
       var teamNumA = 0
       var teamNumB = 0
       var names = 0;
-      var team = ''
+      
       console.log("START GAME ", tempList, this.state.totalPlayers)
       //for (names in tempList){
       while(this.state.cap -(teamNumA + teamNumB) <= tempList.length){//add full contingency
 
 
             // MAKE THEM SHOOT 
-
-            if(tempList[names].length + teamNumA <= teamcap){
-              var set= []; 
+        if(tempList[names].length + teamNumA <= teamcap){
+          var set= []; 
             for (name in tempList[names]){ 
               console.log("Adding this to Team - A: ", tempList[names][name])
               set.push(tempList[names][name])
@@ -199,9 +198,6 @@ StartGame=()=>{
               delArray += [names];
               this.state.Arena[this.state.current]["teamA"].push(set);
               names++;
-            
-
-
             
             if (names == tempList.length){
               names = 0
@@ -238,7 +234,6 @@ StartGame=()=>{
           this.setState({current: this.state.current++})
           console.log("GAME READY: ")
           for (i in delArray){
-            console.log(delArray[i],  i)
             this.state.masterList.splice(delArray[i]-i, 1)
           }
           console.log(this.state.masterList)
