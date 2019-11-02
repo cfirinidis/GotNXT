@@ -61,6 +61,12 @@ export default class MainActivity extends React.Component {
 
   ShowAddress=()=>{
     console.log(this.state.masterList)
+    console.log(this.state.cap)
+    console.log(this.state.current)
+    console.log(this.state.Arena)
+    this.setState({current: this.state.current+1})
+
+
   }
 
    GoToLists=()=>{
@@ -93,158 +99,92 @@ export default class MainActivity extends React.Component {
 
   }
 
-  // StartGame=()=>{
-  //     console.log(this.state.masterList)
-  //     var teamcap = (this.state.cap/2);
-  //     var tempList = this.state.masterList;
-  //     console.log("TempLength", tempList.length)
-  //     var delArray = [];
-  //     var teamNumA = 0;
-  //     var teamNumB = 0;
-  //     var names = 0;
-  //     console.log("START GAME ", this.state.current)
-  //       // NEED TO ADD - MAKE THEM SHOOT == if(tempList[names].length + teamNumA >= teamcap && TeamNUmA < teamsCap)
-  //     while(this.state.cap - (teamNumA + teamNumB) <= tempList.length){//add full contingency
-  //           console.log("LEAK")
-            
-
-  //           if(tempList[names].length + teamNumA <= teamcap){
-  //             var set= []; 
-  //             for (name in tempList[names]){ 
-  //               //console.log("Adding this to Team - A: ", tempList[names][name])
-  //               set.push(tempList[names][name])
-  //               teamNumA++;
-  //               }
-  //               delArray += [names];
-  //               this.state.Arena[this.state.current]["teamA"].push(set);
-  //               names++;
-              
-  //               if (names == tempList.length){
-  //                 names = 0
-  //                 for (i in delArray){
-  //                   this.state.masterList.splice(delArray[i]-i, 1)
-  //                 }
-  //                 tempList = this.state.masterList;
-  //                 delArray = []
-  //             }}
-  //           else if(tempList[names].length + teamNumB <=teamcap){
-  //             var set = [];
-  //             for (name in tempList[names]){
-  //             //console.log("(B) - Adding this to Team - B: ", tempList[names][name])
-  //               set.push(tempList[names][name])
-  //               teamNumB++;
-  //             } 
-  //             this.state.Arena[this.state.current]["teamB"].push(set)
-  //            delArray += [names]
-  //            names++
-             
-  //           if (names == tempList.length){
-  //             names = 0
-  //             for (i in delArray){
-  //             this.state.masterList.splice(delArray[i]-i, 1)
-  //             }
-  //           tempList = this.state.masterList;
-  //           delArray = []
-  //           }}
-        
-  //         // GAME READY
-  //     if( teamNumA == teamcap && teamNumB == teamcap){
-  //       this.setState({current: this.state.current++})
-  //         //console.log("GAME READY: ")
-  //       for (i in delArray){
-  //           //console.log(delArray[i],  i)
-  //           this.state.masterList.splice(delArray[i]-i, 1)
-  //         }
-  //         console.log("Break")
-  //         break;
-  //       }//if full
-  //       // console.log(this.state.Arena, 'delete these: ', delArray)
-  //       }//end of while
-  //       console.log("Out of while: ", this.state.Arena)
-  //       this.setState({masterList: this.state.masterList});
-  //       this.setState({Arena:this.state.Arena});
-
-  //       // console.log("Out of while: ", this.state.current)
-  //       // console.log("MASTER ", this.state.masterList)
-  // }
 
 
-StartGame=()=>{
-    // console.log("WHY HAVE IT", this.state.SampleArray.length, "teamA ", this.state.Arena[0]['Num'] )
-    // console.log('START GAME', this.state.Arena[1], "CAP:", this.state.cap, parseInt(this.state.cap))
-      // console.log("for in :", court , this.state.Arena[court]["teamA"])
-      // console.log("for in :", court , this.state.Arena[court]["teamB"])
-      // no for loop increment as you go
-      var teamcap =  this.state.cap/2;
+
+
+  StartGame=()=>{
+      console.log("START GAME TOP")
+      var teamcap = (this.state.cap/2);
       var tempList = this.state.masterList;
-      var delArray = []
-      var teamNumA = 0
-      var teamNumB = 0
+      console.log("TempLength", tempList.length)
+      var delArray = [];
+      var teamNumA = 0;
+      var teamNumB = 0;
       var names = 0;
-      
-      console.log("START GAME ", tempList, this.state.totalPlayers)
-      //for (names in tempList){
-      while(this.state.cap -(teamNumA + teamNumB) <= tempList.length){//add full contingency
-
-
-            // MAKE THEM SHOOT 
-        if(tempList[names].length + teamNumA <= teamcap){
-          var set= []; 
-            for (name in tempList[names]){ 
-              console.log("Adding this to Team - A: ", tempList[names][name])
-              set.push(tempList[names][name])
-              teamNumA++;
-              }
-              delArray += [names];
-              this.state.Arena[this.state.current]["teamA"].push(set);
-              names++;
-            
+      let crash = 0 
+      console.log("START GAME ", this.state.current)
+        // NEED TO ADD - MAKE THEM SHOOT == if(tempList[names].length + teamNumA >= teamcap && TeamNUmA < teamsCap)
+      while(crash < this.state.masterList.length){//add full contingency
+          console.log("CRASHJ: ", crash, teamNumA, teamNumB, "Names: ", names, tempList[names].length, "max: ", tempList.length)
+            if(tempList[names].length + teamNumA <= teamcap){
+              var set= []; 
+              for (name in tempList[names]){ 
+                //console.log("Adding this to Team - A: ", tempList[names][name])
+                set.push(tempList[names][name])
+                teamNumA++;
+                }
+                delArray += [names];
+                this.state.Arena[this.state.current]["teamA"].push(set);
+                names++;
+              
+                if (names == tempList.length){
+                  names = 0
+                  for (i in delArray){
+                    console.log("delete ", i)
+                    this.state.masterList.splice(delArray[i]-i, 1)
+                  }
+                  tempList = this.state.masterList;
+                  delArray = []
+              }}
+            else if(tempList[names].length + teamNumB <=teamcap){
+              var set = [];
+              for (name in tempList[names]){
+              //console.log("(B) - Adding this to Team - B: ", tempList[names][name])
+                set.push(tempList[names][name])
+                teamNumB++;
+              } 
+              
+             delArray += [names]
+             this.state.Arena[this.state.current]["teamB"].push(set)
+             names++
+             
             if (names == tempList.length){
               names = 0
               for (i in delArray){
+                console.log("delete ", i)
                 this.state.masterList.splice(delArray[i]-i, 1)
               }
-              tempList = this.state.masterList;
-              delArray = []
-
+            tempList = this.state.masterList;
+            delArray = []
             }}
-         else if(tempList[names].length + teamNumB <= teamcap){
-          //  (teamNumB< teamcap && teamNumA == teamcap ){ 
-            var set = [];
-            for (name in tempList[names]){
-              console.log("(B) - Adding this to Team - B: ", tempList[names][name])
-              set.push(tempList[names][name])
-              teamNumB++;
-              } 
-            this.state.Arena[this.state.current]["teamB"].push(set)
-            delArray += [names]
-            names++
+            else{
+              names++;
+            }
         
-        if (names == tempList.length){
-          names = 0
-            for (i in delArray){
+          // GAME READY
+      if( teamNumA == teamcap && teamNumB == teamcap){
+        this.setState({current: this.state.current+1})
+          //console.log("GAME READY: ")
+        for (i in delArray){
+            console.log(delArray[i],  i)
             this.state.masterList.splice(delArray[i]-i, 1)
           }
-           tempList = this.state.masterList;
-           delArray = []
-
-        }}
-        // GAME READY
-        if(teamNumB == teamcap && teamNumA == teamcap){
-          this.setState({current: this.state.current++})
-          console.log("GAME READY: ")
-          for (i in delArray){
-            this.state.masterList.splice(delArray[i]-i, 1)
-          }
-          console.log(this.state.masterList)
+          console.log("Break")
           break;
-        }
+        }//if full
         // console.log(this.state.Arena, 'delete these: ', delArray)
-        }
-        this.setState({masterList: this.state.masterList})
-        console.log("Out of while: ", this.state.Arena)
+        crash++;
 
+        }//end of while
+        console.log("Out of while: ", this.state.Arena, this.state.current)
+        this.setState({masterList: this.state.masterList});
+        this.setState({Arena:this.state.Arena});
+
+        // console.log("Out of while: ", this.state.current)
+        // console.log("MASTER ", this.state.masterList)
   }
+
 
  render() {
    return (
