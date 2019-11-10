@@ -45,10 +45,10 @@ let Games = [{key:"test"}, {key:"test2"}, {key:"Test3"}];
 console.log("GAME : ", Game)
    return (
     <View style={styles.TextInput} >  
-    <Text style={{fontSize:40}}>WAITING LIST</Text>
+    <Text style={{fontSize:40, backgroundColor:'orange'}}>WAITING LIST</Text>
     <FlatList
     data={Game} style={styles.textInput}
-    renderItem={({item}) => <Text style={{fontSize:24, color:'white'}} >{item.key}</Text>}/>
+    renderItem={({item}) => <Text style={{fontSize:30, color:'yellow'}} >{item.key}</Text>}/>
     </View>
     );
     }
@@ -56,49 +56,12 @@ console.log("GAME : ", Game)
   }
 
 const styles = StyleSheet.create({
-	wrapper: {
-		flex: 1,
-		backgroundColor: 'pink',
-	},
-	container: {
-		flex: 1,
-		alignItems: 'center',
-		justifyContent: 'center',
-		backgroundColor: 'yellow',
-		paddingLeft: 40,
-		paddingRight: 40,
-	},
-	header: {
-		fontSize: 24,
-		marginBottom: 60,
-		color: '#fff',
-		fontWeight: 'bold',
-	},
 	textInput: {
-		padding: 16,
 		fontSize:38,
-		color: "red",
-		marginBottom: 25,
+		
+		marginBottom: 50,
 		backgroundColor: 'purple',
-	},
-	btn: {
-		alignSelf: 'stretch',
-		backgroundColor: 'green',
-		padding:2,
-		marginBottom:50,
-		alignItems: 'center',
-	
 
 	},
-	  item: {
-    padding: 10,
-    fontSize: 46,
-    height: 44,
-  },
-	SignUp: {
-		//fontSize: 18,
-		marginTop: 60,
-		//color: '#fff',
-		//fontWeight: 'bold',
-		},
+
 });	

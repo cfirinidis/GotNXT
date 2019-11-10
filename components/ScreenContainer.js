@@ -6,6 +6,7 @@ import Setup from './Setup';
 import ShowList from './ListPage';
 import PopUp from './PopUp';
 
+
 const MainNavigator = createStackNavigator({
     Main: { 
         screen: Setup,
@@ -19,6 +20,7 @@ const MainNavigator = createStackNavigator({
     Test: {
     	screen: PopUp,
     }
+
   
 });
 

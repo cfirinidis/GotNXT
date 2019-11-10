@@ -2,7 +2,21 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e6fd22c1-2518-49b9-98a2-1bfce3901254" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.expo/packager-info.json" beforeDir="false" afterPath="$PROJECT_DIR$/.expo/packager-info.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.expo/settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/.expo/settings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/ListPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/ListPage.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/Main.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/Main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/ScreenContainer.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/ScreenContainer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/react-native-modal/ISSUE_TEMPLATE.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/react-native-modal/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/react-native-modal/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/react-native-modal/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/react-native-modal/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/react-native-modal/src/index.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/react-native-modal/src/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/react-native-modal/src/index.style.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/react-native-modal/src/utils.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -18,8 +32,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/App.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="4" column="44" selection-start-line="4" selection-start-column="44" selection-end-line="4" selection-end-column="44" />
+            <state relative-caret-position="135">
+              <caret line="9" column="3" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
             </state>
           </provider>
         </entry>
@@ -58,6 +72,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -79,8 +95,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -117,7 +131,7 @@
     <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
     <layout>
       <window_info id="Captures" order="0" weight="0.25" />
-      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.26775956" />
+      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.26666668" />
       <window_info id="Structure" order="2" side_tool="true" />
       <window_info id="Image Layers" order="3" />
       <window_info id="Designer" order="4" />
@@ -131,7 +145,7 @@
       <window_info anchor="bottom" id="Messages" order="4" weight="0.32937366" />
       <window_info anchor="right" id="Capture Analysis" order="0" />
       <window_info anchor="right" id="Theme Preview" order="1" />
-      <window_info active="true" anchor="right" id="Assistant" order="2" visible="true" weight="0.25401217" />
+      <window_info active="true" anchor="right" id="Assistant" order="2" visible="true" weight="0.2567792" />
       <window_info anchor="right" id="Palette&#9;" order="3" />
     </layout>
   </component>
@@ -144,8 +158,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/App.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="44" selection-start-line="4" selection-start-column="44" selection-end-line="4" selection-end-column="44" />
+        <state relative-caret-position="135">
+          <caret line="9" column="3" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
         </state>
       </provider>
     </entry>

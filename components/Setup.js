@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
 	textInput: {
 		alignSelf: 'stretch',
 		padding: 16,
-		fontSize:20,
+		fontSize:24,
 		color: "red",
 		marginBottom: 25,
 		backgroundColor: 'yellow',
