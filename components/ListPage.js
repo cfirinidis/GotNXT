@@ -28,7 +28,7 @@ export default class ShowList extends React.Component {
 
  render() {
 
-let Game = Object.values(this.state.masterList).map(function(vals, i) {
+let currentList = Object.values(this.state.masterList).map(function(vals, i) {
       var t= {} ;
       for (val in vals){
         if (t["key"] === undefined){
@@ -38,16 +38,16 @@ let Game = Object.values(this.state.masterList).map(function(vals, i) {
           t["key"] += "  &  " + vals[val].player;
         }
       }
+      console.log("Cur List", t)
       return t
 });
 
-let Games = [{key:"test"}, {key:"test2"}, {key:"Test3"}];
-console.log("GAME : ", Game)
+// console.log("GAME : ", currentList)
    return (
     <View style={styles.TextInput} >  
     <Text style={{fontSize:40, backgroundColor:'orange'}}>WAITING LIST</Text>
     <FlatList
-    data={Game} style={styles.textInput}
+    data={currentList} style={styles.textInput}
     renderItem={({item}) => <Text style={{fontSize:30, color:'yellow'}} >{item.key}</Text>}/>
     </View>
     );

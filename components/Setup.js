@@ -26,19 +26,22 @@ export default class Setup extends React.Component {
      }
  
   SetupCourts=()=>{
+
     var courts = {}
     for (var i = 0; i<this.state.CourtsNum; i++){
       courts['Num'] = i+1
+      courts["teamNumA"] = 0
+      courts["teamNumB"] = 0
       courts['teamA'] = new Array()
       courts['teamB'] = new Array()
       this.state.Arena.push(courts)
       courts={}
     }
     console.log("FINAL: ",this.state.Arena)
-    this.props.navigation.navigate("List", {arena: this.state.Arena, cap:this.state.Capacity, 
-      courtsNum:this.state.CourtsNum });
-    console.log("HERE")
+
     this.setState({Arena:this.state.Arena}) 
+       this.props.navigation.navigate("List", {arena: this.state.Arena, cap:this.state.Capacity, 
+      courtsNum:this.state.CourtsNum });
   }
  
  render() {
