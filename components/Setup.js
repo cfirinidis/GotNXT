@@ -28,10 +28,18 @@ export default class Setup extends React.Component {
   SetupCourts=()=>{
 
     var courts = {}
+    console.log(this.state.Capacity % 2 )
+    if (isNaN(this.state.CourtsNum) ){
+      Alert.alert("Please enter the number of available Courts")
+    }
+    else if(this.state.Capacity % 2 != 0){
+     Alert.alert("Please enter 'EVEN' Number Players") 
+    }
+    else{
     for (var i = 0; i<this.state.CourtsNum; i++){
       courts['Num'] = i+1
-      courts["teamNumA"] = 0
-      courts["teamNumB"] = 0
+      courts["teamANum"] = 0
+      courts["teamBNum"] = 0
       courts['teamA'] = new Array()
       courts['teamB'] = new Array()
       this.state.Arena.push(courts)
@@ -42,18 +50,23 @@ export default class Setup extends React.Component {
     this.setState({Arena:this.state.Arena}) 
        this.props.navigation.navigate("List", {arena: this.state.Arena, cap:this.state.Capacity, 
       courtsNum:this.state.CourtsNum });
-  }
+  }}
  
  render() {
    return (
-      <KeyboardAvoidingView style={styles.wrapper} behavior="padding" enabled>
+      <KeyboardAvoidingView style={styles.wrapper}>
    		<View>
+      <Text style={styles.title}>GotNXT</Text>
+      <Text style={styles.text}> Number of available COURTS</Text>
           <TextInput
+             placeholderTextColor= "white" 
               placeholder="Number of courts "
               onChangeText={CourtsNum => this.setState({ CourtsNum: CourtsNum}) }
               style={styles.textInput}
           />
-          <TextInput
+           <Text style={styles.text}> Number of Total players {'\n'}(5 on 5 = 10)</Text>
+          <TextInput 
+              placeholderTextColor= "white" 
               placeholder="Total Capacity (full court cap = 10):"
               onChangeText={Capacity => this.setState({ Capacity: Capacity }) }
 				style={styles.textInput}    
@@ -70,31 +83,41 @@ export default class Setup extends React.Component {
 
 const styles = StyleSheet.create({
 	wrapper: {
-		flex: 1,
-		backgroundColor: 'pink',
-    paddingTop: 100,
-	},
-	container: {
-		flex: 1,
-		alignItems: 'center',
-		justifyContent: 'center',
-		backgroundColor: 'white',
-		paddingLeft: 40,
-		paddingRight: 40,
+		flex: 2,
+		backgroundColor: '#cecece',
+    paddingTop: 50,
 	},
 	header: {
 		fontSize: 24,
-		marginBottom: 60,
+		marginBottom: 20,
 		color: '#fff',
 		fontWeight: 'bold',
 	},
+  title: {
+    fontSize: 38,
+    marginBottom: 10,
+    color: '#fff',
+    fontWeight: 'bold',
+    textAlign:'center',
+    fontWeight: 'bold',
+  },
 	textInput: {
 		alignSelf: 'stretch',
 		padding: 16,
 		fontSize:24,
 		color: "red",
 		marginBottom: 25,
-		backgroundColor: 'yellow',
+		backgroundColor: '#ffd1dc',
+
 	},
+  text: {
+    alignSelf: 'stretch',
+    fontSize:28,
+    color: "black",
+    marginBottom: 5,
+    fontWeight:'bold',
+    textAlign:"center"
+
+  },
 
 });	

@@ -59,80 +59,18 @@ export default class MainActivity extends React.Component {
   }//good
 
   AddMaster=()=>{
-    // console.log("ADD TO MASTer",this.state.SampleArray);
+    console.log("ADD TO MASTer",this.state.SampleArray.length);
+    if (this.state.SampleArray.length === 0 ){
+      Alert.alert("Please Enter a Name " )
+    }
+    else{
     this.state.masterList.push(this.state.SampleArray)
     this.setState({SampleArray : []})  
+  }
   }//good
-
-
-  // ShowAddress=()=>{
-  //   console.log(this.state.masterList)
-  //   console.log(this.state.cap)
-  //   console.log(this.state.current)
-  //   console.log(this.state.Arena)
-  //   this.setState({current: this.state.current+1})
-  // }
 
    GoToLists=()=>{
     this.props.navigation.navigate("Show", {arena: this.state.Arena, list: this.state.masterList});
-  }
-
-  POP=()=>{
-    console.log("POP")
-    this.props.navigation.navigate("Test");
-  }
-
-    MOD=()=>{
-    console.log("MOD")
-    this.props.navigation.navigate("Modal");
-  }
-
-  endGame=()=>{
-    var courtNum = 1
-    var loser = "teamB"
-    var temp = []
-    for(i in this.state.Arena[courtNum-1][loser][0]){
-      temp.push(this.state.Arena[courtNum-1][loser][0][i])
-    }   
-    
-    this.state.Arena[courtNum-1][loser] = new Array()
-    this.state.masterList.push(temp)
-    // console.log("DELETE: ", this.state.Arena)
-    var crash = 0;
-    var teamNum = 0;
-    var teamcap = (this.state.cap/2);
-    var delArray = [];
-    var names = 0;
-    while(crash < this.state.masterList.length){//add full contingency
-          if(this.state.masterList[names].length + teamNum <= teamcap){
-              var set= []; 
-              for (name in this.state.masterList[names]){ 
-                set.push(this.state.masterList[names][name])
-                teamNum++;
-                }
-                delArray += [names];
-                this.state.Arena[0][loser].push(set);
-                names++;
-                if (names == this.state.masterList.length){
-                  names = 0
-                  for (i in delArray){
-                    this.state.masterList.splice(delArray[i]-i, 1);
-                  }
-                  delArray = []
-              }
-            }
-            names++;
-            if('teamNum '== teamcap ){
-               names = 0
-                  for (i in delArray){
-                    this.state.masterList.splice(delArray[i]-i, 1);
-                  }
-                  delArray = []
-            }
-            crash++;
-          }//end of while
-        this.setState({masterList: this.state.masterList});
-        this.setState({Arena:this.state.Arena});
   }
 
   async StartGame(){
@@ -142,8 +80,8 @@ export default class MainActivity extends React.Component {
       let names = 0;
       let numA = 0;
       let numB = 0;
-      // console.log('Teamnuma :'  ,this.state.Arena, "NBUMM: ",this.state.Arena['teamNumA'], "NUM______", this.state.Arena['Num']  )
-      this.state.Arena['teamNumA'] = "LAME";
+      // console.log('TeamAnum :'  ,this.state.Arena, "NBUMM: ",this.state.Arena['teamANum'], "NUM______", this.state.Arena['Num']  )
+      this.state.Arena['teamANum'] = "LAME";
       
       AsyncAlert = (title, msg) => new Promise((resolve, reject) => {  
         Alert.alert(
@@ -173,6 +111,9 @@ export default class MainActivity extends React.Component {
               for (name in this.state.masterList[names]){ 
                 set.push(this.state.masterList[names][name])
                 numA++;
+                this.state.Arena[this.state.current]["teamANum"]++; 
+                console.log("Looking FOR NUMS",this.state.Arena[this.state.current]["teamANum"] ) 
+                
                 }
                 delArray += [names];
                 this.state.Arena[this.state.current]["teamA"].push(set);
@@ -191,6 +132,7 @@ export default class MainActivity extends React.Component {
               for (name in this.state.masterList[names]){
                 set.push(this.state.masterList[names][name])
                 numB++;
+                this.state.Arena[this.state.current]["teamBNum"]++;
               } 
               delArray += [names]
               this.state.Arena[this.state.current]["teamB"].push(set)
@@ -222,8 +164,11 @@ export default class MainActivity extends React.Component {
           // GAME READY
       if( numA == teamcap && numB == teamcap){
         this.setState({current: this.state.current+1})
-        this.setState({teamNumA: numA})
-        this.setState({teamNumA: numA})
+        console.log("teamNum : ", numA)
+        this.setState({teamANum: numA})
+        this.setState({teamANum: numA})
+                this.setState({teamANum: numA})
+        this.setState({teamANum: numA})
         for (i in delArray){
             this.state.masterList.splice(delArray[i]-i, 1)
           }
@@ -238,17 +183,72 @@ export default class MainActivity extends React.Component {
 
   }
               
-  toggleModal = () => {
-    console.log("TOGGLE", this.state.answer)
-    this.setState({ isModalVisible: !this.state.isModalVisible })
-    for(var i =0; i<3; i++){
-      console.log("WHILE: ", i)
-    }   
+
+   deleteGame = (x, conz, T) => {
+    console.log("I didnt press anything : ",x, " ", conz, " T ", T)
+       console.log("Arena : ", this.state.Arena)
   };
 
-   deleteGame = (x) => {
-    console.log("I didnt press anything : ",x)   
-  };
+  endGame=(courtNum, conz, loser)=>{
+    // console.log("ENDGAME VALS ", courtNum, conz, loser)
+    var loser = loser
+    var temp = []
+    for(i in this.state.Arena[courtNum-1][loser]){
+      console.log("initial : ", this.state.Arena[courtNum-1][loser][i]) 
+      if(this.state.Arena[courtNum-1][loser][i].length>1){
+        for (j in this.state.Arena[courtNum-1][loser][i]){
+          console.log("GRETAER ", this.state.Arena[courtNum-1][loser][i][j])
+        temp.push(this.state.Arena[courtNum-1][loser][i][j])  
+      }}
+      else{
+        console.log("else")
+      temp.push(this.state.Arena[courtNum-1][loser][i][0])
+      }
+    }   
+    console.log("Temp: ", temp)
+    
+    this.state.Arena[courtNum-1][loser] = new Array()
+    // console.log("DOubt This will work ", this.state.Arena[courtNum-1][loser+'Num'] )
+    this.state.masterList.push(temp)
+    // console.log("DELETE: ", this.state.Arena, "LIST: ", this.state.masterList)
+    var crash = 0;
+    // this.state.Arena[courtNum-1][loser+'Num'] = 0;
+    var teamNum = 0
+    var teamcap = (this.state.cap/2);
+    var delArray = [];
+    var names = 0;
+    while(crash < this.state.masterList.length){//add full contingency
+          if(this.state.masterList[names].length + teamNum <= teamcap){
+              var set= []; 
+              for (name in this.state.masterList[names]){ 
+                set.push(this.state.masterList[names][name])
+                teamNum++;
+                }
+                delArray += [names];
+                this.state.Arena[0][loser].push(set);
+                names++;
+                if (names == this.state.masterList.length){
+                  names = 0
+                  for (i in delArray){
+                    this.state.masterList.splice(delArray[i]-i, 1);
+                  }
+                  delArray = []
+              }
+            }
+            names++;
+            if(teamNum == teamcap ){
+               names = 0
+                  for (i in delArray){
+                    this.state.masterList.splice(delArray[i]-i, 1);
+                  }
+                  delArray = []
+            }
+            crash++;
+          }//end of while
+        this.setState({masterList: this.state.masterList});
+        this.setState({Arena:this.state.Arena});
+  }
+
 
 
  render() {
@@ -257,47 +257,38 @@ export default class MainActivity extends React.Component {
     let A = []
     let B = []
     let t = {}
-    // console.log("TOP", val, key)
+   
     for (keys in val){
       // console.log("key : ", keys, val )
       if (keys == "teamA"){
-        console.log("tema A: ", val[keys])
+        // console.log("tema A: ", val[keys])
         for (things in val[keys]){
-          console.log("THONGS: ", things, val[keys][things].length)
+          // console.log("THONGS: ", things, val[keys][things].length)
           for (players in val[keys][things]){
-            console.log("PLAYERS", val[keys][things][players]['player'])
-            A += [val[keys][things][players]['player'] + ' ']
+            // console.log("PLAYERS", val[keys][things][players]['player'])
+            A += [val[keys][things][players]['player'] + ' | ']
           }
         }
       }
       else{
         for (things in val[keys]){
-          console.log("THONGS: ", things, val[keys][things].length)
+          // console.log("THONGS: ", things, val[keys][things].length)
           for (players in val[keys][things]){
-            console.log("PLAYERS", val[keys][things][players]['player'])
-            B += [val[keys][things][players]['player'] + ' ']
+            // console.log("PLAYERS", val[keys][things][players]['player'])
+            B += [val[keys][things][players]['player'] + ' | ']
           }
         }
 
-
-
       }
      }
-     t["key"] = val.Num
-     t["key"] += A
-     t["key"] += B
-    console.log("AAAAAA : ", t)
+      // console.log("TOP", val, val.Num.toString(), "NUM: ", val.Num)
+     t["key"] =  val.Num.toString()
+     t["valA"] = A 
+     t["valB"] = B
+    // console.log("AAAAAA : ", t)
        
-      // console.log('TA:', val['teamA'], "TB: ", val['teamA'], val.teamA.player)  
-      // return  ([val.Num, val.teamA, val.teamB]) 
-    // return["NUM  : ", val.Num , "TeamA: ", A,  " TeamB : " ,B ]
   return t
 }); 
-
-      //  let Game =  this.state.Arena.map((val, key)=>{
-      //   return <Games key={key} keyval={key} val={val}
-      //            />
-      // });
 
    return (
       <KeyboardAvoidingView style={styles.wrapper} behavior="padding" enabled>
@@ -311,44 +302,37 @@ export default class MainActivity extends React.Component {
               placeholderTextColor='gray' />
 
     <TouchableOpacity  onPress={this.AddItemsToArray.bind(this)} style={styles.addButton} >
-        <Text style={styles.addButtonText}>+ Name(s)</Text>
+        <Text style={{color:'black', fontSize:20}}>+Name(s)</Text>
     </TouchableOpacity>       
 
     <TouchableOpacity  onPress={this.AddMaster.bind(this)} style={styles.addButton} >
-        < Text style={styles.addButtonText}> +  LIST </Text>
+        < Text style={{color:'black', fontSize:26}}> + LIST </Text>
     </TouchableOpacity>
 
     <TouchableOpacity  onPress={this.StartGame.bind(this)} style={styles.addStart } >
-        <Text style={styles.addButtonText}>Start</Text>
+        <Text style={{color:'black', fontSize:32}}>Start</Text>
     </TouchableOpacity>
 
     <TouchableOpacity  onPress={this.GoToLists.bind(this)} style={styles.list} >
-        <Text style={styles.addButtonText}> List </Text>
+        <Text style={{color:'black', fontSize:32}}> List </Text>
     </TouchableOpacity>
 
-          <Button color="red" style={{padding:80}} 
-           title="End Game" onPress={this.endGame.bind(this)} />
-
-    
-
-     <View >  
-    <Text style={{fontSize:40, backgroundColor:'orange'}}>Current Games</Text>
+     <View style={{padding:20}}>  
+    <Text style={{fontSize:40, backgroundColor:'purple', color:'white', textAlign:'center'}}>Current Games</Text>
     <FlatList
     data={Game} style={styles.textInput}
     renderItem={({ item }) => (
     <View>
-    <Text style={{fontSize:30, color:'black'}} >{item.key}</Text>
-    <Button color='red' width="50%" flexDirection='row' onPress={()=>this.deleteGame(item.key)} title="TeamA Won"/>
-     <Button color='red' width="25%" onPress={()=>this.deleteGame(item.key)} title="TeamB Won"/>
-
+    <Text style={{fontSize:30, color:'black'}}>Game {item.key} : </Text>
+      <Text style={{color:"black", fontSize:28}}>{item.valA}{"\n"}  - VS -</Text>
+      <Text style={{color:"red", fontSize:28}}>{item.valB}</Text>
+    <Button color='gray' style={styles.endGame} onPress={()=>this.endGame(item.key, "conz", "teamB")} title="TeamA Won"/>
+    <Button color='black' onPress={()=>this.endGame(item.key, "conz", "teamA")} title="TeamB Won"/>
     </View>
     )}
-
     />
     </View>
-    
-
-   
+     
 
       </View>
        </ScrollView>
@@ -359,47 +343,12 @@ export default class MainActivity extends React.Component {
 }
 
 
-          // <FlatList
-          //           horizontal={true}
-          //           data={this.state.topPopularMovies}
-          //           renderItem={({ item }) => (
-          //           <View>
-
-          //               <Text>{item.original_title}</Text>
-          //               <Button onPress={this.mybuttonclick} title="hello"/>
-          //           </View>
-          //           )}
-          //           keyExtractor={item => item.id}
-          //       />
-          //   </View>
-
-
-
-
-       // <Text>"FILL THE COURTS "</Text>
-       //   <Button title="Start" onPress={this.StartGame.bind(this)}
-       //      style={styles.btn}/>
-
-      //  <View>
-      //   <Button color= 'black' 
-      //   title="Show modal" onPress={this.toggleModal} />
-      //   <Modal isVisible={this.state.isModalVisible}>
-      //     <View style={{ flex: 1 }}>
-      //       <Text>Hello!</Text>
-      //       <Button title="Hide modal" onPress={this.toggleModal} />
-      //       <Button title="SPLIT" onPress={(answer)=> this.setState({answer:"yes"})}/>
-      //     </View>
-      //   </Modal>
-      // </View>
-
-    //    <Text style={{fontSize:24, color:'black'}}>
-    // {Game}
-    // </Text>
 
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    backgroundColor: 'pink',
+    backgroundColor: '#bbbbbb',
+    padding: 5,
   },
   
   header: {
@@ -414,10 +363,14 @@ const styles = StyleSheet.create({
     fontSize:20,
     color: "red",
     marginBottom: 25,
-    backgroundColor: 'yellow',
+    backgroundColor: 'white',
+
+        justifyContent: "flex-end"
   },
   endGame: {
-    width: 90,
+    color:'red',
+    margin: 30,
+   
   },
     addButtonText: {
     color: 'white',
@@ -430,7 +383,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
     // right: 20,
     // bottom: 90,
-    backgroundColor: '#E91E63',
+    backgroundColor: '#ffffb1',
     flexDirection:'column',
     width: 90,
     height: 90,
@@ -442,7 +395,8 @@ const styles = StyleSheet.create({
   addStart: {
     position: 'absolute',
     zIndex: 11,
-    backgroundColor: 'green',
+    backgroundColor: '#b1ffb1',
+    color: 'black',
     top: 80,
     width: 90,
     left: 130,
@@ -456,9 +410,8 @@ const styles = StyleSheet.create({
   list: {
     position: 'absolute',
     zIndex: 11,
-    backgroundColor: 'purple',
+    backgroundColor: '#ffd589',
     width: 90,
-    color: 'yellow',
     left: 130,
     top: 175,
     flexDirection: 'row',
