@@ -9,16 +9,16 @@
  */
 'use strict';
 
-const AnimatedImplementation = require('../../Animated/src/AnimatedImplementation');
-const React = require('react');
-const StyleSheet = require('../../StyleSheet/StyleSheet');
-const View = require('../View/View');
+const AnimatedImplementation = require('AnimatedImplementation');
+const React = require('React');
+const StyleSheet = require('StyleSheet');
+const View = require('View');
 
-import type {LayoutEvent} from '../../Types/CoreEventTypes';
+import type {LayoutEvent} from 'CoreEventTypes';
 
 const AnimatedView = AnimatedImplementation.createAnimatedComponent(View);
 
-export type Props = {
+type Props = {
   children?: React.Element<any>,
   nextHeaderLayoutY: ?number,
   onLayout: (event: LayoutEvent) => void,
@@ -38,7 +38,7 @@ type State = {
 };
 
 class ScrollViewStickyHeader extends React.Component<Props, State> {
-  state: State = {
+  state = {
     measured: false,
     layoutY: 0,
     layoutHeight: 0,
@@ -63,7 +63,7 @@ class ScrollViewStickyHeader extends React.Component<Props, State> {
     }
   };
 
-  render(): React.Node {
+  render() {
     const {inverted, scrollViewHeight} = this.props;
     const {measured, layoutHeight, layoutY, nextHeaderLayoutY} = this.state;
     const inputRange: Array<number> = [-1, 0];

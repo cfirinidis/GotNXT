@@ -10,8 +10,8 @@
 
 'use strict';
 
-const requireNativeComponent = require('../ReactNative/requireNativeComponent');
+const requireNativeComponent = require('requireNativeComponent');
 
-const ImageViewNativeComponent: string = requireNativeComponent('RCTImageView');
+const ImageViewNativeComponent = requireNativeComponent('RCTImageView');
 
 module.exports = ImageViewNativeComponent;

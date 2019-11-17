@@ -320,7 +320,7 @@ export default class MainActivity extends React.Component {
      <View style={{padding:20}}>  
     <Text style={{fontSize:40, backgroundColor:'purple', color:'white', textAlign:'center'}}>Current Games</Text>
     <FlatList
-    data={Game} style={styles.textInput}
+    data={Game} 
     renderItem={({ item }) => (
     <View>
     <Text style={{fontSize:30, color:'black'}}>Game {item.key} : </Text>

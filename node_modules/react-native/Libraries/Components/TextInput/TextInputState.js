@@ -15,8 +15,8 @@
 
 'use strict';
 
-const Platform = require('../../Utilities/Platform');
-const UIManager = require('../../ReactNative/UIManager');
+const Platform = require('Platform');
+const UIManager = require('UIManager');
 
 let currentlyFocusedID: ?number = null;
 const inputs = new Set();
@@ -79,7 +79,7 @@ function unregisterInput(textFieldID: number) {
   inputs.delete(textFieldID);
 }
 
-function isTextInput(textFieldID: number): boolean {
+function isTextInput(textFieldID: number) {
   return inputs.has(textFieldID);
 }
 

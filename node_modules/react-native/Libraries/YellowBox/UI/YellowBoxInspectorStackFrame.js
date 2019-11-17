@@ -10,14 +10,14 @@
 
 'use strict';
 
-const React = require('react');
-const StyleSheet = require('../../StyleSheet/StyleSheet');
-const Text = require('../../Text/Text');
-const YellowBoxPressable = require('./YellowBoxPressable');
-const YellowBoxStyle = require('./YellowBoxStyle');
+const React = require('React');
+const StyleSheet = require('StyleSheet');
+const Text = require('Text');
+const YellowBoxPressable = require('YellowBoxPressable');
+const YellowBoxStyle = require('YellowBoxStyle');
 
-import type {PressEvent} from '../../Types/CoreEventTypes';
-import type {StackFrame} from '../../Core/NativeExceptionsManager';
+import type {PressEvent} from 'CoreEventTypes';
+import type {StackFrame} from 'parseErrorStack';
 
 type Props = $ReadOnly<{|
   frame: StackFrame,
@@ -40,34 +40,22 @@ const YellowBoxInspectorStackFrame = (props: Props): React.Node => {
         ellipsizeMode="middle"
         numberOfLines={1}
         style={styles.frameLocation}>
-        {formatFrameLocation(frame)}
+        {`${getFrameLocation(frame.file)}:${frame.lineNumber}${
+          frame.column == null ? '' : ':' + frame.column
+        }`}
       </Text>
     </YellowBoxPressable>
   );
 };
 
-const formatFrameLocation = (frame: StackFrame): string => {
-  const {file, lineNumber, column} = frame;
-  if (file == null) {
-    return '<unknown>';
-  }
-  const queryIndex = file.indexOf('?');
-  const query = queryIndex < 0 ? '' : file.substr(queryIndex);
+const getFrameLocation = (uri: string): string => {
+  const queryIndex = uri.indexOf('?');
+  const query = queryIndex < 0 ? '' : uri.substr(queryIndex);
 
-  const path = queryIndex < 0 ? file : file.substr(0, queryIndex);
-  let location = path.substr(path.lastIndexOf('/') + 1) + query;
+  const path = queryIndex < 0 ? uri : uri.substr(0, queryIndex);
+  const file = path.substr(path.lastIndexOf('/') + 1);
 
-  if (lineNumber == null) {
-    return location;
-  }
-
-  location = location + ':' + lineNumber;
-
-  if (column == null) {
-    return location;
-  }
-
-  return location + ':' + column;
+  return file + query;
 };
 
 const styles = StyleSheet.create({

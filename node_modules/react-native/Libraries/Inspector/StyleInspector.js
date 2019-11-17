@@ -10,13 +10,13 @@
 
 'use strict';
 
-const React = require('react');
-const StyleSheet = require('../StyleSheet/StyleSheet');
-const Text = require('../Text/Text');
-const View = require('../Components/View/View');
+const React = require('React');
+const StyleSheet = require('StyleSheet');
+const Text = require('Text');
+const View = require('View');
 
 class StyleInspector extends React.Component<$FlowFixMeProps> {
-  render(): React.Node {
+  render() {
     if (!this.props.style) {
       return <Text style={styles.noStyle}>No style</Text>;
     }

@@ -125,7 +125,12 @@ export type ScrollEvent = SyntheticEvent<
       y: number,
       x: number,
     |}>,
-    zoomScale?: number,
-    responderIgnoreScroll?: boolean,
+    zoomScale: number,
+  |}>,
+>;
+
+export type SwitchChangeEvent = SyntheticEvent<
+  $ReadOnly<{|
+    value: boolean,
   |}>,
 >;

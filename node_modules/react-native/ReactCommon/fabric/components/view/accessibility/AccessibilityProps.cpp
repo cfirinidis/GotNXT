@@ -16,10 +16,14 @@ namespace facebook {
 namespace react {
 
 AccessibilityProps::AccessibilityProps(
-    AccessibilityProps const &sourceProps,
-    RawProps const &rawProps)
+    const AccessibilityProps &sourceProps,
+    const RawProps &rawProps)
     : accessible(
           convertRawProp(rawProps, "accessible", sourceProps.accessible)),
+      accessibilityTraits(convertRawProp(
+          rawProps,
+          "accessibilityTraits",
+          sourceProps.accessibilityTraits)),
       accessibilityLabel(convertRawProp(
           rawProps,
           "accessibilityLabel",
@@ -50,7 +54,8 @@ AccessibilityProps::AccessibilityProps(
 
 #if RN_DEBUG_STRING_CONVERTIBLE
 SharedDebugStringConvertibleList AccessibilityProps::getDebugProps() const {
-  auto const &defaultProps = AccessibilityProps();
+  const auto &defaultProps = AccessibilityProps();
+  LOG(INFO) << "Call AccessibilityProps::getDebugProps with testId " << testId;
   return SharedDebugStringConvertibleList{
       debugStringConvertibleItem("testId", testId, defaultProps.testId),
   };

@@ -10,9 +10,9 @@
 
 'use strict';
 
-const symbolicateStackTrace = require('../../Core/Devtools/symbolicateStackTrace');
+const symbolicateStackTrace = require('symbolicateStackTrace');
 
-import type {StackFrame} from '../../Core/NativeExceptionsManager';
+import type {StackFrame} from 'parseErrorStack';
 
 type CacheKey = string;
 

@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import <React/RCTPackagerConnection.h>
+#import "RCTPackagerConnection.h"
 
 #import <algorithm>
 #import <objc/runtime.h>
@@ -19,12 +19,10 @@
 #import <React/RCTLog.h>
 #import <React/RCTPackagerClient.h>
 #import <React/RCTReconnectingWebSocket.h>
+#import <React/RCTSRWebSocket.h>
 #import <React/RCTUtils.h>
 
-#if RCT_DEV && !TARGET_OS_UIKITFORMAC
-
-#import <React/RCTSRWebSocket.h>
-
+#if RCT_DEV
 @interface RCTPackagerConnection () <RCTReconnectingWebSocketDelegate>
 @end
 
@@ -73,7 +71,7 @@ struct Registration {
      addObserverForName:RCTBundleURLProviderUpdatedNotification
      object:nil
      queue:[NSOperationQueue mainQueue]
-     usingBlock:^(NSNotification *_Nonnull __unused note) {
+     usingBlock:^(NSNotification *_Nonnull note) {
        [weakSelf bundleURLSettingsChanged];
      }];
   }
@@ -200,7 +198,7 @@ static BOOL isSupportedVersion(NSNumber *version)
 
 #pragma mark - RCTReconnectingWebSocketDelegate
 
-- (void)reconnectingWebSocketDidOpen:(__unused RCTReconnectingWebSocket *)webSocket
+- (void)reconnectingWebSocketDidOpen:(RCTReconnectingWebSocket *)webSocket
 {
   std::vector<Registration<RCTConnectedHandler>> registrations;
   {
@@ -261,7 +259,7 @@ static BOOL isSupportedVersion(NSNumber *version)
   }
 }
 
-- (void)reconnectingWebSocketDidClose:(__unused RCTReconnectingWebSocket *)webSocket
+- (void)reconnectingWebSocketDidClose:(RCTReconnectingWebSocket *)webSocket
 {
   std::lock_guard<std::mutex> l(_mutex);
   _socketConnected = NO;

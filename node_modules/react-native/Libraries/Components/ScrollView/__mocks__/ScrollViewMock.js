@@ -12,17 +12,17 @@
 
 'use strict';
 
-const React = require('react');
-const View = require('../../View/View');
+const React = require('React');
+const View = require('View');
 
-const requireNativeComponent = require('../../../ReactNative/requireNativeComponent');
+const requireNativeComponent = require('requireNativeComponent');
 
 const RCTScrollView = requireNativeComponent('RCTScrollView');
 
-const ScrollViewComponent: $FlowFixMe = jest.genMockFromModule('../ScrollView');
+const ScrollViewComponent = jest.genMockFromModule('ScrollView');
 
 class ScrollViewMock extends ScrollViewComponent {
-  render(): React.Element<string> {
+  render() {
     return (
       <RCTScrollView {...this.props}>
         {this.props.refreshControl}

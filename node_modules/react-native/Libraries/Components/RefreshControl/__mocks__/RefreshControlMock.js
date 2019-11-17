@@ -10,9 +10,9 @@
 
 'use strict';
 
-const React = require('react');
+const React = require('React');
 
-const requireNativeComponent = require('../../../ReactNative/requireNativeComponent');
+const requireNativeComponent = require('requireNativeComponent');
 
 const RCTRefreshControl = requireNativeComponent('RCTRefreshControl');
 
@@ -21,7 +21,7 @@ class RefreshControlMock extends React.Component<{}> {
   componentDidMount() {
     RefreshControlMock.latestRef = this;
   }
-  render(): React.Element<string> {
+  render() {
     return <RCTRefreshControl />;
   }
 }

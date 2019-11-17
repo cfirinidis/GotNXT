@@ -10,16 +10,16 @@
 
 'use strict';
 
-const React = require('react');
-const StyleSheet = require('../../StyleSheet/StyleSheet');
-const Text = require('../../Text/Text');
-const View = require('../../Components/View/View');
-const YellowBoxCategory = require('../Data/YellowBoxCategory');
-const YellowBoxPressable = require('./YellowBoxPressable');
-const YellowBoxStyle = require('./YellowBoxStyle');
-const YellowBoxWarning = require('../Data/YellowBoxWarning');
+const React = require('React');
+const StyleSheet = require('StyleSheet');
+const Text = require('Text');
+const YellowBoxPressable = require('YellowBoxPressable');
+const View = require('View');
+const YellowBoxCategory = require('YellowBoxCategory');
+const YellowBoxStyle = require('YellowBoxStyle');
+const YellowBoxWarning = require('YellowBoxWarning');
 
-import type {Category} from '../Data/YellowBoxCategory';
+import type {Category} from 'YellowBoxCategory';
 
 type Props = $ReadOnly<{|
   category: Category,
@@ -28,8 +28,8 @@ type Props = $ReadOnly<{|
 |}>;
 
 class YellowBoxListRow extends React.Component<Props> {
-  static GUTTER: number = StyleSheet.hairlineWidth;
-  static HEIGHT: number = 48;
+  static GUTTER = StyleSheet.hairlineWidth;
+  static HEIGHT = 48;
 
   shouldComponentUpdate(nextProps: Props): boolean {
     const prevProps = this.props;
@@ -38,7 +38,7 @@ class YellowBoxListRow extends React.Component<Props> {
       prevProps.onPress !== nextProps.onPress ||
       prevProps.warnings.length !== nextProps.warnings.length ||
       prevProps.warnings.some(
-        (prevWarning, index) => prevWarning !== nextProps.warnings[index],
+        (prevWarning, index) => prevWarning !== nextProps[index],
       )
     );
   }

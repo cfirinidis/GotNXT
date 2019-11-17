@@ -10,8 +10,8 @@
 
 'use strict';
 
-import type {Options, DatePickerOpenAction} from './DatePickerAndroidTypes';
-import NativeDatePickerAndroid from './NativeDatePickerAndroid';
+const DatePickerModule = require('NativeModules').DatePickerAndroid;
+import type {Options, DatePickerOpenAction} from 'DatePickerAndroidTypes';
 
 /**
  * Convert a Date to a timestamp.
@@ -73,7 +73,7 @@ class DatePickerAndroid {
       _toMillis(optionsMs, 'minDate');
       _toMillis(optionsMs, 'maxDate');
     }
-    return NativeDatePickerAndroid.open(options);
+    return DatePickerModule.open(options);
   }
 
   /**

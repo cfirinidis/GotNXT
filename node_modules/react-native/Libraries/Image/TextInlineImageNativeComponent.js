@@ -10,8 +10,8 @@
 
 'use strict';
 
-const requireNativeComponent = require('../ReactNative/requireNativeComponent');
+const requireNativeComponent = require('requireNativeComponent');
 
-const TextInlineImage: string = requireNativeComponent('RCTTextInlineImage');
+const TextInlineImage = requireNativeComponent('RCTTextInlineImage');
 
 module.exports = TextInlineImage;

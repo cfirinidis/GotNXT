@@ -10,10 +10,10 @@
 
 'use strict';
 
-const Platform = require('../../Utilities/Platform');
-const NativeEventEmitter = require('../../EventEmitter/NativeEventEmitter');
-
-import NativeTVNavigationEventEmitter from './NativeTVNavigationEventEmitter';
+const Platform = require('Platform');
+const TVNavigationEventEmitter = require('NativeModules')
+  .TVNavigationEventEmitter;
+const NativeEventEmitter = require('NativeEventEmitter');
 
 function TVEventHandler() {
   this.__nativeTVNavigationEventListener = null;
@@ -24,12 +24,12 @@ TVEventHandler.prototype.enable = function(
   component: ?any,
   callback: Function,
 ) {
-  if (Platform.OS === 'ios' && !NativeTVNavigationEventEmitter) {
+  if (Platform.OS === 'ios' && !TVNavigationEventEmitter) {
     return;
   }
 
   this.__nativeTVNavigationEventEmitter = new NativeEventEmitter(
-    NativeTVNavigationEventEmitter,
+    TVNavigationEventEmitter,
   );
   this.__nativeTVNavigationEventListener = this.__nativeTVNavigationEventEmitter.addListener(
     'onHWKeyEvent',
