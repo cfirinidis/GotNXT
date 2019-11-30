@@ -9,8 +9,10 @@ import{
   FlatList,
   ScrollView,
   KeyboardAvoidingView,
+  TouchableHighlight,
   TouchableOpacity,
   AsyncStorage,
+  Modal,
   Image,
 } from 'react-native';
 import { createAppContainer } from 'react-navigation';
@@ -18,9 +20,13 @@ import { createStackNavigator} from 'react-navigation-stack';
 import Setup from './Setup';
 import PopUp from './PopUp';
 import Dialog from "react-native-dialog";
-import Modal from "react-native-modal";
 import CustomPromptComponent from './Modal';
 import Games from './currentGames';
+import StartFunction from './function';
+
+import SectionedMultiSelect from 'react-native-sectioned-multi-select';
+import SelectMultiple from 'react-native-select-multiple';
+
 
 export default class MainActivity extends React.Component { 
   constructor(props) {
@@ -28,7 +34,13 @@ export default class MainActivity extends React.Component {
        this.state = {
          plist: [],
          ps: [],
+         hitShot: [],
+         selectedItems: [],
+         modalVisible: false,
+         scrolledMultiPickerVisible: false,
+        scrolledMultiPickerSelectedItems: [],
          Name: '',
+         shooters: [],
          totalPlayers:10,
          SampleArray : [],
          masterList : [[{player: "Lebron", replacement: false}, {player:"AntDavis", replacement: false}], [{player:"Kyrie", replacement: false},
@@ -39,8 +51,6 @@ export default class MainActivity extends React.Component {
          Arena: this.props.navigation.getParam("arena", "blank"),
          courtsNum: this.props.navigation.getParam("courtsNum", "blank"),
          current: 0,
-         isModalVisible: false,
-         conz: "CONZ",
          answer: 'none'
        };
      }
@@ -70,10 +80,31 @@ export default class MainActivity extends React.Component {
   }//good
 
    GoToLists=()=>{
-    this.props.navigation.navigate("Show", {arena: this.state.Arena, list: this.state.masterList});
+    this.props.navigation.navigate("Show", {arena: this.state.Arena, list: this.state.masterList});  
+  }
+   
+   GoToModal=()=>{
+    this.props.navigation.navigate("Modal");
   }
 
+    onSelectionsChange = (hitShot) => {
+    // selectedFruits is array of { label, value }
+    this.setState({ hitShot })
+  }
+
+  print =()=>{
+    console.log("PRINT")
+    console.log(this.state.hitShot)
+  }
+
+    setModalVisible(visible) {
+    this.setState({modalVisible: visible});
+  }
+
+
   async StartGame(){
+    this.func = new StartFunction();
+    this.func.printF();
       let teamcap = (this.state.cap/2);
       let delArray = [];
       let crash = 0;
@@ -93,103 +124,125 @@ export default class MainActivity extends React.Component {
                     );
       });
 
-        DsyncAlert = (title, msg, players) => new Promise((resolve, reject) => {  
-        Alert.alert(
-                    title,
-                    msg,
 
+      let start = await AsyncAlert("Pick teams from List", '')
+      if (start =="YES"){
+        console.log(this.state.masterList)
+        for(i in this.state.masterList){
+          console.log("i", i, this.state.masterList[i].length)
+          if (this.state.masterList[i].length > 1){
+            for (j in this.state.masterList[i]){
+              console.log("FOR j ", this.state.masterList[i][j]['player'])
+              this.state.shooters.push(this.state.masterList[i][j]['player'])
 
-                    [ {textInput: "YES", onPress: () => { resolve('YES') }},
-                      {text: "NO", onPress: () => { resolve('NO') }}  ],
-                    { cancelable: false },
-                    );
-      });
-    
-      while(crash < this.state.masterList.length){//add full contingency
-            if(this.state.masterList[names].length + numA <= teamcap){
-              var set= []; 
-              for (name in this.state.masterList[names]){ 
-                set.push(this.state.masterList[names][name])
-                numA++;
-                this.state.Arena[this.state.current]["teamANum"]++; 
-                console.log("Looking FOR NUMS",this.state.Arena[this.state.current]["teamANum"] ) 
+            }
+          }
+          else{
+            console.log("single player", this.state.masterList[i][0])
+          this.state.shooters.push(this.state.masterList[i][0]['player'])
+        }
+        }
+        // console.log("SHooter", this.state.shooters)
+        this.setState({modalVisible: true});
+        console.log(this.state.theyHit)
+
+      }
+      else{
+        while(crash < this.state.masterList.length){//add full contingency
+              if(this.state.masterList[names].length + numA <= teamcap){
+                var set= []; 
+                for (name in this.state.masterList[names]){ 
+                  set.push(this.state.masterList[names][name])
+                  numA++;
+                  this.state.Arena[this.state.current]["teamANum"]++; 
+                  console.log("Looking FOR NUMS",this.state.Arena[this.state.current]["teamANum"] ) 
+                  
+                  }
+                  delArray += [names];
+                  this.state.Arena[this.state.current]["teamA"].push(set);
+                  names++;
                 
-                }
-                delArray += [names];
-                this.state.Arena[this.state.current]["teamA"].push(set);
-                names++;
-              
+                  if (names == this.state.masterList.length){
+                    names = 0
+                    for (i in delArray){
+                      this.state.masterList.splice(delArray[i]-i, 1);
+                    }
+                    this.state.masterList = this.state.masterList;
+                    delArray = []
+                }}
+              else if(this.state.masterList[names].length + numB <=teamcap){
+                var set = [];
+                for (name in this.state.masterList[names]){
+                  set.push(this.state.masterList[names][name])
+                  numB++;
+                  this.state.Arena[this.state.current]["teamBNum"]++;
+                } 
+                delArray += [names]
+                this.state.Arena[this.state.current]["teamB"].push(set)
+                names++
                 if (names == this.state.masterList.length){
                   names = 0
                   for (i in delArray){
-                    this.state.masterList.splice(delArray[i]-i, 1);
+                    this.state.masterList.splice(delArray[i]-i, 1)
                   }
-                  this.state.masterList = this.state.masterList;
-                  delArray = []
-              }}
-            else if(this.state.masterList[names].length + numB <=teamcap){
-              var set = [];
-              for (name in this.state.masterList[names]){
-                set.push(this.state.masterList[names][name])
-                numB++;
-                this.state.Arena[this.state.current]["teamBNum"]++;
-              } 
-              delArray += [names]
-              this.state.Arena[this.state.current]["teamB"].push(set)
-              names++
-              if (names == this.state.masterList.length){
-                names = 0
-                for (i in delArray){
-                  this.state.masterList.splice(delArray[i]-i, 1)
-                }
-              delArray = []
-              }}
-            else{
-                if(numA + numB != this.state.cap){
-                  // console.log("Totals: ", numA, numB, teamcap)
-                let s = '';
-                for (i in this.state.masterList[names]){
-                  s += this.state.masterList[names][i]['player'] + '  '  } 
-                let diff = this.state.cap - (numA + numB) ;
-                let command = "Shoot for " + diff
-                let response = await AsyncAlert(command, s);
-                console.log("RESPONSE : ", response)
-                if (response == "YES"){
-                  console.log('Something has to happen')
-                  let theyHit = await AsyncAlert("They will Shoot", s)
+                delArray = []
+                }}
+              else{
+                  if(numA + numB != this.state.cap){
+                    // console.log("Totals: ", numA, numB, teamcap)
+                  let s = '';
+                  for (i in this.state.masterList[names]){
+                    s += this.state.masterList[names][i]['player'] + '  '  
+                    console.log(" CONSOLE : ",this.state.masterList[names][i]['player'])
+                    this.state.shooters.push(this.state.masterList[names][i]['player'])
+                  } 
 
-                } 
-               
-             names++; }}
-          // GAME READY
-      if( numA == teamcap && numB == teamcap){
-        this.setState({current: this.state.current+1})
-        console.log("teamNum : ", numA)
-        this.setState({teamANum: numA})
-        this.setState({teamANum: numA})
-                this.setState({teamANum: numA})
-        this.setState({teamANum: numA})
-        for (i in delArray){
-            this.state.masterList.splice(delArray[i]-i, 1)
-          }
-          console.log(" TEAMS FULL")
-          break;
-        }//if full
-        crash++;
 
-        }//end of while
+                  let diff = this.state.cap - (numA + numB) ;
+                  let command = "Shoot for " + diff
+
+                  let response = await AsyncAlert(command, s);
+                  console.log("RESPONSE : ", response)
+                  // They will shoot , Create slector from list
+                  if (response == "YES"){
+                    console.log('Something has to happen')
+                    this.setState({modalVisible: true});
+                    break
+              
+
+
+
+
+
+                  } 
+                 
+               names++; }}
+            // GAME READY
+        if( numA == teamcap && numB == teamcap){
+          this.setState({current: this.state.current+1})
+          console.log("teamNum : ", numA)
+          this.setState({teamANum: numA})
+          this.setState({teamANum: numA})
+                  this.setState({teamANum: numA})
+          this.setState({teamANum: numA})
+          for (i in delArray){
+              this.state.masterList.splice(delArray[i]-i, 1)
+            }
+            console.log(" TEAMS FULL")
+            break;
+          }//if full
+          crash++;
+
+          }}//end of while
         this.setState({masterList: this.state.masterList});
         this.setState({Arena:this.state.Arena});
 
   }
-              
 
-   deleteGame = (x, conz, T) => {
-    console.log("I didnt press anything : ",x, " ", conz, " T ", T)
-       console.log("Arena : ", this.state.Arena)
-  };
 
-  endGame=(courtNum, conz, loser)=>{
+
+
+  async endGame(courtNum, conz, loser){
     // console.log("ENDGAME VALS ", courtNum, conz, loser)
     var loser = loser
     var temp = []
@@ -197,7 +250,7 @@ export default class MainActivity extends React.Component {
       console.log("initial : ", this.state.Arena[courtNum-1][loser][i]) 
       if(this.state.Arena[courtNum-1][loser][i].length>1){
         for (j in this.state.Arena[courtNum-1][loser][i]){
-          console.log("GRETAER ", this.state.Arena[courtNum-1][loser][i][j])
+          console.log("GREATER ", this.state.Arena[courtNum-1][loser][i][j])
         temp.push(this.state.Arena[courtNum-1][loser][i][j])  
       }}
       else{
@@ -217,6 +270,26 @@ export default class MainActivity extends React.Component {
     var teamcap = (this.state.cap/2);
     var delArray = [];
     var names = 0;
+
+    AsyncAlert = (title, msg) => new Promise((resolve, reject) => {  
+        Alert.alert(
+                    title,
+                    msg,
+                    [ {text: "YES", onPress: () => { resolve('YES') }},
+                      {text: "NO", onPress: () => { resolve('NO') }}  ],
+                    { cancelable: false },
+                    );
+      });
+
+        DsyncAlert = (title, msg) => new Promise((resolve, reject) => {  
+      
+                
+                  this.setState({ scrolledMultiPickerVisible: true })
+                  
+      });
+
+
+
     while(crash < this.state.masterList.length){//add full contingency
           if(this.state.masterList[names].length + teamNum <= teamcap){
               var set= []; 
@@ -234,6 +307,23 @@ export default class MainActivity extends React.Component {
                   }
                   delArray = []
               }
+            }
+            else{
+
+                  // console.log("Totals: ", numA, numB, teamcap)
+                let s = '';
+                for (i in this.state.masterList[names]){
+                  s += this.state.masterList[names][i]['player'] + '  '  } 
+                let diff = this.state.cap;
+                let command = "Shoot for " + diff
+                let response = await AsyncAlert(command, s);
+                console.log("RESPONSE : ", response)
+                if (response == "YES"){
+                  console.log('Something has to happen')
+                  let theyHit = await AsyncAlert("They will Shoot", s)
+
+                } 
+          
             }
             names++;
             if(teamNum == teamcap ){
@@ -278,14 +368,12 @@ export default class MainActivity extends React.Component {
             B += [val[keys][things][players]['player'] + ' | ']
           }
         }
-
       }
      }
-      // console.log("TOP", val, val.Num.toString(), "NUM: ", val.Num)
      t["key"] =  val.Num.toString()
      t["valA"] = A 
      t["valB"] = B
-    // console.log("AAAAAA : ", t)
+    
        
   return t
 }); 
@@ -294,6 +382,8 @@ export default class MainActivity extends React.Component {
       <KeyboardAvoidingView style={styles.wrapper} behavior="padding" enabled>
       <ScrollView>
       <View>
+
+
           <TextInput
               placeholder="NAME"
               onChangeText={(Name) => this.setState({ Name}) }
@@ -317,13 +407,17 @@ export default class MainActivity extends React.Component {
         <Text style={{color:'black', fontSize:32}}> List </Text>
     </TouchableOpacity>
 
+        <TouchableOpacity  onPress={this.GoToModal.bind(this)}>
+        <Text style={{color:'black', fontSize:32}}> Modal</Text>
+    </TouchableOpacity>
+
      <View style={{padding:20}}>  
     <Text style={{fontSize:40, backgroundColor:'purple', color:'white', textAlign:'center'}}>Current Games</Text>
     <FlatList
     data={Game} 
     renderItem={({ item }) => (
     <View>
-    <Text style={{fontSize:30, color:'black'}}>Game {item.key} : </Text>
+    <Text style={{fontSize:30, color:'blue'}}>Game {item.key} : </Text>
       <Text style={{color:"black", fontSize:28}}>{item.valA}{"\n"}  - VS -</Text>
       <Text style={{color:"red", fontSize:28}}>{item.valB}</Text>
     <Button color='gray' style={styles.endGame} onPress={()=>this.endGame(item.key, "conz", "teamB")} title="TeamA Won"/>
@@ -332,6 +426,30 @@ export default class MainActivity extends React.Component {
     )}
     />
     </View>
+
+
+
+
+    <Modal 
+    visible={this.state.modalVisible}>
+      <View>
+        <Text style={{fontSize:30}}>THIS SHOULD BE TITLE </Text>
+        <SelectMultiple
+          items={this.state.shooters}
+          selectedItems={ this.state.hitShot }
+          onSelectionsChange={this.onSelectionsChange} />
+
+        <Button onPress={this.print} title="Print"> u</Button>
+        <TouchableHighlight
+                onPress={() => {
+                  this.setModalVisible(!this.state.modalVisible);
+                }}>
+              <Text style={{fontSize:28}}>Hide Modal</Text>
+        </TouchableHighlight>
+
+      </View>
+    </Modal>
+
      
 
       </View>
@@ -342,6 +460,16 @@ export default class MainActivity extends React.Component {
  }
 }
 
+
+const LONG_LIST = [
+  'ADAM',
+  'BOBBY',
+  'CHARLIE',
+  'DENNIES',
+  'ERIC',
+  'FRANK',
+
+];
 
 
 const styles = StyleSheet.create({

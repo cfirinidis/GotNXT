@@ -26,7 +26,6 @@ export default class Setup extends React.Component {
      }
  
   SetupCourts=()=>{
-
     var courts = {}
     console.log(this.state.Capacity % 2 )
     if (isNaN(this.state.CourtsNum) ){
@@ -53,29 +52,33 @@ export default class Setup extends React.Component {
   }}
  
  render() {
-   return (
-      <KeyboardAvoidingView style={styles.wrapper}>
-   		<View>
+   return (    
+   		<View style={styles.wrapper}>
+      <KeyboardAvoidingView>    
       <Text style={styles.title}>GotNXT</Text>
-      <Text style={styles.text}> Number of available COURTS</Text>
-          <TextInput
-             placeholderTextColor= "white" 
+        <Text style={styles.text}> Number of available COURTS</Text>
+            <TextInput
+              placeholderTextColor= "white" 
               placeholder="Number of courts "
               onChangeText={CourtsNum => this.setState({ CourtsNum: CourtsNum}) }
               style={styles.textInput}
-          />
-           <Text style={styles.text}> Number of Total players {'\n'}(5 on 5 = 10)</Text>
-          <TextInput 
+              keyboardType={'numeric'}  
+            />
+            <Text style={styles.text}> Number of Total players {'\n'}(5 on 5 = 10)</Text>
+            <TextInput 
               placeholderTextColor= "white" 
               placeholder="Total Capacity (full court cap = 10):"
               onChangeText={Capacity => this.setState({ Capacity: Capacity }) }
-				style={styles.textInput}    
-          />
-          < Button color="red" 
-           title="Click When Done" onPress={this.SetupCourts}
-           />
+				      style={styles.textInput}    
+              keyboardType={'numeric'}  
+            />
+
+    <TouchableOpacity  onPress={this.SetupCourts.bind(this)} style={styles.button} >
+      <Text style={styles.text}> Press When Done </Text>
+    </TouchableOpacity>
+     </KeyboardAvoidingView>
       </View>
-      </KeyboardAvoidingView>
+      
    );
  }
 }
@@ -83,18 +86,13 @@ export default class Setup extends React.Component {
 
 const styles = StyleSheet.create({
 	wrapper: {
-		flex: 2,
-		backgroundColor: '#cecece',
-    paddingTop: 50,
-	},
-	header: {
-		fontSize: 24,
-		marginBottom: 20,
-		color: '#fff',
-		fontWeight: 'bold',
+    flex: 1,
+		backgroundColor: 'grey',
+    paddingTop: 10,
 	},
   title: {
     fontSize: 38,
+    paddingTop:15,
     marginBottom: 10,
     color: '#fff',
     fontWeight: 'bold',
@@ -102,11 +100,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 	textInput: {
-		alignSelf: 'stretch',
-		padding: 16,
-		fontSize:24,
+		padding: 18,
+    marginBottom: 8,
+		fontSize: 24,
 		color: "red",
-		marginBottom: 25,
 		backgroundColor: '#ffd1dc',
 
 	},
@@ -114,10 +111,18 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     fontSize:28,
     color: "black",
-    marginBottom: 5,
+    marginBottom: 15,
     fontWeight:'bold',
     textAlign:"center"
 
+  },
+    button: {
+    color: "red",
+    fontSize: 26,
+    backgroundColor: 'red',
+    marginBottom: 15,
+    width: 200,
+    height:80,
   },
 
 });	

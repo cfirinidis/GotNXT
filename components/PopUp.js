@@ -3,6 +3,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 import Dialog from "react-native-dialog";
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator} from 'react-navigation-stack'; 
+import MultiSelect from 'react-native-multiple-select';
 import Setup from './Setup'
  
 export default class PopUp extends Component {

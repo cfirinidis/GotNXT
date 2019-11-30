@@ -5,6 +5,8 @@ import MainActivity from './Main';
 import Setup from './Setup';
 import ShowList from './ListPage';
 import PopUp from './PopUp';
+import ModalExample from './Modal'
+import StartFunction from './function'
 
 
 const MainNavigator = createStackNavigator({
@@ -19,9 +21,13 @@ const MainNavigator = createStackNavigator({
     },
     Test: {
     	screen: PopUp,
+    },
+    Modal: {
+        screen: ModalExample,
+    },
+    Functions: {
+        screen: StartFunction,
     }
-
-  
 });
 
 

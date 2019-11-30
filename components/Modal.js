@@ -1,92 +1,81 @@
-import React, { Component } from "react";
-import { Text, StyleSheet, TouchableOpacity, View } from "react-native";
-import { createAppContainer } from 'react-navigation';
-import { createStackNavigator} from 'react-navigation-stack'; 
-import Setup from './Setup'
+import React, { Component } from 'react'
+import { View, Button, Modal, TouchableHighlight, Text} from 'react-native'
+import SelectMultiple from 'react-native-select-multiple'
+ 
+// const fruits = ['Apples', 'Oranges', 'Pears']
+// --- OR ---
+const fruits = [
+  { label: 'Apples', value: 'appls' },
+  { label: 'Oranges', value: 'orngs' },
+  { label: 'Pears', value: 'pears' }
+]
+ 
+class App extends Component {
+  state = { 
+    selectedFruits: [] ,
+    modalVisible: false,
 
-// ...
-type Props = {
-    title: string,
-    options: string[],
-    onSubmit: (selection: string) => void,
-    onCancel: () => void
+
+  };
+ 
+  onSelectionsChange = (selectedFruits) => {
+    // selectedFruits is array of { label, value }
+    this.setState({ selectedFruits })
+  }
+
+  print =()=>{
+    console.log("PRINT")
+    console.log(this.state.selectedFruits)
+  }
+
+  setModalVisible(visible) {
+    this.setState({modalVisible: visible});
+  }
+ 
+  render () {
+    return (
+        <View>
+        <Modal 
+        visible={this.state.modalVisible}>
+
+      <View>
+        <SelectMultiple
+          items={fruits}
+          selectedItems={this.state.selectedFruits}
+          onSelectionsChange={this.onSelectionsChange} />
+
+          <Button onPress={this.print} title="Print"> u</Button>
+
+
+       <TouchableHighlight
+                onPress={() => {
+                  this.setModalVisible(!this.state.modalVisible);
+                }}>
+                <Text>Hide Modal</Text>
+              </TouchableHighlight>
+
+
+
+          
+      </View>
+ </Modal>
+
+
+ 
+        <TouchableHighlight
+                onPress={() => {
+                  this.setModalVisible(!this.state.modalVisible);
+                }}>
+                <Text>Hide Modal</Text>
+              </TouchableHighlight>
+
+</View>
+
+
+     
+
+
+    )
+  }
 }
-
-type State = {
-    selection: string
-}
-
-export default class CustomPromptComponent extends React.PureComponent<Props, State> {
-    constructor(props: Props) {
-        super(props);
-        this.state = {
-            selection: null
-        };
-    }
-    // ...
-    _onCancelPress = () => this.props.onCancel();
-
-  _onSubmit = () => {
-
-    this._onOptionPressed("Happy");
-    console.log("Selection: ", this.state.selection)
-    this.props.onSubmit(this.state.selection);}
-
-
-  _onOptionPressed = (option: string)=> {this.setState({ selection: option })
-  
-}
-    // ...
-    _renderOption = (option: string) => {
-        const { selection } = this.state;
-        console.log("this.state.selection", this.state.selection, "option :",option)
-        if (option =="HAPPY"){
-        this._onOptionPressed(option)
-      }
-        const isSelected = selection === option;
-        return option
-        // ...
-    }
-
-    print=()=>{
-        console.log("PRINT")
-    }
-    
-    render() {
-        return (
-            <View>
-                <Text style={styles.container}>{this.props.title}</Text>
-                <Text style={styles.title}>{this.props.options.map(this._renderOption)} </Text>
-
-                <View>
-                
-                    <TouchableOpacity onPress={this._onCancelPress}>   
-                    <Text style={styles.title}>Cancel</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity onPress={this._onSubmitPress}> 
-                    <Text> OK </Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-        );
-    }
-
-}
-
-
-
-const styles = StyleSheet.create({
-    container: {
-        position: 'absolute',
-        color: 'orange',
-        backgroundColor:'white'
-    },
-    title: {
-        fontSize: 28,
-        color: 'orange',
-        backgroundColor:'white'
-    }
-})
-
-
+export default App
