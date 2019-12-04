@@ -1,10 +1,10 @@
 {
   "devToolsPort": 19002,
-  "expoServerPort": 19000,
-  "packagerPort": 19004,
-  "packagerPid": 17780,
-  "expoServerNgrokUrl": "https://2x-meu.anonymous.gotnxt.exp.direct",
-  "packagerNgrokUrl": "https://packager.2x-meu.anonymous.gotnxt.exp.direct",
-  "ngrokPid": 17810,
+  "expoServerPort": null,
+  "packagerPort": null,
+  "packagerPid": null,
+  "expoServerNgrokUrl": null,
+  "packagerNgrokUrl": null,
+  "ngrokPid": null,
   "webpackServerPort": null
 }
