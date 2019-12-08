@@ -125,15 +125,10 @@ export default class MainActivity extends React.Component {
 
   setModalVisible=(visible, p)=> new Promise((resolve)=> {
     this.setState({modalVisible: visible})
-
   });
 
   shootFunction=()=>{
     this.setModalVisible(!this.state.modalVisible, "nothing");
-    // console.log(this.state.Arena)
-    // console.log(this.state.masterList)
-    // console.log("LOUIS  ",this.state.shooters, this.state.theyHit, "currnet", this.state.current)
-
   }
 
   removeFromList=(delArray)=>{
@@ -229,7 +224,7 @@ export default class MainActivity extends React.Component {
                   let s = '';
                   for (i in this.state.masterList[names]){
                     s += this.state.masterList[names][i]['player'] + '  '  
-                    console.log(" CONSOLE : ",this.state.masterList[names][i]['player'])
+                    console.log(" ADDED to Shooters list : ",this.state.masterList[names][i]['player'])
                     this.state.shooters.push(this.state.masterList[names][i]['player'])
                   } 
 
@@ -240,12 +235,10 @@ export default class MainActivity extends React.Component {
                   // They will shoot , Create slector from list
                   //
                   if (response == "YES"){
-                    console.log('Something has to happen', delArray)
                     delArray += [names]
                     delArray = this.removeFromList(delArray)
                     this.shootFunction()
                     break
-                    console.log("DUMB", dumb)
                   } 
                   else{this.setState({shooters: []});}
                  
@@ -264,11 +257,8 @@ export default class MainActivity extends React.Component {
         console.log("SET THE ARENA AND LIST")
         this.setState({masterList: this.state.masterList});
         this.setState({Arena:this.state.Arena});
-        console.log("SET THE ARENA AND LIST contginued" )
-
+        console.log("SET THE ARENA AND LIST continued" )
   }
-
-
 
 
   async endGame(courtNum, loser){
@@ -276,10 +266,8 @@ export default class MainActivity extends React.Component {
     var temp = []
     this.state.current = courtNum-1
     for(i in this.state.Arena[courtNum-1][loser]){
-      // console.log("initial : ", this.state.Arena[courtNum-1][loser][i]) 
       if(this.state.Arena[courtNum-1][loser][i].length>1){
         for (j in this.state.Arena[courtNum-1][loser][i]){
-          // console.log("GREATER ", this.state.Arena[courtNum-1][loser][i][j])
         temp.push(this.state.Arena[courtNum-1][loser][i][j])  
       }}
       else{
@@ -288,92 +276,17 @@ export default class MainActivity extends React.Component {
       }
     }   
     console.log("Temp: ", temp)
-    
     this.state.Arena[courtNum-1][loser] = new Array()
-    // console.log("DOubt This will work ", this.state.Arena[courtNum-1][loser+'Num'] )
+    this.state.Arena[courtNum-1][loser+"Num"] = 0;
     this.state.masterList.push(temp)
-    // console.log("DELETE: ", this.state.Arena, "LIST: ", this.state.masterList)
-    var crash = 0;
-    // this.state.Arena[courtNum-1][loser+'Num'] = 0;
-    var teamNum = 0
-    var teamcap = (this.state.cap/2);
-    var delArray = [];
-    var names = 0;
-
-    AsyncAlert = (title, msg) => new Promise((resolve, reject) => {  
-        Alert.alert(
-                    title,
-                    msg,
-                    [ {text: "YES", onPress: () => { resolve('YES') }},
-                      {text: "NO", onPress: () => { resolve('NO') }}  ],
-                    { cancelable: false },
-                    );
-      });
-    this.state.Arena[courtNum-1][loser+"Num"] = 0
-
-    console.log("BEFORE WHILE :",this.state.current, "CURRENT ", this.state.Arena[courtNum-1][loser+"Num"], " LOSER " , loser+"Num",this.state.masterList[names].length )
-    console.log("Before info : ", this.state.masterList[names].length , this.state.Arena[courtNum-1][loser+"Num"] , teamcap)
-    console.log("master :: ", this.state.masterList)
-
-
+    this.setState({masterList: this.state.masterList});
+    this.setState({Arena:this.state.Arena});
+    console.log("END OF ENDGAME")
     this.StartGame();
-
-    // while(crash > this.state.masterList.length){//add full contingency
-    //   break
-    //     console.log(this.state.masterList.length, "while: ", this.state.masterList[names], "names # ", names)
-    //                if(this.state.Arena[courtNum-1][loser+"Num"]  == teamcap ){
-    //            names = 0
-    //               delArray = this.removeFromList(delArray)
-    //               break
-    //         }
-    //       if(this.state.masterList[names].length + this.state.Arena[courtNum-1][loser+"Num"] <= teamcap){
-    //             console.log("IF in endGame")
-    //            var set = this.extractFromList(names);
-    //            console.log("FUNCTION: ", set)
-    //             this.state.Arena[courtNum-1][loser+"Num"] += this.state.masterList[names].length;
-    //             delArray += [names];
-    //             this.state.Arena[courtNum-1][loser].push(set);
-    //             names++;
-    //             if (names == this.state.masterList.length){
-    //               names = 0
-    //               delArray = this.removeFromList(delArray)
-    //           }
-    //         }
-    //         else if(this.state.masterList[names].length + this.state.Arena[courtNum-1][loser+"Num"] > teamcap){
-    //             console.log("ELSE in endgame// shooters before: ", this.state.shooters )
-    //             let s = '';
-    //             for (i in this.state.masterList[names]){
-    //               s += this.state.masterList[names][i]['player'] + '  '  
-    //               this.state.shooters.push(this.state.masterList[names][i]['player'])
-    //             } 
-    //             let diff = this.state.cap/2 - this.state.Arena[courtNum-1][loser+"Num"];
-    //             let command = "Shoot for " + diff
-    //             console.log("endgame shoot")
-    //             let response = await AsyncAlert(command, s);
-    //             console.log("RESPONSE in endgame: ", response)
-    //             if (response == "YES"){
-    //               console.log('Something has to happen')
-    //               delArray += [names]
-    //                 delArray = this.removeFromList(delArray)
-    //                 this.shootFunction()
-    //                 break
-    //                 console.log("DUMB", dumb)
-
-    //             } 
-          
-    //         }
-    //         names++;
-
-    //         crash++;
-    //       }//end of while
-        this.setState({masterList: this.state.masterList});
-        this.setState({Arena:this.state.Arena});
-        console.log("END OF ENDGAME")
   }
 
-
-
  render() {
+  console.log("RENDER", this.state.Arena)
   let Game = this.state.Arena.map((val, key)=> {
     let A = []
     let B = []
@@ -427,21 +340,20 @@ export default class MainActivity extends React.Component {
         <Text style={{color:'black', fontSize:32}}> List </Text>
     </TouchableOpacity>
 
-        <TouchableOpacity  onPress={this.GoToModal.bind(this)}>
-        <Text style={{color:'black', fontSize:32}}> Modal</Text>
-    </TouchableOpacity>
+
 
      <View style={{padding:20}}>  
-    <Text style={{fontSize:40, backgroundColor:'purple', color:'white', textAlign:'center'}}>Current Games</Text>
+    <Text style={{fontSize:40, backgroundColor:'black', color:'white', textAlign:'center'}}>Current Games</Text>
     <FlatList
     data={Game} 
     renderItem={({ item }) => (
     <View>
-    <Text style={{fontSize:30, color:'blue'}}>Game {item.key} : </Text>
-      <Text style={{color:"black", fontSize:28}}>{item.valA}{"\n"}  - VS -</Text>
+    <Text style={{fontSize:30, color:'black'}}>Game {item.key} : </Text>
+      <Text style={{color:"gray", fontSize:28}}>{item.valA}</Text>
+      <Text style={{color:"black", fontSize:34}}>- V S -</Text>
       <Text style={{color:"red", fontSize:28}}>{item.valB}</Text>
     <Button color='gray' style={styles.endGame} onPress={()=>this.endGame(item.key,  "teamB")} title="TeamA Won"/>
-    <Button color='black' onPress={()=>this.endGame(item.key,  "teamA")} title="TeamB Won"/>
+    <Button color='red' onPress={()=>this.endGame(item.key,  "teamA")} title="TeamB Won"/>
     </View>
     )}
     />
@@ -476,11 +388,15 @@ export default class MainActivity extends React.Component {
  }
 }
 
+    //     <TouchableOpacity  onPress={this.GoToModal.bind(this)}>
+    //     <Text style={{color:'black', fontSize:32}}> Modal</Text>
+    // </TouchableOpacity>
+
 
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    backgroundColor: '#bbbbbb',
+    backgroundColor: '#e8eae7',
     padding: 5,
   },
   
@@ -516,7 +432,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
     // right: 20,
     // bottom: 90,
-    backgroundColor: '#ffffb1',
+    backgroundColor: '#ababab',
     flexDirection:'column',
     width: 90,
     height: 90,
@@ -528,7 +444,7 @@ const styles = StyleSheet.create({
   addStart: {
     position: 'absolute',
     zIndex: 11,
-    backgroundColor: '#b1ffb1',
+    backgroundColor: '#64e723',
     color: 'black',
     top: 80,
     width: 90,
@@ -543,7 +459,7 @@ const styles = StyleSheet.create({
   list: {
     position: 'absolute',
     zIndex: 11,
-    backgroundColor: '#ffd589',
+    backgroundColor: 'white',
     width: 90,
     left: 130,
     top: 175,
