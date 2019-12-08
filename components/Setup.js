@@ -34,8 +34,14 @@ export default class Setup extends React.Component {
     else if(this.state.Capacity % 2 != 0){
      Alert.alert("Please enter 'EVEN' Number Players") 
     }
+    else if(this.state.Arena.length>0){
+      Alert.alert("Already Setup, restart app. Restarting app will delete all data!")
+      this.props.navigation.navigate("List", {arena: this.state.Arena, cap:this.state.Capacity, 
+      courtsNum:this.state.CourtsNum });
+    }
     else{
-    for (var i = 0; i<this.state.CourtsNum; i++){
+    
+    for (var i=0; i<this.state.CourtsNum; i++){
       courts['Num'] = i+1
       courts["teamANum"] = 0
       courts["teamBNum"] = 0
@@ -56,18 +62,17 @@ export default class Setup extends React.Component {
    		<View style={styles.wrapper}>
       <KeyboardAvoidingView>    
       <Text style={styles.title}>GotNXT</Text>
-        <Text style={styles.text}> Number of available COURTS</Text>
             <TextInput
-              placeholderTextColor= "white" 
-              placeholder="Number of courts "
+              placeholderTextColor= "red" 
+              placeholder="Enter Number Of Courts "
               onChangeText={CourtsNum => this.setState({ CourtsNum: CourtsNum}) }
               style={styles.textInput}
               keyboardType={'numeric'}  
             />
-            <Text style={styles.text}> Number of Total players {'\n'}(5 on 5 = 10)</Text>
+            <Text style={styles.text}> Example : 5 on 5 = 10</Text>
             <TextInput 
-              placeholderTextColor= "white" 
-              placeholder="Total Capacity (full court cap = 10):"
+              placeholderTextColor= "red" 
+              placeholder="Enter Number Of Players"
               onChangeText={Capacity => this.setState({ Capacity: Capacity }) }
 				      style={styles.textInput}    
               keyboardType={'numeric'}  
@@ -87,14 +92,14 @@ export default class Setup extends React.Component {
 const styles = StyleSheet.create({
 	wrapper: {
     flex: 1,
-		backgroundColor: 'grey',
+		backgroundColor: '#e8eae7',
     paddingTop: 10,
 	},
   title: {
     fontSize: 38,
     paddingTop:15,
     marginBottom: 10,
-    color: '#fff',
+    color: 'gray',
     fontWeight: 'bold',
     textAlign:'center',
     fontWeight: 'bold',
@@ -104,7 +109,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
 		fontSize: 24,
 		color: "red",
-		backgroundColor: '#ffd1dc',
+		backgroundColor: '#e8eae7',
 
 	},
   text: {

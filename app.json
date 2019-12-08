@@ -4,7 +4,7 @@
   "expo": {
     "name": "GotNXT",
     "slug": "expo-template-bare",
-    "privacy": "unlisted",
+    "privacy": "public",
     "sdkVersion": "35.0.0",
     "version": "1.0.0",
     "entryPoint": "node_modules/expo/AppEntry.js",
@@ -12,6 +12,13 @@
       "ios",
       "android",
       "web"
-    ]
-  }
+    ],
+  "android": {
+    "package": "com.conzstructions.GotNXT",
+  },
+  "ios": {
+      "bundleIdentifier": "com.yourcompany.yourappname",
+      "supportsTablet": true,
+    },
+}
 }
