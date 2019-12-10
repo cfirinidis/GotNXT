@@ -22,6 +22,7 @@ export default class Setup extends React.Component {
          Arena: [],
          CourtsNum: 0,
          Capacity: 0,
+         masterList: []
        };
      }
  
@@ -64,22 +65,24 @@ export default class Setup extends React.Component {
       <Text style={styles.title}>GotNXT</Text>
             <TextInput
               placeholderTextColor= "red" 
+              underlineColorAndroid="gray" 
               placeholder="Enter Number Of Courts "
               onChangeText={CourtsNum => this.setState({ CourtsNum: CourtsNum}) }
               style={styles.textInput}
               keyboardType={'numeric'}  
             />
-            <Text style={styles.text}> Example : 5 on 5 = 10</Text>
+
             <TextInput 
               placeholderTextColor= "red" 
-              placeholder="Enter Number Of Players"
+              underlineColorAndroid="gray"
+              placeholder="Enter Num Of Players On Each Team"
               onChangeText={Capacity => this.setState({ Capacity: Capacity }) }
 				      style={styles.textInput}    
               keyboardType={'numeric'}  
             />
 
     <TouchableOpacity  onPress={this.SetupCourts.bind(this)} style={styles.button} >
-      <Text style={styles.text}> Press When Done </Text>
+      <Text style={styles.text}> DONE </Text>
     </TouchableOpacity>
      </KeyboardAvoidingView>
       </View>
@@ -107,7 +110,7 @@ const styles = StyleSheet.create({
 	textInput: {
 		padding: 18,
     marginBottom: 8,
-		fontSize: 24,
+		fontSize: 22,
 		color: "red",
 		backgroundColor: '#e8eae7',
 
@@ -122,12 +125,13 @@ const styles = StyleSheet.create({
 
   },
     button: {
-    color: "red",
     fontSize: 26,
-    backgroundColor: 'red',
+    backgroundColor: 'white',
+    borderColor: 'red',
+    borderWidth: 2,
     marginBottom: 15,
     width: 200,
-    height:80,
+    height:50,
   },
 
 });	
