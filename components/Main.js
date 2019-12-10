@@ -310,7 +310,7 @@ export default class MainActivity extends React.Component {
       
   return t
 }); 
-
+console.log("SHOOTERS        HHHHHHHHHH", this.state.shooters)
    return (
       <KeyboardAvoidingView style={styles.wrapper} behavior="padding" enabled>
       <ScrollView>
@@ -325,7 +325,7 @@ export default class MainActivity extends React.Component {
               placeholderTextColor='gray' />
 
     <TouchableOpacity  onPress={this.AddItemsToArray.bind(this)} style={styles.addButton} >
-        <Text style={{color:'black', fontSize:20}}>+Name(s)</Text>
+        <Text style={{color:'black', fontSize:18}}>+Name(s)</Text>
     </TouchableOpacity>       
 
     <TouchableOpacity  onPress={this.AddMaster.bind(this)} style={styles.addButton} >
@@ -352,7 +352,7 @@ export default class MainActivity extends React.Component {
       <Text style={{color:"gray", fontSize:28}}>{item.valA}</Text>
       <Text style={{color:"black", fontSize:34}}>- V S -</Text>
       <Text style={{color:"red", fontSize:28}}>{item.valB}</Text>
-    <Button color='gray' style={styles.endGame} onPress={()=>this.endGame(item.key,  "teamB")} title="TeamA Won"/>
+    <Button color='gray' onPress={()=>this.endGame(item.key,  "teamB")} title="TeamA Won"/>
     <Button color='red' onPress={()=>this.endGame(item.key,  "teamA")} title="TeamB Won"/>
     </View>
     )}
@@ -377,8 +377,6 @@ export default class MainActivity extends React.Component {
         </TouchableHighlight>
       </View>
     </Modal>
-
-     
 
       </View>
        </ScrollView>
@@ -419,11 +417,14 @@ const styles = StyleSheet.create({
   endGame: {
     color:'red',
     margin: 30,
+    borderWidth: 1,
+    borderColor: "red",
    
   },
     addButtonText: {
     color: 'white',
     fontSize: 18,
+    borderColor: 'red',
     justifyContent: 'center',
      alignItems: 'center',
 
