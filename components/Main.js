@@ -34,6 +34,7 @@ export default class MainActivity extends React.Component {
          ps: [],
          hitShot: [],
          res:'',
+         title: '',
          selectedItems: [],
          modalVisible: false,
          scrolledMultiPickerVisible: false,
@@ -124,12 +125,9 @@ export default class MainActivity extends React.Component {
   }
 
   setModalVisible=(visible, p)=> new Promise((resolve)=> {
+    this.state.title = p
     this.setState({modalVisible: visible})
   });
-
-  shootFunction=()=>{
-    this.setModalVisible(!this.state.modalVisible, "nothing");
-  }
 
   removeFromList=(delArray)=>{
     console.log(delArray, this.state.masterList)
@@ -237,7 +235,7 @@ export default class MainActivity extends React.Component {
                   if (response == "YES"){
                     delArray += [names]
                     delArray = this.removeFromList(delArray)
-                    this.shootFunction()
+                    this.setModalVisible(!this.state.modalVisible, "Select Player(s) That Hit");
                     break
                   } 
                   else{this.setState({shooters: []});}
@@ -363,7 +361,7 @@ console.log("SHOOTERS        HHHHHHHHHH", this.state.shooters)
     <Modal 
     visible={this.state.modalVisible}>
       <View>
-        <Text style={{fontSize:30}}>THIS SHOULD BE TITLE </Text>
+        <Text style={{fontSize:30}}>{this.state.title} </Text>
         <SelectMultiple
           items={this.state.shooters}
           selectedItems={ this.state.hitShot }
@@ -373,7 +371,7 @@ console.log("SHOOTERS        HHHHHHHHHH", this.state.shooters)
 
         <TouchableHighlight   onPress={() => {
             this.setModalVisible(!this.state.modalVisible, "something").then(this.AddMaster2());}}>
-              <Text style={{fontSize:28}}>Hide Modal</Text>
+              <Text style={{backgroundColor:'orange' , fontSize:32}}>Done</Text>
         </TouchableHighlight>
       </View>
     </Modal>
