@@ -36,6 +36,7 @@ export default class MainActivity extends React.Component {
          res:'',
          diff: 0,
          title: '',
+         command: '',
          selectedItems: [],
          modalVisible: false,
          scrolledMultiPickerVisible: false,
@@ -70,7 +71,7 @@ export default class MainActivity extends React.Component {
   }//good
 
   AddMaster=()=>{
-    console.log("ADD TO MASTer",this.state.SampleArray.length);
+    // console.log("ADD TO MASTer",this.state.SampleArray.length);
     if (this.state.SampleArray.length === 0 ){
       Alert.alert("Please Enter a Name " )
     }
@@ -84,17 +85,17 @@ export default class MainActivity extends React.Component {
       var hit= [];
       var rest = [];
       var hitList = [];
-      console.log("HEREEEEEEEE", this.state.hitShot.length, this.state.diff)
+      // console.log("HEREEEEEEEE", this.state.hitShot.length, this.state.diff)
       for  (i in this.state.hitShot){
-            console.log("ADDMASTER @", i, this.state.hitShot[i]["label"])
+            // console.log("ADDMASTER @", i, this.state.hitShot[i]["label"])
             hit.push({player: this.state.hitShot[i]["label"], replacement: false});
             hitList.push(this.state.hitShot[i]["label"])
     }
-    console.log("HitLIST", hitList, this.state.shooters)
+    // console.log("HitLIST", hitList, this.state.shooters)
     for (i in this.state.shooters){
-      console.log("FOR LOPP", this.state.shooters[i])
+      // console.log("FOR LOPP", this.state.shooters[i])
       if (!hitList.includes(this.state.shooters[i]) ){
-      console.log("in works",this.state.shooters[i] )
+      // console.log("in works",this.state.shooters[i] )
       rest.push({player: this.state.shooters[i], replacement: false});
     }
     }
@@ -103,7 +104,7 @@ export default class MainActivity extends React.Component {
     this.state.masterList.unshift(hit)
     this.setState({hitShot: []})
     this.setState({shooters: []})
-    console.log("ADMASTER 2 : current ", this.state.current)  
+    // console.log("ADMASTER 2 : current ", this.state.current)  
     this.StartGame();
   
   }//good
@@ -136,7 +137,7 @@ export default class MainActivity extends React.Component {
   });
 
   removeFromList=(delArray)=>{
-    console.log(delArray, this.state.masterList)
+    // console.log(delArray, this.state.masterList)
     for (i in delArray){
       this.state.masterList.splice(delArray[i]-i, 1)
     }
@@ -159,7 +160,7 @@ export default class MainActivity extends React.Component {
       let delArray = [];
       let crash = 0;
       let names = 0;
-      console.log("START GAME TOP : WHAT GAME # - ", this.state.current)
+      // console.log("START GAME TOP : WHAT GAME # - ", this.state.current)
       // console.log('TeamAnum :'  ,this.state.Arena, "NBUMM: ",this.state.Arena['teamANum'], "NUM______", this.state.Arena['Num']  )
       
       AsyncAlert = (title, msg) => new Promise((resolve, reject) => {  
@@ -200,9 +201,8 @@ export default class MainActivity extends React.Component {
               if (this.state.current >= this.state.Arena.length){
                    Alert.alert("GAMES FULL!")
                    break
-      
               }
-            console.log("TOP : ", this.state.Arena[this.state.current]["teamANum"], this.state.masterList[names].length )
+            // console.log("TOP : ", this.state.Arena[this.state.current]["teamANum"], this.state.masterList[names].length )
               if(this.state.masterList[names].length +  this.state.Arena[this.state.current]["teamANum"]  <= teamcap){
                 var set = this.extractFromList(names);
                 this.state.Arena[this.state.current]["teamANum"] += this.state.masterList[names].length;
@@ -211,7 +211,7 @@ export default class MainActivity extends React.Component {
                 names++;
                 if (names == this.state.masterList.length){
                     names = 0
-                  delArray = this.removeFromList(delArray)
+                    delArray = this.removeFromList(delArray)
                 }}
               else if(this.state.masterList[names].length + this.state.Arena[this.state.current]["teamBNum"] <=teamcap){
                 var set = this.extractFromList(names);
@@ -224,20 +224,29 @@ export default class MainActivity extends React.Component {
                   delArray = this.removeFromList(delArray)
                 }}
               else{
-                  if( this.state.Arena[this.state.current]["teamANum"]+ this.state.Arena[this.state.current]["teamBNum"] != this.state.cap){
+                  if( this.state.Arena[this.state.current]["teamANum"] + this.state.Arena[this.state.current]["teamBNum"] != this.state.cap){
+                  // If the number is EQUAL then the phrasing should be =choose num to of team a 
                   let s = '';
                   for (i in this.state.masterList[names]){
                     s += this.state.masterList[names][i]['player'] + '  '  
-                    console.log(" ADDED to Shooters list : ",this.state.masterList[names][i]['player'])
+                    // console.log(" ADDED to Shooters list : ",this.state.masterList[names][i]['player'])
                     this.state.shooters.push(this.state.masterList[names][i]['player'])
                   } 
 
-                  this.state.diff = this.state.cap - (this.state.Arena[this.state.current]["teamANum"]  + this.state.Arena[this.state.current]["teamBNum"]) ;
-                  let command = "Shoot for " + this.state.diff
-                  let response = await AsyncAlert(command, s);
-                  console.log("RESPONSE : ", response)
-                  // They will shoot , Create slector from list
-                  //
+                  this.state.diff = this.state.cap - ( this.state.Arena[this.state.current]["teamANum"]  + 
+                                    this.state.Arena[this.state.current]["teamBNum"] );
+                  console.log("THis is the DIFF AND STUFF", this.state.diff, this.state.shooters.length)
+                  if ( this.state.diff == this.state.shooters.length ){
+                    this.state.command = " Shoot for " + ((this.state.cap/2) - this.state.Arena[this.state.current]["teamANum"] + 
+                      "To Play On TEAM-A")
+                    this.state.diff = ((this.state.cap/2) - this.state.Arena[this.state.current]["teamANum"])
+                  }
+                  else{
+                  this.state.command = "Shoot for " + this.state.diff
+                  }
+
+                  let response = await AsyncAlert(this.state.command, s);
+                  // console.log("RESPONSE : ", response)
                   if (response == "YES"){
                     delArray += [names]
                     delArray = this.removeFromList(delArray)
@@ -251,22 +260,22 @@ export default class MainActivity extends React.Component {
         if( this.state.Arena[this.state.current]["teamANum"]  == teamcap && this.state.Arena[this.state.current]["teamBNum"] == teamcap){
           this.setState({current: this.state.current+1})
           this.removeFromList(delArray)
-          console.log(" TEAMS FULL: on to - ", this.state.current)
+          // console.log(" TEAMS FULL: on to - ", this.state.current)
           break;
           }//if full
           crash++;          
 
           }//end of while
         //} select from list
-        console.log("SET THE ARENA AND LIST")
+        // console.log("SET THE ARENA AND LIST")
         this.setState({masterList: this.state.masterList});
         this.setState({Arena:this.state.Arena});
-        console.log("SET THE ARENA AND LIST continued" )
+        // console.log("SET THE ARENA AND LIST continued" )
   }
 
 
   async endGame(courtNum, loser){
-    console.log("ENDGAME VALS ", courtNum,  loser)
+    // console.log("ENDGAME VALS ", courtNum,  loser)
     var temp = []
     this.state.current = courtNum-1
     for(i in this.state.Arena[courtNum-1][loser]){
@@ -275,22 +284,21 @@ export default class MainActivity extends React.Component {
         temp.push(this.state.Arena[courtNum-1][loser][i][j])  
       }}
       else{
-        console.log("else")
       temp.push(this.state.Arena[courtNum-1][loser][i][0])
       }
     }   
-    console.log("Temp: ", temp)
+    // console.log("Temp: ", temp)
     this.state.Arena[courtNum-1][loser] = new Array()
     this.state.Arena[courtNum-1][loser+"Num"] = 0;
     this.state.masterList.push(temp)
     this.setState({masterList: this.state.masterList});
     this.setState({Arena:this.state.Arena});
-    console.log("END OF ENDGAME")
+    // console.log("END OF ENDGAME")
     this.StartGame();
   }
 
  render() {
-  console.log("RENDER", this.state.Arena)
+  // console.log("RENDER", this.state.Arena)
   let Game = this.state.Arena.map((val, key)=> {
     let A = []
     let B = []
@@ -314,12 +322,11 @@ export default class MainActivity extends React.Component {
       
   return t
 }); 
-console.log("SHOOTERS        HHHHHHHHHH", this.state.shooters)
+// console.log("SHOOTERS        HHHHHHHHHH", this.state.shooters)
    return (
       <KeyboardAvoidingView style={styles.wrapper} behavior="padding" enabled>
       <ScrollView>
       <View>
-
 
           <TextInput
               placeholder="NAME"
