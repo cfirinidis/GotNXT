@@ -34,6 +34,7 @@ export default class MainActivity extends React.Component {
          ps: [],
          hitShot: [],
          res:'',
+         diff: 0,
          title: '',
          selectedItems: [],
          modalVisible: false,
@@ -79,10 +80,11 @@ export default class MainActivity extends React.Component {
   }
   }//good
 
-    AddMaster2=()=>{
+  AddMaster2=()=>{
       var hit= [];
       var rest = [];
       var hitList = [];
+      console.log("HEREEEEEEEE", this.state.hitShot.length, this.state.diff)
       for  (i in this.state.hitShot){
             console.log("ADDMASTER @", i, this.state.hitShot[i]["label"])
             hit.push({player: this.state.hitShot[i]["label"], replacement: false});
@@ -117,6 +119,10 @@ export default class MainActivity extends React.Component {
     onSelectionsChange = (hitShot) => {
     // selectedFruits is array of { label, value }
     this.setState({ hitShot })
+    // console.log(this.state.hitShot.length, "len")
+    // if (this.state.hitShot.length > this.state.diff ){
+    //   console.log("select too many2")
+    // }
   }
 
   print =()=>{
@@ -226,8 +232,8 @@ export default class MainActivity extends React.Component {
                     this.state.shooters.push(this.state.masterList[names][i]['player'])
                   } 
 
-                  let diff = this.state.cap - (this.state.Arena[this.state.current]["teamANum"]  + this.state.Arena[this.state.current]["teamBNum"]) ;
-                  let command = "Shoot for " + diff
+                  this.state.diff = this.state.cap - (this.state.Arena[this.state.current]["teamANum"]  + this.state.Arena[this.state.current]["teamBNum"]) ;
+                  let command = "Shoot for " + this.state.diff
                   let response = await AsyncAlert(command, s);
                   console.log("RESPONSE : ", response)
                   // They will shoot , Create slector from list
@@ -235,7 +241,7 @@ export default class MainActivity extends React.Component {
                   if (response == "YES"){
                     delArray += [names]
                     delArray = this.removeFromList(delArray)
-                    this.setModalVisible(!this.state.modalVisible, "Select Player(s) That Hit");
+                    this.setModalVisible(!this.state.modalVisible,  "Select Player(s) That Hit");
                     break
                   } 
                   else{this.setState({shooters: []});}
@@ -363,6 +369,7 @@ console.log("SHOOTERS        HHHHHHHHHH", this.state.shooters)
       <View>
         <Text style={{fontSize:30}}>{this.state.title} </Text>
         <SelectMultiple
+        maxSelect= {this.state.diff}
           items={this.state.shooters}
           selectedItems={ this.state.hitShot }
           onSelectionsChange={this.onSelectionsChange} />

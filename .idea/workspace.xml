@@ -2,12 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3a423d67-4c73-4bf5-a912-1af58db132e1" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.expo/packager-info.json" beforeDir="false" afterPath="$PROJECT_DIR$/.expo/packager-info.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.expo/settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/.expo/settings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/ListPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/ListPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/Main.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/Main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/Setup.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/Setup.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -27,8 +22,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/components/Main.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4260">
-              <caret line="284" column="21" selection-start-line="284" selection-start-column="21" selection-end-line="284" selection-end-column="21" />
+            <state relative-caret-position="4230">
+              <caret line="282" column="21" selection-start-line="282" selection-start-column="21" selection-end-line="282" selection-end-column="21" />
             </state>
           </provider>
         </entry>
@@ -65,8 +60,9 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="ProjectPane" />
+      <pane id="PackagesPane" />
       <pane id="AndroidView">
         <subPane>
           <expand>
@@ -83,7 +79,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -122,7 +117,7 @@
     <frame x="67" y="25" width="927" height="1053" extended-state="4" />
     <layout>
       <window_info id="Captures" order="0" weight="0.25" />
-      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.28263336" />
+      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.28944382" />
       <window_info id="Structure" order="2" side_tool="true" />
       <window_info id="Build Variants" order="3" side_tool="true" />
       <window_info id="Image Layers" order="4" />
@@ -143,8 +138,8 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/components/Main.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4260">
-          <caret line="284" column="21" selection-start-line="284" selection-start-column="21" selection-end-line="284" selection-end-column="21" />
+        <state relative-caret-position="4230">
+          <caret line="282" column="21" selection-start-line="282" selection-start-column="21" selection-end-line="282" selection-end-column="21" />
         </state>
       </provider>
     </entry>
