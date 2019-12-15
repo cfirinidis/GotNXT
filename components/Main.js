@@ -70,6 +70,9 @@ export default class MainActivity extends React.Component {
     // console.log(this.state.SampleArray, this.state.SampleArray.length, "total", this.state.totalPlayers);
   }//good
 
+  clearList=()=>{
+    this.setState({SampleArray:[]})
+  }
   AddMaster=()=>{
     // console.log("ADD TO MASTer",this.state.SampleArray.length);
     if (this.state.SampleArray.length === 0 ){
@@ -322,6 +325,19 @@ export default class MainActivity extends React.Component {
       
   return t
 }); 
+
+
+
+
+  let pending = Object.values(this.state.SampleArray).map(function(vals) {
+      var t= {} ;
+      for (val in vals){
+          if(vals[val] != false && vals[val] != true){
+              t["key"] = vals[val]; 
+        }}
+        // console.log("Cur List", t)
+      return t
+});
 // console.log("SHOOTERS        HHHHHHHHHH", this.state.shooters)
    return (
       <KeyboardAvoidingView style={styles.wrapper} behavior="padding" enabled>
@@ -348,13 +364,23 @@ export default class MainActivity extends React.Component {
     </TouchableOpacity>
 
     <TouchableOpacity  onPress={this.GoToLists.bind(this)} style={styles.list} >
-        <Text style={{color:'black', fontSize:32}}> List </Text>
+        <Text style={{color:'grey', fontSize:32}}> List </Text>
     </TouchableOpacity>
 
+    <Text style={{fontSize:40}}> Names </Text>
+    <TouchableOpacity onPress={this.clearList.bind(this)}>
+      <Text style={{backgroundColor:'grey', color:'white', width:150, fontSize:20}}> CLEAR LIST</Text>
+    </TouchableOpacity>
 
+    <View>
+    <FlatList
+    data={pending}
+    style={styles.temporary}
+    renderItem={({item}) => <Text style={{color:'purple', fontSize:24, alignItems:'center'}}>{item.key}</Text>}/>
+    </View>
 
      <View style={{padding:20}}>  
-    <Text style={{fontSize:40, backgroundColor:'black', color:'white', textAlign:'center'}}>Current Games</Text>
+    <Text style={{fontSize:40, backgroundColor:'black', color:'white', textAlign:'center',flexDirection:'row', justifyContent:'flex-end'}}>Current Games</Text>
     <FlatList
     data={Game} 
     renderItem={({ item }) => (
@@ -409,7 +435,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#e8eae7',
     padding: 5,
   },
+  temporary: {
+    width:120,
+    alignSelf: 'stretch',
+    fontSize: 30,
+    textAlign:'right',
+    flex: 1,
+    flexDirection: 'row',
   
+
+  },
   header: {
     fontSize: 24,
     marginBottom: 60,
@@ -424,7 +459,7 @@ const styles = StyleSheet.create({
     marginBottom: 25,
     backgroundColor: 'white',
 
-        justifyContent: "flex-end"
+  
   },
   endGame: {
     color:'red',
