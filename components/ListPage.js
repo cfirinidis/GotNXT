@@ -78,7 +78,7 @@ let currentList = Object.values(this.state.masterList).map(function(vals, i) {
         else{
           t["key"] += "  &  " + vals[val].player; }
       }
-      // console.log("Cur List", t)
+       console.log("Cur List", t)
       return t
 });
 
