@@ -25,15 +25,11 @@ import Games from './currentGames';
 import StartFunction from './function';
 import SelectMultiple from 'react-native-select-multiple';
 
-
 export default class MainActivity extends React.Component { 
   constructor(props) {
        super(props);
        this.state = {
-         plist: [],
-         ps: [],
          hitShot: [],
-         res:'',
          diff: 0,
          title: '',
          command: '',
@@ -335,7 +331,6 @@ export default class MainActivity extends React.Component {
           if(vals[val] != false && vals[val] != true){
               t["key"] = vals[val]; 
         }}
-        // console.log("Cur List", t)
       return t
 });
 // console.log("SHOOTERS        HHHHHHHHHH", this.state.shooters)
@@ -353,10 +348,22 @@ export default class MainActivity extends React.Component {
 
     <TouchableOpacity  onPress={this.AddItemsToArray.bind(this)} style={styles.addButton} >
         <Text style={{color:'black', fontSize:18}}>+Name(s)</Text>
-    </TouchableOpacity>       
+    </TouchableOpacity>     
 
-    <TouchableOpacity  onPress={this.AddMaster.bind(this)} style={styles.addButton} >
-        < Text style={{color:'black', fontSize:26}}> + LIST </Text>
+    <Text style={{fontSize:40}}> Names </Text>
+      <TouchableOpacity onPress={this.clearList.bind(this)}>
+        <Text style={{backgroundColor:'white', color:'black', width:150, fontSize:20}}> CLEAR LIST</Text>
+      </TouchableOpacity>
+
+    <View>
+      <FlatList
+        data={pending}
+        style={styles.temporary}
+        renderItem={({item}) => <Text style={{color:'purple', fontSize:24, alignItems:'center'}}>{item.key}</Text>}/>
+    </View>  
+
+    <TouchableOpacity  onPress={this.AddMaster.bind(this)} >
+        < Text style={{backgroundColor:'grey', color:'white', width:150, fontSize:20}}> DONE ADDING </Text>
     </TouchableOpacity>
 
     <TouchableOpacity  onPress={this.StartGame.bind(this)} style={styles.addStart } >
@@ -364,20 +371,10 @@ export default class MainActivity extends React.Component {
     </TouchableOpacity>
 
     <TouchableOpacity  onPress={this.GoToLists.bind(this)} style={styles.list} >
-        <Text style={{color:'grey', fontSize:32}}> List </Text>
+        <Text style={{color:'grey', fontSize:32}}>  List  </Text>
     </TouchableOpacity>
 
-    <Text style={{fontSize:40}}> Names </Text>
-    <TouchableOpacity onPress={this.clearList.bind(this)}>
-      <Text style={{backgroundColor:'grey', color:'white', width:150, fontSize:20}}> CLEAR LIST</Text>
-    </TouchableOpacity>
 
-    <View>
-    <FlatList
-    data={pending}
-    style={styles.temporary}
-    renderItem={({item}) => <Text style={{color:'purple', fontSize:24, alignItems:'center'}}>{item.key}</Text>}/>
-    </View>
 
      <View style={{padding:20}}>  
     <Text style={{fontSize:40, backgroundColor:'black', color:'white', textAlign:'center',flexDirection:'row', justifyContent:'flex-end'}}>Current Games</Text>
@@ -391,27 +388,23 @@ export default class MainActivity extends React.Component {
       <Text style={{color:"red", fontSize:28}}>{item.valB}</Text>
     <Button color='gray' onPress={()=>this.endGame(item.key,  "teamB")} title="TeamA Won"/>
     <Button color='red' onPress={()=>this.endGame(item.key,  "teamA")} title="TeamB Won"/>
+    </View>)}/>
     </View>
-    )}
-    />
-    </View>
-
 
     <Modal 
     visible={this.state.modalVisible}>
       <View>
         <Text style={{fontSize:30}}>{this.state.title} </Text>
         <SelectMultiple
-        maxSelect= {this.state.diff}
+          maxSelect= {this.state.diff}
           items={this.state.shooters}
           selectedItems={ this.state.hitShot }
           onSelectionsChange={this.onSelectionsChange} />
-
         <Button onPress={this.print} title="Print"> u</Button>
 
         <TouchableHighlight   onPress={() => {
             this.setModalVisible(!this.state.modalVisible, "something").then(this.AddMaster2());}}>
-              <Text style={{backgroundColor:'orange' , fontSize:32}}>Done</Text>
+            <Text style={{backgroundColor:'orange' , fontSize:32}}>Done</Text>
         </TouchableHighlight>
       </View>
     </Modal>
@@ -436,21 +429,23 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   temporary: {
-    width:120,
+    width:150,
     alignSelf: 'stretch',
     fontSize: 30,
+    borderColor: 'red',
+    borderWidth: 1,
     textAlign:'right',
     flex: 1,
     flexDirection: 'row',
-  
-
   },
+
   header: {
     fontSize: 24,
     marginBottom: 60,
     color: '#fff',
     fontWeight: 'bold',
   },
+
   textInput: {
     alignSelf: 'stretch',
     padding: 16,
@@ -458,9 +453,8 @@ const styles = StyleSheet.create({
     color: "red",
     marginBottom: 25,
     backgroundColor: 'white',
-
-  
   },
+
   endGame: {
     color:'red',
     margin: 30,
@@ -496,7 +490,7 @@ const styles = StyleSheet.create({
     color: 'black',
     top: 80,
     width: 90,
-    left: 130,
+    left: 220,
     flexDirection: 'row',
     height: 90,
     borderRadius: 50,
@@ -506,14 +500,14 @@ const styles = StyleSheet.create({
   },
   list: {
     position: 'absolute',
-    zIndex: 11,
     backgroundColor: 'white',
-    width: 90,
-    left: 130,
-    top: 175,
+    width: 130,
+    left: 220,
+    top: 230,
+    borderWidth: 2,
+    borderColor: 'orange',
     flexDirection: 'row',
-    height: 90,
-    borderRadius: 50,
+    height: 45,
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 8,
