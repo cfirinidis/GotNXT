@@ -139,4 +139,41 @@ export default class StartFunction extends React.Component {
   }
 
 
+
+
 }
+
+
+// <Modal 
+//     visible={this.state.modal2Visible}>
+//   <View>
+//     <Text style={{fontSize:30}}>{this.state.title} </Text>
+//     <Button onPress={this.print} title="Print"> u</Button>
+//     <TextInput 
+//             placeholderTextColor= "red" 
+//             underlineColorAndroid="gray"
+//             placeholder="Enter position on list"
+//             onChangeText={position => this.setState({ position: position }) }
+//             style={styles.inputs}
+//             keyboardType={'numeric'}  
+//     />
+
+//     <TextInput 
+//               placeholderTextColor= "red" 
+//               underlineColorAndroid="gray"
+//               placeholder="Enter name"
+//               onChangeText={position => this.setState({ position: position }) }
+//               style={styles.inputs}
+//               keyboardType={'numeric'}  
+//     />
+//     <TouchableHighlight   onPress={() => {
+//       this.setModal2Visible(!this.state.modal2Visible, "something");}}>
+//       <Text style={{fontSize:28, backgroundColor:"red"}}>DONE</Text>
+//     </TouchableHighlight>
+//   </View>
+// </Modal>
+  
+// <TouchableHighlight   onPress={() => {
+//   this.setModal2Visible(!this.state.modal2Visible, "something");}}>
+//   <Text style={styles.addButton}> + Add </Text>
+// </TouchableHighlight>

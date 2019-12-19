@@ -75,7 +75,7 @@ export default class Setup extends React.Component {
             <TextInput 
               placeholderTextColor= "red" 
               underlineColorAndroid="gray"
-              placeholder="Enter Num Of Players On Each Team"
+              placeholder="Enter Num Of Players PER Team"
               onChangeText={Capacity => this.setState({ Capacity: Capacity }) }
 				      style={styles.textInput}    
               keyboardType={'numeric'}  

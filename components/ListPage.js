@@ -25,20 +25,25 @@ export default class ShowList extends React.Component {
        this.state = {
          masterList : this.props.navigation.getParam("list", "blank"),
            modalVisible: false,
+  
            toRemove: [],
            testList: [],
-           title: ''
+           title: '',
+           position: 0,
        };
      }
 
 onSelectionsChange = (toRemove) => {
     // selectedFruits is array of { label, value }
-
     this.setState({ toRemove })
   }
 
 temp =()=>{
   this.state.modalVisible = false;
+}
+
+AddPlayer=()=>{
+
 }
 
 removePlayers = () =>{
@@ -63,13 +68,20 @@ for (i in rem){
 }
 
   setModalVisible=(visible, p)=> new Promise((resolve)=> {
+    console.log("Modal 1")
     this.state.title = p;
     this.setState({modalVisible: visible})
   });
 
+  setModal2Visible=(visible, p)=> new Promise((resolve)=> {
+    console.log("MODAL 2")
+    this.state.title = p;
+    this.setState({modal2Visible: visible})
+  });
 
- render() {
-  // console.log(this.state.masterList)
+
+render() {
+console.log(this.state.masterList)
 let currentList = Object.values(this.state.masterList).map(function(vals, i) {
       var t= {} ;
       for (val in vals){
@@ -94,13 +106,15 @@ this.state.playerList = Object.values(currentList).map(function(vals, i){
 });
  // console.log("GAME : ", this.state.playerList)
  // console.log("currentList", currentList)
-   return (
-    <View style={styles.TextInput} >  
-    <Text style={{fontSize:40, backgroundColor:'orange'}}>WAITING LIST</Text>
-    <FlatList
+return (
+<ScrollView>
+<View style={styles.TextInput} >  
+    
+<Text style={{fontSize:40, backgroundColor:'orange'}}>WAITING LIST</Text>
+
+<FlatList
     data={currentList} style={styles.textInput}
     renderItem={({item}) => <Text style={{fontSize:30, color:'yellow'}} >{item.key}</Text>}/>
-
 
 <Modal 
     visible={this.state.modalVisible}>
@@ -111,39 +125,54 @@ this.state.playerList = Object.values(currentList).map(function(vals, i){
           selectedItems={ this.state.toRemove }
           onSelectionsChange={this.onSelectionsChange} />
 
-        <Button onPress={this.print} title="Print"> u</Button>
-
-        <TouchableHighlight   onPress={() => {
-            this.setModalVisible(!this.state.modalVisible, "something").then(this.removePlayers());}}>
-              <Text style={{fontSize:28, backgroundColor:"red"}}>DONE</Text>
+        <TouchableHighlight   onPress={ () => {
+            this.setModalVisible(!this.state.modalVisible, "something").then( this.removePlayers() );}}>
+            <Text style={{fontSize:28, width:115, height:45, backgroundColor:"red", top:25}}>DONE</Text>
         </TouchableHighlight>
       </View>
-    </Modal>
+</Modal>
 
-  <Button color='gray' style={styles.endGame} onPress={
-    ()=>this.setModalVisible(!this.state.modalVisible, "Choose Player To Remove")   } 
-     title="Remove Player"/>
 
-    </View>
+
+<TouchableHighlight onPress={()=> {
+    this.setModalVisible(!this.state.modalVisible, "Choose Player To Remove"); }}>  
+    <Text style={styles.buttons}> - Remove </Text>  
+</TouchableHighlight>
+
+
+  
+
+
+</View>
+</ScrollView>
     );
-    }
-
-
-
-
-
-
   }
+}
+
+
 
 const styles = StyleSheet.create({
 	textInput: {
 		fontSize:38,
-		
 		marginBottom: 50,
 		backgroundColor: 'purple',
-
 	},
-    list: {
+  buttons: {
+    width: 135,
+    height: 40,
+    borderWidth:2,
+    color: 'white',
+    backgroundColor:'black',
+    fontSize: 28,
+  },
+  inputs:{
+    padding: 18,
+    marginBottom: 8,
+    fontSize: 22,
+    color: "red",
+    backgroundColor: '#e8eae7',
+  },
+  list: {
     position: 'absolute',
     zIndex: 11,
     backgroundColor: 'white',
