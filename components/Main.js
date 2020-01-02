@@ -33,16 +33,27 @@ export default class MainActivity extends React.Component {
          diff: 0,
          title: '',
          command: '',
+         remPlayer: [],
+         allAvailable: [],
+         curPlayersA: {},
+         curPlayersB: {},
+         tempCourt: [],
+         move: [], 
+         team: '',
+         tempNum: 0,
+         repFlag: false,
+         anotherCourt: [],
          selectedItems: [],
-         modalVisible: false,
-         scrolledMultiPickerVisible: false,
-        scrolledMultiPickerSelectedItems: [],
+        modalVisible: false,
+        modalPlayerVisible: false,
+        modalRepPlayerVisible: false, 
+
          Name: '',
          shooters: [],
          totalPlayers:10,
          SampleArray : [],
-         masterList : [[{player: "Lebron", replacement: false}, {player:"AntDavis", replacement: false}], [{player:"Kyrie", replacement: false},
-          {player:"Durant", replacement: false}], [{player:"Majerle", replacement: false}],[{player:"Kawhi", replacement: false},
+         masterList : [[{player: "Lebron", replacement: false}, {player:"AntDavis", replacement: false}], [{player:"Kyrie", replacement: true},
+          {player:"Durant", replacement: true}], [{player:"Majerle", replacement: false}],[{player:"Kawhi", replacement: false},
            {player:"PG13", replacement: false}], [{player:'Larry', replacement: false}, {player:'Parish', replacement: false}], 
            [{player:'CONZ', replacement: false}] ],
          cap: this.props.navigation.getParam("cap", "blank"),
@@ -69,8 +80,16 @@ export default class MainActivity extends React.Component {
   clearList=()=>{
     this.setState({SampleArray:[]})
   }
+
+  addToCurA=(list, n)=>{
+    this.state.curPlayersA[n] = list;
+  }
+
+  addToCurB=(list, n)=>{
+    this.state.curPlayersB[n] = list;
+  }
+
   AddMaster=()=>{
-    // console.log("ADD TO MASTer",this.state.SampleArray.length);
     if (this.state.SampleArray.length === 0 ){
       Alert.alert("Please Enter a Name " )
     }
@@ -84,50 +103,113 @@ export default class MainActivity extends React.Component {
       var hit= [];
       var rest = [];
       var hitList = [];
-      // console.log("HEREEEEEEEE", this.state.hitShot.length, this.state.diff)
       for  (i in this.state.hitShot){
-            // console.log("ADDMASTER @", i, this.state.hitShot[i]["label"])
             hit.push({player: this.state.hitShot[i]["label"], replacement: false});
             hitList.push(this.state.hitShot[i]["label"])
     }
-    // console.log("HitLIST", hitList, this.state.shooters)
     for (i in this.state.shooters){
-      // console.log("FOR LOPP", this.state.shooters[i])
       if (!hitList.includes(this.state.shooters[i]) ){
-      // console.log("in works",this.state.shooters[i] )
       rest.push({player: this.state.shooters[i], replacement: false});
-    }
+      }
     }
     
     this.state.masterList.unshift(rest)
     this.state.masterList.unshift(hit)
     this.setState({hitShot: []})
-    this.setState({shooters: []})
-    // console.log("ADMASTER 2 : current ", this.state.current)  
+    this.setState({shooters: []})  
     this.StartGame();
-  
   }//good
 
-   GoToLists=()=>{
+  GoToLists=()=>{
     this.props.navigation.navigate("Show", {arena: this.state.Arena, list: this.state.masterList});  
   }
    
-   GoToModal=()=>{
+  GoToModal=()=>{
     this.props.navigation.navigate("Modal");
   }
 
-    onSelectionsChange = (hitShot) => {
-    // selectedFruits is array of { label, value }
-    this.setState({ hitShot })
-    // console.log(this.state.hitShot.length, "len")
-    // if (this.state.hitShot.length > this.state.diff ){
-    //   console.log("select too many2")
-    // }
+  async replacePlayer(num, team, players){
+      replaceAlert = (title, msg) => new Promise((resolve, reject) => {  
+        Alert.alert(
+                    title,
+                    msg,
+                    [ {text: "Subtitute", onPress: () => { resolve('YES') }},
+                      {text: "Correction", onPress: () => { resolve('NO') }}  ],
+                    { cancelable: true},
+                    );
+      });
+
+      x = await replaceAlert("Replace Player", "Replacement / Correction")
+      this.state.tempNum = num
+      this.state.team = team
+      if (x == "YES"){
+        this.state.repFlag = true
+        }
+      else{
+        this.state.repFlag = false
+        }
+    
+    for(i in players[num]){
+      this.state.tempCourt.push( players[num][i] )
+    }
+      this.setModalPlayerVisible(!this.state.modalPlayerVisible, "Remove Player");    
+  };
+
+  useInfo=()=>{
+    if (this.state.remPlayer.length == 0){
+      this.setState({ tempCourt:[] });
+      this.setState({ remPlayer:[] });
+      return 0
+    }
+            
+    for (k in this.state.Arena[this.state.tempNum-1][this.state.team]){
+        if (this.state.remPlayer[0]['label'] == this.state.Arena[this.state.tempNum-1][this.state.team][k][0]["player"]){
+          delete this.state.Arena[this.state.tempNum-1][this.state.team][k]
+          this.state.Arena[this.state.tempNum-1][this.state.team+"Num"] -= 1
+        }
+      }
+      let repP = [];
+      Object.values(this.state.masterList).map(function(val) { 
+        for (j in val){
+          repP.push(val[j]['player']);
+        }
+      });
+    this.setState({ tempCourt: [] });
+    this.setState({ allAvailable: repP });   
+    this.setState({ remPlayer:[] });
+    this.setState({ Arena: this.state.Arena });
+    this.setState({ current:this.state.tempNum-1 })
+    this.setModalRepPlayerVisible(!this.state.modalRepPlayerVisible, "Replacement !!!!");
   }
 
-  print =()=>{
-    console.log("PRINT")
-    console.log(this.state.hitShot)
+  updateMaster=()=>{
+    for(i in this.state.masterList){
+      for (j in this.state.masterList[i]){
+        if (this.state.masterList[i][j]['player'] == this.state.move[0]['value']){
+          this.state.masterList[i].splice(j,1)
+          if (this.state.masterList[i].length == 0){
+            this.state.masterList.splice(i,1);
+          }
+          break;
+    }}}
+    this.state.masterList.unshift([{player:this.state.move[0]['value'], replacement: this.state.repFlag}])
+    this.setState({ move: [] });
+    this.setState({ repFlag: false });
+    this.StartGame();
+  }
+
+  onSelectionsChange = (hitShot) => {
+    // selectedFruits is array of { label, value }
+    this.setState({ hitShot })
+  }
+
+  onSelectionsChangePlayerTop = (move) => {
+    // selectedFruits is array of { label, value }
+    this.setState({ move })
+  }
+
+  onSelectionsChangePlayer =(remPlayer)=>{
+    this.setState({ remPlayer })
   }
 
   setModalVisible=(visible, p)=> new Promise((resolve)=> {
@@ -135,8 +217,17 @@ export default class MainActivity extends React.Component {
     this.setState({modalVisible: visible})
   });
 
+  setModalPlayerVisible=(visible, p)=> new Promise((resolve)=> {
+    this.state.title = p
+    this.setState({modalPlayerVisible: visible})
+  });
+
+  setModalRepPlayerVisible=(visible, p)=> new Promise((resolve)=> {
+    this.state.title = p
+    this.setState({ modalRepPlayerVisible: visible})
+  });
+
   removeFromList=(delArray)=>{
-    // console.log(delArray, this.state.masterList)
     for (i in delArray){
       this.state.masterList.splice(delArray[i]-i, 1)
     }
@@ -150,7 +241,6 @@ export default class MainActivity extends React.Component {
         }
     return set
   }
-
 
   async StartGame(){
     this.func = new StartFunction();
@@ -168,7 +258,7 @@ export default class MainActivity extends React.Component {
                     msg,
                     [ {text: "YES", onPress: () => { resolve('YES') }},
                       {text: "NO", onPress: () => { resolve('NO') }}  ],
-                    { cancelable: false },
+                    { cancelable: false},
                     );
       });
 
@@ -206,7 +296,8 @@ export default class MainActivity extends React.Component {
                 var set = this.extractFromList(names);
                 this.state.Arena[this.state.current]["teamANum"] += this.state.masterList[names].length;
                 delArray += [names];
-                this.state.Arena[this.state.current]["teamA"].push(set);
+                for (i in set){
+                  this.state.Arena[this.state.current]["teamA"].push([set[i]]);}
                 names++;
                 if (names == this.state.masterList.length){
                     names = 0
@@ -216,7 +307,8 @@ export default class MainActivity extends React.Component {
                 var set = this.extractFromList(names);
                 this.state.Arena[this.state.current]["teamBNum"] += this.state.masterList[names].length;
                 delArray += [names]
-                this.state.Arena[this.state.current]["teamB"].push(set)
+                for(i in set){
+                  this.state.Arena[this.state.current]["teamB"].push([set[i]])}
                 names++
                 if (names == this.state.masterList.length){
                   names = 0
@@ -224,17 +316,13 @@ export default class MainActivity extends React.Component {
                 }}
               else{
                   if( this.state.Arena[this.state.current]["teamANum"] + this.state.Arena[this.state.current]["teamBNum"] != this.state.cap){
-                  // If the number is EQUAL then the phrasing should be =choose num to of team a 
                   let s = '';
                   for (i in this.state.masterList[names]){
                     s += this.state.masterList[names][i]['player'] + '  '  
-                    // console.log(" ADDED to Shooters list : ",this.state.masterList[names][i]['player'])
                     this.state.shooters.push(this.state.masterList[names][i]['player'])
                   } 
-
                   this.state.diff = this.state.cap - ( this.state.Arena[this.state.current]["teamANum"]  + 
                                     this.state.Arena[this.state.current]["teamBNum"] );
-                  console.log("THis is the DIFF AND STUFF", this.state.diff, this.state.shooters.length)
                   if ( this.state.diff == this.state.shooters.length ){
                     this.state.command = " Shoot for " + ((this.state.cap/2) - this.state.Arena[this.state.current]["teamANum"] + 
                       "To Play On TEAM-A")
@@ -245,7 +333,6 @@ export default class MainActivity extends React.Component {
                   }
 
                   let response = await AsyncAlert(this.state.command, s);
-                  // console.log("RESPONSE : ", response)
                   if (response == "YES"){
                     delArray += [names]
                     delArray = this.removeFromList(delArray)
@@ -253,77 +340,73 @@ export default class MainActivity extends React.Component {
                     break
                   } 
                   else{this.setState({shooters: []});}
-                 
                names++; }}
             // GAME READY
         if( this.state.Arena[this.state.current]["teamANum"]  == teamcap && this.state.Arena[this.state.current]["teamBNum"] == teamcap){
           this.setState({current: this.state.current+1})
           this.removeFromList(delArray)
-          // console.log(" TEAMS FULL: on to - ", this.state.current)
           break;
           }//if full
           crash++;          
-
           }//end of while
-        //} select from list
-        // console.log("SET THE ARENA AND LIST")
         this.setState({masterList: this.state.masterList});
         this.setState({Arena:this.state.Arena});
-        // console.log("SET THE ARENA AND LIST continued" )
   }
 
-
   async endGame(courtNum, loser){
-    // console.log("ENDGAME VALS ", courtNum,  loser)
     var temp = []
     this.state.current = courtNum-1
-    for(i in this.state.Arena[courtNum-1][loser]){
-      if(this.state.Arena[courtNum-1][loser][i].length>1){
-        for (j in this.state.Arena[courtNum-1][loser][i]){
-        temp.push(this.state.Arena[courtNum-1][loser][i][j])  
-      }}
-      else{
-      temp.push(this.state.Arena[courtNum-1][loser][i][0])
+    var tempC = 0;
+    for (i in this.state.Arena[courtNum-1][loser]){
+      if (this.state.Arena[courtNum-1][loser][i][0]['replacement'] == false){
+          temp.push(this.state.Arena[courtNum-1][loser][i][0])
+          delete this.state.Arena[courtNum-1][loser][i]
+          tempC += 1            
       }
-    }   
-    // console.log("Temp: ", temp)
-    this.state.Arena[courtNum-1][loser] = new Array()
-    this.state.Arena[courtNum-1][loser+"Num"] = 0;
-    this.state.masterList.push(temp)
-    this.setState({masterList: this.state.masterList});
+      else{
+        this.state.Arena[courtNum-1][loser][i][0]['replacement'] = false  
+      }
+    } 
+    this.state.Arena[courtNum-1][loser+"Num"] -= tempC;
+    if (temp.length>0){ 
+      this.state.masterList.push(temp)  
+      this.setState({masterList: this.state.masterList});
+    }
     this.setState({Arena:this.state.Arena});
-    // console.log("END OF ENDGAME")
     this.StartGame();
   }
 
  render() {
-  // console.log("RENDER", this.state.Arena)
+  // console.log("RENDER THE ARENA : ", this.state.Arena, this.state.curPlayers, "TEMPO: ", this.state.tempCourt)
   let Game = this.state.Arena.map((val, key)=> {
     let A = []
     let B = []
     let t = {}
+    let currentPlayerA = []
+    let currentPlayerB = []
    
   for (keys in val){
       if (keys == "teamA"){
         for (things in val[keys]){
           for (players in val[keys][things]){
             A += [val[keys][things][players]['player'] + ' | ']
+            currentPlayerA.push(val[keys][things][players]['player'])
       }}}
       else{
         for (things in val[keys]){
           for (players in val[keys][things]){
             B += [val[keys][things][players]['player'] + ' | ']
+            currentPlayerB.push(val[keys][things][players]['player'])
       }}}
   }
      t["key"] =  val.Num.toString()
      t["valA"] = A 
      t["valB"] = B
-      
+  // console.log("this is each t: ", t['valA'].length, currentPlayer )
+  this.addToCurA(currentPlayerA, val.Num)
+  this.addToCurB(currentPlayerB, val.Num)
   return t
 }); 
-
-
-
 
   let pending = Object.values(this.state.SampleArray).map(function(vals) {
       var t= {} ;
@@ -332,27 +415,27 @@ export default class MainActivity extends React.Component {
               t["key"] = vals[val]; 
         }}
       return t
-});
-// console.log("SHOOTERS        HHHHHHHHHH", this.state.shooters)
+  });
+
    return (
       <KeyboardAvoidingView style={styles.wrapper} behavior="padding" enabled>
       <ScrollView>
       <View>
 
           <TextInput
-              placeholder="NAME"
+              placeholder="Enter One NAME at a Time : "
               onChangeText={(Name) => this.setState({ Name}) }
               value={this.state.Name}
               style={styles.textInput} 
               placeholderTextColor='gray' />
 
     <TouchableOpacity  onPress={this.AddItemsToArray.bind(this)} style={styles.addButton} >
-        <Text style={{color:'black', fontSize:18}}>+Name(s)</Text>
+        <Text style={{color:'black', fontSize:19}}>+Name(s)</Text>
     </TouchableOpacity>     
 
-    <Text style={{fontSize:40}}> Names </Text>
-      <TouchableOpacity onPress={this.clearList.bind(this)}>
-        <Text style={{backgroundColor:'white', color:'black', width:150, fontSize:20}}> CLEAR LIST</Text>
+    <Text style={{fontSize:40, bottom: 50}}> Names </Text>
+      <TouchableOpacity onPress={this.clearList.bind(this)} style={styles.clearList} >
+        <Text style={{color:'gray', fontSize:20}}> CLEAR LIST</Text>
       </TouchableOpacity>
 
     <View>
@@ -362,8 +445,8 @@ export default class MainActivity extends React.Component {
         renderItem={({item}) => <Text style={{color:'purple', fontSize:24, alignItems:'center'}}>{item.key}</Text>}/>
     </View>  
 
-    <TouchableOpacity  onPress={this.AddMaster.bind(this)} >
-        < Text style={{backgroundColor:'grey', color:'white', width:150, fontSize:20}}> DONE ADDING </Text>
+    <TouchableOpacity  onPress={this.AddMaster.bind(this)} style={styles.doneAdding} >
+        < Text style={{color:'white', fontSize:20}}> DONE ADDING </Text>
     </TouchableOpacity>
 
     <TouchableOpacity  onPress={this.StartGame.bind(this)} style={styles.addStart } >
@@ -374,20 +457,24 @@ export default class MainActivity extends React.Component {
         <Text style={{color:'grey', fontSize:32}}>  List  </Text>
     </TouchableOpacity>
 
-
-
-     <View style={{padding:20}}>  
+    <View style={{padding:20}}>  
     <Text style={{fontSize:40, backgroundColor:'black', color:'white', textAlign:'center',flexDirection:'row', justifyContent:'flex-end'}}>Current Games</Text>
     <FlatList
     data={Game} 
     renderItem={({ item }) => (
     <View>
     <Text style={{fontSize:30, color:'black'}}>Game {item.key} : </Text>
-      <Text style={{color:"gray", fontSize:28}}>{item.valA}</Text>
+      <TouchableHighlight onPress={()=>this.replacePlayer(item.key, "teamA", this.state.curPlayersA) }>
+        <Text style={{color:"gray", fontSize:28}}>{item.valA}</Text>
+      </TouchableHighlight>
       <Text style={{color:"black", fontSize:34}}>- V S -</Text>
+    <TouchableHighlight onPress={()=>this.replacePlayer(item.key, "teamB", this.state.curPlayersB) }>
       <Text style={{color:"red", fontSize:28}}>{item.valB}</Text>
+    </TouchableHighlight>
+    
     <Button color='gray' onPress={()=>this.endGame(item.key,  "teamB")} title="TeamA Won"/>
     <Button color='red' onPress={()=>this.endGame(item.key,  "teamA")} title="TeamB Won"/>
+   
     </View>)}/>
     </View>
 
@@ -400,11 +487,44 @@ export default class MainActivity extends React.Component {
           items={this.state.shooters}
           selectedItems={ this.state.hitShot }
           onSelectionsChange={this.onSelectionsChange} />
-        <Button onPress={this.print} title="Print"> u</Button>
 
         <TouchableHighlight   onPress={() => {
             this.setModalVisible(!this.state.modalVisible, "something").then(this.AddMaster2());}}>
             <Text style={{backgroundColor:'orange' , fontSize:32}}>Done</Text>
+        </TouchableHighlight>
+      </View>
+    </Modal>
+
+    <Modal 
+    visible={this.state.modalPlayerVisible}>
+      <View>
+        <Text style={{fontSize:30}}>{this.state.title} </Text>
+        <SelectMultiple
+          maxSelect= {1}
+          items={this.state.tempCourt}
+          selectedItems={ this.state.remPlayer }
+          onSelectionsChange={this.onSelectionsChangePlayer} />
+
+        <TouchableHighlight   onPress={() => 
+            this.setModalPlayerVisible(!this.state.modalPlayerVisible, "something").then(this.useInfo())}>
+            <Text style={{backgroundColor:'green' , fontSize:32}}>Done</Text>
+        </TouchableHighlight>
+      </View>
+    </Modal>
+
+    <Modal 
+      visible={this.state.modalRepPlayerVisible}>
+        <View>
+        <Text style={{fontSize:30}}>{this.state.title} </Text>
+        <SelectMultiple
+          maxSelect= {1}
+          items={ this.state.allAvailable }
+          selectedItems={ this.state.move }
+          onSelectionsChange={this.onSelectionsChangePlayerTop} />
+
+        <TouchableHighlight   onPress={() => 
+            this.setModalRepPlayerVisible(!this.state.modalRepPlayerVisible, "Replacements").then(this.updateMaster())}>
+            <Text style={{backgroundColor:'pink' , fontSize:32}}>Done</Text>
         </TouchableHighlight>
       </View>
     </Modal>
@@ -435,8 +555,16 @@ const styles = StyleSheet.create({
     borderColor: 'red',
     borderWidth: 1,
     textAlign:'right',
+    bottom: 40,
     flex: 1,
     flexDirection: 'row',
+  },
+  clearList: {
+    backgroundColor:'white', 
+    color:'black', 
+    width:150, 
+    fontSize:20, 
+    bottom:40
   },
 
   header: {
@@ -462,6 +590,11 @@ const styles = StyleSheet.create({
     borderColor: "red",
    
   },
+  doneAdding: {
+    backgroundColor:'grey',  
+    bottom:40, 
+    width:150, 
+  },
     addButtonText: {
     color: 'white',
     fontSize: 18,
@@ -474,11 +607,14 @@ const styles = StyleSheet.create({
     zIndex: 1,
     // right: 20,
     // bottom: 90,
-    backgroundColor: '#ababab',
+    backgroundColor: 'orange',
     flexDirection:'column',
-    width: 90,
-    height: 90,
-    borderRadius: 50,
+    width: 105,
+    height: 60,
+    bottom: 85,
+    left: 295,
+    borderWidth: 3,
+    borderColor: 'gray',
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 8,
@@ -503,7 +639,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     width: 130,
     left: 220,
-    top: 230,
+    top: 200,
     borderWidth: 2,
     borderColor: 'orange',
     flexDirection: 'row',
