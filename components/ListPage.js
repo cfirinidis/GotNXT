@@ -24,9 +24,12 @@ export default class ShowList extends React.Component {
        super(props);
        this.state = {
          masterList : this.props.navigation.getParam("list", "blank"),
+         courtArr: this.props.navigation.getParam("courtArr", "blank"),
            modalVisible: false,
-  
+           modalPrefVisible: false,
            toRemove: [],
+           prefCourt: [],
+           prefPos: '',
            testList: [],
            title: '',
            position: 0,
@@ -36,6 +39,11 @@ export default class ShowList extends React.Component {
 onSelectionsChange = (toRemove) => {
     // selectedFruits is array of { label, value }
     this.setState({ toRemove })
+  }
+
+onSelectionsChangePref = (prefCourt) => {
+    // selectedFruits is array of { label, value }
+    this.setState({ prefCourt })
   }
 
 temp =()=>{
@@ -73,24 +81,72 @@ for (i in rem){
     this.setState({modalVisible: visible})
   });
 
-  setModal2Visible=(visible, p)=> new Promise((resolve)=> {
-    console.log("MODAL 2")
+  setModalPrefVisible=(visible, p)=> new Promise((resolve)=> {
+    console.log("Modal PREF")
     this.state.title = p;
-    this.setState({modal2Visible: visible})
+    this.setState({modalPrefVisible: visible})
   });
 
 
+  // setModal2Visible=(visible, p)=> new Promise((resolve)=> {
+  //   console.log("MODAL 2")
+  //   this.state.title = p;
+  //   this.setState({modal2Visible: visible})
+  // });
+
+
+
+  async setPref(names){
+    var t = names.slice(2, names.length)
+    
+      prefAlert = (t) => new Promise((resolve, reject) => {  
+        Alert.alert(
+                    "Add Court Pref for: ",
+                    t,
+                    [ {text: "Yes", onPress: () => { resolve('YES') }},
+                      {text: "NO", onPress: () => { resolve('NO') }}  ],
+                    { cancelable: true},
+                    );
+        });
+    ans = await prefAlert(t);
+    if (ans == "YES"){
+      this.setModalPrefVisible(!this.state.modalPrefVisible, "Select Preferred Court: ")
+      console.log("Pref Pos ", names[0])
+
+    }
+    // console.log("ans ", ans )
+    var t = names.slice(2, names.length)
+    this.setState({prefPos: names[0] - 1})
+
+    // console.log("COURT ARRAY : ", this.state.courtArr,  "PRINTED THIS", names, "-- ", names[0], "TTT: ", t)
+  }
+
+setPrefMaster=()=>{
+  // console.log("USEFULE INFO : ", this.state.prefPos, this.state.prefCourt[0]['value'])
+  // console.log("MASTERLIST ",this.state.masterList[this.state.prefPos][0]['pref'] )
+  var t = this.state.prefCourt[0]['value'] 
+  // console.log("t:   ",t[t.length-1])
+  this.state.masterList[this.state.prefPos][0]['pref'] = t[t.length - 1]
+  this.setState({ masterList: this.state.masterList })
+  this.setState({prefPos: '' })  
+  this.setState({prefCourt:[] })
+
+}
+
 render() {
-console.log(this.state.masterList)
+// console.log(this.state.masterList)
 let currentList = Object.values(this.state.masterList).map(function(vals, i) {
+    
       var t= {} ;
-      for (val in vals){
+      for (val in vals[1]){
+        // console.log("map vals", val, vals, ":: ", vals[1])
         if (t["key"] === undefined){
-          t["key"] = i+1 + " " + vals[val].player; }
+          t["key"] = i+1 + " " + vals[1][val].player; }
         else{
-          t["key"] += "  &  " + vals[val].player; }
+          t["key"] += "  &  " + vals[1][val].player; }
       }
-       console.log("Cur List", t)
+      t["key"] += " ( " + vals[0].pref + " )"
+        // console.log("Cur List", t, vals[0].pref)
       return t
 });
 
@@ -114,7 +170,13 @@ return (
 
 <FlatList
     data={currentList} style={styles.textInput}
-    renderItem={({item}) => <Text style={{fontSize:30, color:'yellow'}} >{item.key}</Text>}/>
+    renderItem={({item}) => 
+    <TouchableHighlight onPress={()=>{this.setPref(item.key)} }>
+    <Text style={{fontSize:30, color:'yellow'}} >{item.key}</Text>
+    </TouchableHighlight>
+
+  }/>
+
 
 <Modal 
     visible={this.state.modalVisible}>
@@ -127,7 +189,7 @@ return (
 
         <TouchableHighlight   onPress={ () => {
             this.setModalVisible(!this.state.modalVisible, "something").then( this.removePlayers() );}}>
-            <Text style={{fontSize:28, width:115, height:45, backgroundColor:"red", top:25}}>DONE</Text>
+            <Text style={{fontSize:28, width:115, height:45, backgroundColor:"red"}}>DONE</Text>
         </TouchableHighlight>
       </View>
 </Modal>
@@ -140,7 +202,21 @@ return (
 </TouchableHighlight>
 
 
-  
+<Modal 
+    visible={this.state.modalPrefVisible}>
+      <View>
+        <Text style={{fontSize:30}}>{this.state.title} </Text>
+        <SelectMultiple
+          items={this.state.courtArr}
+          selectedItems={ this.state.prefCourt }
+          onSelectionsChange={this.onSelectionsChangePref} />
+
+        <TouchableHighlight   onPress={ () => {
+            this.setModalPrefVisible(!this.state.modalPrefVisible, "something").then(this.setPrefMaster() ); }}>
+            <Text style={{fontSize:28, width:115, height:45, backgroundColor:"red"}}>DONE</Text>
+        </TouchableHighlight>
+      </View>
+</Modal>
 
 
 </View>

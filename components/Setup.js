@@ -22,7 +22,8 @@ export default class Setup extends React.Component {
          Arena: [],
          CourtsNum: 0,
          Capacity: 0,
-         masterList: []
+         masterList: [],
+         courtArr:[],
        };
      }
  
@@ -50,12 +51,13 @@ export default class Setup extends React.Component {
       courts['teamB'] = new Array()
       this.state.Arena.push(courts)
       courts={}
+      this.state.courtArr.push("Court : "+ (i+1))
     }
-    console.log("FINAL: ",this.state.Arena)
+    console.log("FINAL: ",this.state.Arena, this.state.courtArr)
 
     this.setState({Arena:this.state.Arena}) 
        this.props.navigation.navigate("List", {arena: this.state.Arena, cap:this.state.Capacity, 
-      courtsNum:this.state.CourtsNum });
+      courtsNum:this.state.CourtsNum, courtArr: this.state.courtArr });
   }}
  
  render() {
