@@ -55,34 +55,32 @@ AddPlayer=()=>{
 }
 
 removePlayers = () =>{
-console.log("Remove")
+// console.log("Remove")
 var rem = []
-console.log("NEXT FUNCTION : ",this.state.toRemove)
+// console.log("NEXT FUNCTION : ",this.state.toRemove)
 for ( i in this.state.toRemove){
   // console.log(this.state.toRemove[i]['label'][0])
   rem.push(this.state.toRemove[i]['label'][0])
 
 }
-console.log("REM", rem, rem.length)
+// console.log("REM", rem, rem.length)
 
 for (i in rem){
-  console.log("MS  ",this.state.masterList[rem[i]-1], i)
+  // console.log("MS  ",this.state.masterList[rem[i]-1], i)
   this.state.masterList.splice(rem[i]-1-i, 1)
 }
     // console.log("brefore", toRemove)
     // toRemove[0]['label'] = toRemove[0]['label'][0]
     // toRemove[0]['value'] = toRemove[0]['value'].substring(2,)
-    console.log("FINALLLLL:::", this.state.masterList)
+    // console.log("FINALLLLL:::", this.state.masterList)
 }
 
   setModalVisible=(visible, p)=> new Promise((resolve)=> {
-    console.log("Modal 1")
     this.state.title = p;
     this.setState({modalVisible: visible})
   });
 
   setModalPrefVisible=(visible, p)=> new Promise((resolve)=> {
-    console.log("Modal PREF")
     this.state.title = p;
     this.setState({modalPrefVisible: visible})
   });
@@ -97,7 +95,7 @@ for (i in rem){
 
 
   async setPref(names){
-    var t = names.slice(2, names.length)
+    var t = names.slice(2, names.length-5)
     
       prefAlert = (t) => new Promise((resolve, reject) => {  
         Alert.alert(
@@ -111,7 +109,6 @@ for (i in rem){
     ans = await prefAlert(t);
     if (ans == "YES"){
       this.setModalPrefVisible(!this.state.modalPrefVisible, "Select Preferred Court: ")
-      console.log("Pref Pos ", names[0])
 
     }
     // console.log("ans ", ans )

@@ -29,7 +29,7 @@ export default class Setup extends React.Component {
  
   SetupCourts=()=>{
     var courts = {}
-    console.log(this.state.Capacity % 2 )
+    // console.log(this.state.Capacity % 2 )
     if (isNaN(this.state.CourtsNum) ){
       Alert.alert("Please enter the number of available Courts")
     }
@@ -53,7 +53,7 @@ export default class Setup extends React.Component {
       courts={}
       this.state.courtArr.push("Court : "+ (i+1))
     }
-    console.log("FINAL: ",this.state.Arena, this.state.courtArr)
+    // console.log("FINAL: ",this.state.Arena, this.state.courtArr)
 
     this.setState({Arena:this.state.Arena}) 
        this.props.navigation.navigate("List", {arena: this.state.Arena, cap:this.state.Capacity, 

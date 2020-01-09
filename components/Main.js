@@ -25,6 +25,7 @@ import Games from './currentGames';
 import StartFunction from './function';
 import SelectMultiple from 'react-native-select-multiple';
 
+const STORAGE_KEY = '@save_arena'
 export default class MainActivity extends React.Component { 
   constructor(props) {
        super(props);
@@ -52,7 +53,8 @@ export default class MainActivity extends React.Component {
          shooters: [],
          totalPlayers:10,
          SampleArray : [],
-         masterList : [
+         
+        masterList : [
          [{pref:0}, [{player: "Lebron", replacement: false}, {player:"AntDavis", replacement: false}]],
          [{pref:0}, [{player:"Kyrie", replacement: true}, {player:"Durant", replacement: true}]],
         [{pref:0}, [{player:"Majerle", replacement: false}]],
@@ -60,6 +62,7 @@ export default class MainActivity extends React.Component {
          [{pref:0}, [{player:'Larry', replacement: false}, {player:'Parish', replacement: false}]], 
           [{pref:0}, [{player:'CONZ', replacement: false}] ] 
           ],
+
          cap: this.props.navigation.getParam("cap", "blank"),
          Arena: this.props.navigation.getParam("arena", "blank"),
          courtsNum: this.props.navigation.getParam("courtsNum", "blank"),
@@ -68,6 +71,9 @@ export default class MainActivity extends React.Component {
          answer: 'none'
        };
      }
+
+
+  
  
   AddItemsToArray=()=>{
       if (this.state.Name.length != 0 ){
@@ -105,7 +111,12 @@ export default class MainActivity extends React.Component {
   }//good
 
   AddMaster2=()=>{
-    // console.log("Add2: ", this.state.delArray, this.state.masterList)
+    console.log("Add2: ", this.state.hitShot, this.state.shooters)
+    // if (this.state.hitShot.length==0){
+    //   console.log("Empty")
+    //   this.state.masterList.splice(this.state.restNum, 0, [{pref:0}, this.state.shooters]);
+    //   return 0
+    // }
       var hit= [];
       var rest = [];
       var hitList = [];
@@ -118,14 +129,19 @@ export default class MainActivity extends React.Component {
       rest.push({player: this.state.shooters[i], replacement: false});
       }
     }
-    console.log("RestNUm:  ",this.state.restNum)
+    console.log("RestNUm:  ",this.state.restNum, rest)
     this.state.masterList.splice(this.state.restNum, 0, [{pref:0}, rest])
     // this.state.masterList.unshift([{pref:0}, rest])
-    this.state.masterList.unshift([{pref:0}, hit])
+    if (hit.length != 0){
+      this.state.masterList.unshift([{pref:0}, hit])
+    }
     // console.log("ADD MASTER 2 ",this.state.masterList)
     this.setState({hitShot: [] });
     this.setState({restNum: 0 });
-    this.setState({shooters: [] });  
+    this.state.shooters = [];
+    this.setState({shooters: this.state.shooters });  
+    this.setState({masterList: this.state.masterList});
+    console.log("ADD MASTER 2 ",this.state.masterList, this.state.shooters)
     this.StartGame();
   }//good
 
@@ -166,6 +182,7 @@ export default class MainActivity extends React.Component {
   };
 
   useInfo=()=>{
+    console.log("Useinfo", this.state.remPlayer)
     if (this.state.remPlayer.length == 0){
       this.setState({ tempCourt:[] });
       this.setState({ remPlayer:[] });
@@ -260,6 +277,30 @@ export default class MainActivity extends React.Component {
         }
     return set
   }
+
+//   save = async () => {
+//     console.log("Save: ",this.state.Arena, STORAGE_KEY)
+//     try {
+
+//       await AsyncStorage.setItem(212, ["Arena"])
+//       alert('Data successfully saved!')
+//       // this.setState({ Arena: this.state.Arena })
+//     } catch (e) {
+//       alert('Failed to save arena info.')
+//     }
+//   }
+
+// retrieveData = async () => {
+//     try {
+//       const arenaLoad = await AsyncStorage.getItem(STORAGE_KEY)
+
+//       if (name !== null) {
+//         this.setState({ Arena: arenaLoad })
+//       }
+//     } catch (e) {
+//       alert('Failed to load name.')
+//     }
+//   }
 
   async StartGame(){
     this.func = new StartFunction();
@@ -356,12 +397,12 @@ export default class MainActivity extends React.Component {
                   else{
                   this.state.command = "Shoot for " + this.state.diff
                   }
-
+                  console.log("SHOOTERS BEFORE RESPONSE: ", this.state.shooters)
                 let response = await AsyncAlert(this.state.command, s);
                 if (response == "YES"){
                     delArray += [names]
                     this.state.restNum = names - (delArray.length - 1)
-                    console.log("START: ", names, " ", delArray.length)
+                    // console.log("START: ", names, " ", delArray.length)
                     delArray = this.removeFromList(delArray)
                   
                     
@@ -380,6 +421,7 @@ export default class MainActivity extends React.Component {
           }//end of while
         this.setState({masterList: this.state.masterList});
         this.setState({Arena:this.state.Arena});
+        // this.save()
   }
 
   async endGame(courtNum, loser, winner){
