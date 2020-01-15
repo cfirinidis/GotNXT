@@ -10,7 +10,7 @@
  </p>
 
 ## Features:
-###### Players go directky back into queue after game is over until players declare they're done.
+###### Players go directly back into queue after game is over and aren't removed until they declare they're done.
 
 <img src="https://github.com/cfirinidis/GotNXT/blob/MASTER/PICTURES/Screenshot_1579062874.png" width="250" height="375">
 
