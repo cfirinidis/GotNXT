@@ -157,7 +157,7 @@ this.state.playerList = this.getNames()
 
  // console.log("GAME : ", this.state.playerList)
  // console.log("currentList", currentList)
- console.log("courtArr ", this.state.courtArr, this.state.masterList)
+ // console.log("courtArr ", this.state.courtArr, this.state.masterList)
 return (
 <ScrollView>
 <View>  

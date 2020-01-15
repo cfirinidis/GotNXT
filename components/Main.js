@@ -39,6 +39,7 @@ export default class MainActivity extends React.Component {
          curPlayersA: {},
          curPlayersB: {},
          tempCourt: [],
+         winnersW: [],
          move: [], 
          team: '',
          tempNum: 0,
@@ -48,9 +49,11 @@ export default class MainActivity extends React.Component {
         modalVisible: false,
         modalPlayerVisible: false,
         modalRepPlayerVisible: false, 
+        modalPrefVisible: false,
         restNum: 0,
          Name: '',
          shooters: [],
+         prefCourt: [],
          totalPlayers:10,
          SampleArray : [],
          masterList : [
@@ -59,39 +62,18 @@ export default class MainActivity extends React.Component {
         [{pref:0}, [{player:"Majerle", replacement: false}]],
         [{pref:0}, [{player:"Kawhi", replacement: false}, {player:"PG13", replacement: false}]],
          [{pref:0}, [{player:'Larry', replacement: false}, {player:'Parish', replacement: false}]], 
-          [{pref:0}, [{player:'CONZ', replacement: false}]],  
-          [{pref:0}, [{player: "Lebron", replacement: false}, {player:"AntDavis", replacement: false}]],
-         [{pref:0}, [{player:"Kyrie", replacement: true}, {player:"Durant", replacement: true}]],
-        [{pref:0}, [{player:"Majerle", replacement: false}]],
-        [{pref:0}, [{player:"Kawhi", replacement: false}, {player:"PG13", replacement: false}]],
-         [{pref:0}, [{player:'Larry', replacement: false}, {player:'Parish', replacement: false}]], 
-          [{pref:0}, [{player:'CONZ', replacement: false}]], 
-          [{pref:0}, [{player: "Lebron", replacement: false}, {player:"AntDavis", replacement: false}]],
-         [{pref:0}, [{player:"Kyrie", replacement: true}, {player:"Durant", replacement: true}]],
-        [{pref:0}, [{player:"Majerle", replacement: false}]],
-        [{pref:0}, [{player:"Kawhi", replacement: false}, {player:"PG13", replacement: false}]],
-         [{pref:0}, [{player:'Larry', replacement: false}, {player:'Parish', replacement: false}]], 
-          [{pref:0}, [{player:'CONZ', replacement: false}]],  
-          [{pref:0}, [{player: "Lebron", replacement: false}, {player:"AntDavis", replacement: false}]],
-         [{pref:0}, [{player:"Kyrie", replacement: true}, {player:"Durant", replacement: true}]],
-        [{pref:0}, [{player:"Majerle", replacement: false}]],
-        [{pref:0}, [{player:"Kawhi", replacement: false}, {player:"PG13", replacement: false}]],
-         [{pref:0}, [{player:'Larry', replacement: false}, {player:'Parish', replacement: false}]], 
-          [{pref:0}, [{player:'CONZ', replacement: false}]],
-          [{pref:0}, [{player:'ENDOFLIST- almost', replacement: false}]], 
-          [{pref:0}, [{player:'ENDOFLIST', replacement: false}]]  
+          [{pref:0}, [{player:'CONZ', replacement: false}]]
           ],  
          cap: this.props.navigation.getParam("cap", "blank"),
          Arena: this.props.navigation.getParam("arena", "blank"),
          courtsNum: this.props.navigation.getParam("courtsNum", "blank"),
          courtArr: this.props.navigation.getParam("courtArr", "blank"),
+         courtArrPref: [],
          // masterList: this.props.navigation.getParam("masterList", "blank"),
          current: 0,
          answer: 'none'
        };
      }
-
-
   
  
   AddItemsToArray=()=>{
@@ -128,11 +110,11 @@ export default class MainActivity extends React.Component {
     this.state.masterList.push([{pref:0},this.state.SampleArray])
     this.setState({SampleArray : []})  
     this.saveData();
-  }
+    }
   }//good
 
   AddMaster2=()=>{
-    console.log("Add2: ", this.state.hitShot, this.state.shooters)
+    // console.log("Add2: ", this.state.hitShot, this.state.shooters)
     // if (this.state.hitShot.length==0){
     //   console.log("Empty")
     //   this.state.masterList.splice(this.state.restNum, 0, [{pref:0}, this.state.shooters]);
@@ -150,7 +132,7 @@ export default class MainActivity extends React.Component {
       rest.push({player: this.state.shooters[i], replacement: false});
       }
     }
-    console.log("RestNUm:  ",this.state.restNum, rest)
+    // console.log("RestNUm:  ",this.state.restNum, rest)
     this.state.masterList.splice(this.state.restNum, 0, [{pref:0}, rest])
     // this.state.masterList.unshift([{pref:0}, rest])
     if (hit.length != 0){
@@ -162,7 +144,7 @@ export default class MainActivity extends React.Component {
     this.state.shooters = [];
     this.setState({shooters: this.state.shooters });  
     this.setState({masterList: this.state.masterList});
-    console.log("ADD MASTER 2 ",this.state.masterList, this.state.shooters)
+    // console.log("ADD MASTER 2 ",this.state.masterList, this.state.shooters)
     this.StartGame();
   }//good
 
@@ -175,43 +157,8 @@ export default class MainActivity extends React.Component {
     this.props.navigation.navigate("Modal");
   }
 
-
-
-  async replacePlayer(num, team, players){
-      replaceAlert = (title, msg) => new Promise((resolve, reject) => {  
-        Alert.alert(
-                    title,
-                    msg,
-                    [ {text: "Winners / Winners", onPress: () => {resolve('WIN') }},  
-                      {text: "Correction", onPress: () => { resolve('NO') }},
-                      {text: "Subtitute", onPress: () => { resolve('YES') }} 
-                      ],
-                    { cancelable: true},
-                    );
-      });
-
-      var sub = await replaceAlert("Replace Player", "Replacement / Correction")
-      this.state.tempNum = num
-      this.state.team = team
-      if (sub =="WIN"){
-        alert("one day this will work")
-      }
-      else{
-        if (sub == "YES"){
-          this.state.repFlag = true
-          }
-        else{
-          this.state.repFlag = false
-        } 
-        for(i in players[num]){
-          this.state.tempCourt.push( players[num][i] )
-        }
-        this.setModalPlayerVisible(!this.state.modalPlayerVisible, "Remove Player");    
-      }
-};
-
   useInfo=()=>{
-    console.log("Useinfo", this.state.remPlayer)
+    // console.log("Useinfo", this.state.remPlayer)
     if (this.state.remPlayer.length == 0){
       this.setState({ tempCourt:[] });
       this.setState({ remPlayer:[] });
@@ -416,7 +363,7 @@ export default class MainActivity extends React.Component {
                   else{
                   this.state.command = "Shoot for " + this.state.diff
                   }
-                  console.log("SHOOTERS BEFORE RESPONSE: ", this.state.shooters)
+                  // console.log("SHOOTERS BEFORE RESPONSE: ", this.state.shooters)
                 let response = await AsyncAlert(this.state.command, s);
                 if (response == "YES"){
                     delArray += [names]
@@ -444,41 +391,130 @@ export default class MainActivity extends React.Component {
 
   }
 
-  async endGame(courtNum, loser, winner){
-    if ( (this.state.Arena[courtNum-1]["teamBNum"] + this.state.Arena[courtNum-1]["teamANum"]) < this.state.cap){
-      alert("Game has not started");
-      console.log( this.state.Arena[courtNum-1]["teamBNum"] , " + ",  this.state.Arena[courtNum-1]["teamANum"] ," = ", this.state.cap )
-      return
-    }
 
-    var temp = []
-    this.state.current = courtNum-1
-    var tempC = 0;
-    for (i in this.state.Arena[courtNum-1][winner]){
-      this.state.Arena[courtNum-1][winner][i][0]['replacement'] = false 
-    }
-    for (i in this.state.Arena[courtNum-1][loser]){
-      if (this.state.Arena[courtNum-1][loser][i][0]['replacement'] == false){
-          temp.push(this.state.Arena[courtNum-1][loser][i][0])
-          delete this.state.Arena[courtNum-1][loser][i]
-          tempC += 1            
-      }
-      else{
-        this.state.Arena[courtNum-1][loser][i][0]['replacement'] = false  
-      }
-    } 
-
-    this.state.Arena[courtNum-1][loser+"Num"] -= tempC;
-    if (temp.length>0){ 
-      this.state.masterList.push([{pref:0}, temp])  
-      this.setState({masterList: this.state.masterList});
-    }
-    this.setState({Arena:this.state.Arena});
-    this.StartGame();
+  onSelectionsChangePref = (prefCourt) => {
+    // selectedFruits is array of { label, value }
+    this.setState({ prefCourt })
   }
 
+  setModalPrefVisible=(visible, p)=> new Promise((resolve)=> {
+    this.state.title = p;
+    this.setState({modalPrefVisible: visible})
+  });
+
+  async replacePlayer(num, team, players){
+      replaceAlert = (title, msg) => new Promise((resolve) => {  
+        Alert.alert(
+                    title,
+                    msg,
+                    [ {text: "Winners / Winners", onPress: () => {resolve('WIN') }},  
+                      {text: "Correction", onPress: () => { resolve('NO') }},
+                      {text: "Subtitute", onPress: () => { resolve('YES') }} 
+                      ],
+                    { cancelable: true},
+                    );
+      });
+
+      var sub = await replaceAlert("Replace Player", "Replacement / Correction")
+      this.state.tempNum = num
+      this.state.team = team
+      if (sub =="WIN"){
+        // alert("one day this will work")
+        this.endGame(num, team, team, "win")
+      }
+      else{
+        if (sub == "YES"){
+          this.state.repFlag = true
+          }
+        else{
+          this.state.repFlag = false
+        } 
+        for(i in players[num]){
+          this.state.tempCourt.push( players[num][i] )
+        }
+        this.setModalPlayerVisible(!this.state.modalPlayerVisible, "Remove Player");    
+      }
+};
+
+
+  async endGame(courtNum, loser, winner, status){
+    if ( (this.state.Arena[courtNum-1]["teamBNum"] + this.state.Arena[courtNum-1]["teamANum"]) < this.state.cap){
+      alert("Game has not started");
+      // console.log( this.state.Arena[courtNum-1]["teamBNum"] , " + ",  this.state.Arena[courtNum-1]["teamANum"] ," = ", this.state.cap )
+      return
+    }
+    
+      // console.log("endgame court arr: ", this.state.courtArr, courtNum)
+      // var shallow =  this.state.courtArr;
+      // this.state.courtArrPref = shallow;
+      // this.state.courtArrPref.splice([courtNum-1], 1)
+      // console.log('endgame court after: ', this.state.courtArrPref, "shallow", shallow, "courtarr ", this.state.courtArr)
+      var temp = [];
+      var titleP = '';
+      this.state.current = courtNum-1
+      var tempC = 0;
+      for (i in this.state.Arena[courtNum-1][winner]){
+        this.state.Arena[courtNum-1][winner][i][0]['replacement'] = false 
+      }
+      for (i in this.state.Arena[courtNum-1][loser]){
+        if (this.state.Arena[courtNum-1][loser][i][0]['replacement'] == false){
+            temp.push(this.state.Arena[courtNum-1][loser][i][0])
+            titleP += " " + (this.state.Arena[courtNum-1][loser][i][0]['player'])
+            delete this.state.Arena[courtNum-1][loser][i]
+            tempC += 1            
+        }
+        else{
+          this.state.Arena[courtNum-1][loser][i][0]['replacement'] = false  
+        }
+      } 
+
+      this.state.Arena[courtNum-1][loser+"Num"] -= tempC;
+      if (temp.length>0){ 
+        if (status == 'reg'){
+          this.state.masterList.push([{pref:0}, temp])
+        }
+        else{
+          prefAlert = () => new Promise((resolve) => {  
+            Alert.alert(
+                    "Add Court Pref for: ",
+                    titleP,
+                    [ {text: "Yes", onPress: () => { resolve('YES') }},
+                      {text: "NO", onPress: () => { resolve('NO') }}  ],
+                    { cancelable: true},
+                    );
+            });
+          ans = await prefAlert();
+          if (ans == "YES"){
+            this.setModalPrefVisible(!this.state.modalPrefVisible, "Select Preferred Court: ")
+           // this.state.masterList.unshift([{pref:2}, temp])
+
+
+         
+          this.setState({masterList: this.state.masterList});
+           this.setState({Arena:this.state.Arena});
+           this.setState({winnersW: temp})
+           return 0
+       }
+        }}
+      this.setState({Arena:this.state.Arena});
+      this.StartGame();
+  
+}
+
+winnersWinners(){
+  if (this.state.prefCourt.length == 0){
+    this.state.masterList.unshift([{pref:"Waiting"}, this.state.winnersW])
+    return 0
+  } 
+  // console.log(" VALUE", this.state.prefCourt[0]['value'])
+  var t = this.state.prefCourt[0]['value']  
+  this.state.masterList.unshift([{pref: t[t.length - 1]}, this.state.winnersW])
+  this.setState({masterList: this.state.masterList});
+  this.setState({prefCourt:[] })
+}
+
  render() {
-  console.log("NUMMM: ", this.state.courtsNum)
+  // console.log("NUMMM: ", this.state.courtsNum)
   // console.log("MasterList : ", this.state.masterList)
   // console.log("RENDER THE ARENA : ", this.state.Arena, this.state.curPlayers, "TEMPO: ", this.state.tempCourt)
   let Game = this.state.Arena.map((val, key)=> {
@@ -509,9 +545,6 @@ export default class MainActivity extends React.Component {
   this.addToCurB(currentPlayerB, val.Num)
   return t
 }); 
-
-
-
 
   let pending = Object.values(this.state.SampleArray).map(function(vals) {
       var t= {} ;
@@ -581,11 +614,11 @@ export default class MainActivity extends React.Component {
       <Text style={{color:"red", fontSize:28}}>TEAM B :{"\n"}{item.valB}</Text>
     </TouchableHighlight>
 
-    <TouchableHighlight onPress={()=>this.endGame(item.key, "teamB", "teamA")} style={styles.teamAWonStyle} >
+    <TouchableHighlight onPress={()=>this.endGame(item.key, "teamB", "teamA", 'reg')} style={styles.teamAWonStyle} >
       <Text style={{color:"white", fontSize:26}}>Team A Won</Text>
     </TouchableHighlight>
 
-    <TouchableHighlight onPress={()=>this.endGame(item.key, "teamA", "teamB") } style={styles.teamBWonStyle}>
+    <TouchableHighlight onPress={()=>this.endGame(item.key, "teamA", "teamB", 'reg') } style={styles.teamBWonStyle}>
       <Text style={{color:"white", fontSize:26}}>Team B Won</Text>
     </TouchableHighlight>
     
@@ -602,7 +635,6 @@ export default class MainActivity extends React.Component {
           style={styles.modalStyle}
           selectedItems={ this.state.hitShot }
           onSelectionsChange={this.onSelectionsChange} />
-
         <TouchableHighlight   onPress={() => 
             this.setModalVisible(!this.state.modalVisible, "something").then(this.AddMaster2())}
              style={styles.modalButton}>
@@ -617,11 +649,9 @@ export default class MainActivity extends React.Component {
         <Text style={{fontSize:30, backgroundColor:'red', color:'white'}}>{this.state.title} </Text>
         <SelectMultiple
           maxSelect= {1}
-    
           items={this.state.tempCourt}
           selectedItems={ this.state.remPlayer }
           onSelectionsChange={this.onSelectionsChangePlayer} />
-
         <TouchableHighlight   onPress={() => 
             this.setModalPlayerVisible(!this.state.modalPlayerVisible, "something").then(this.useInfo())}
              style={styles.modalButton}>
@@ -651,7 +681,23 @@ export default class MainActivity extends React.Component {
     </Modal>
 
 
+<Modal 
+    visible={this.state.modalPrefVisible}>
+      <View style={styles.modalStyle}>
+        <Text style={{fontSize:30, backgroundColor:'orange', color:'white'}}>{this.state.title} </Text>
+        <SelectMultiple
 
+          items={this.state.courtArr}
+          selectedItems={ this.state.prefCourt }
+          onSelectionsChange={this.onSelectionsChangePref} />
+
+        <TouchableHighlight   onPress={ () => {
+            this.setModalPrefVisible(!this.state.modalPrefVisible, "something").then(this.winnersWinners()); 
+          }} style={styles.modalButton}>
+            <Text style={styles.modalText} >DONE</Text>
+        </TouchableHighlight>
+      </View>
+</Modal>
 
       </View>
        </ScrollView>
@@ -718,7 +764,7 @@ const styles = StyleSheet.create({
   },
   
    teamAWonStyle:{
-    marginTop: 2,
+    marginTop: 5,
     backgroundColor:'gray',
     flexDirection: 'row',
     width:'45%',
