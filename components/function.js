@@ -212,3 +212,21 @@ export default class StartFunction extends React.Component {
 //   this.setModal2Visible(!this.state.modal2Visible, "something");}}>
 //   <Text style={styles.addButton}> + Add </Text>
 // </TouchableHighlight>
+
+
+
+
+
+// this.state.playerList = Object.values(this.state.masterList).map(function(vals, i){
+//   var test = [];
+//   for (val in vals[1]){
+//     console.log("val: ", vals[1][val].player)
+//     // for (pl in vals[1][val])
+//     // console.log("pl: ", pl, vals[1][val][pl])
+//     test.push(vals[1][val].player)
+   
+//   }
+//   console.log("test: ", test)
+//   return test
+
+// });
