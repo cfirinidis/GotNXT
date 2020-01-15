@@ -20,30 +20,102 @@ export default class Setup extends React.Component {
        super(props);
        this.state = {
          Arena: [],
-         CourtsNum: 0,
-         Capacity: 0,
+         courtsNum: '',
+         capacity: '',
          masterList: [],
          courtArr:[],
+         test:''
        };
      }
+
+  async resetAll(){
+
+       AsyncAlert = (title, msg) => new Promise((resolve) => {  
+        Alert.alert(
+                    title,
+                    msg,
+                    [ {text: "YES", onPress: () => { resolve('YES') }},
+                      {text: "NO", onPress: () => { resolve('NO') }}  ],
+                    { cancelable: false},
+                    );
+      });
+    
+    var answer =  await AsyncAlert ('RESET ALL', "Are you sure?")
+  
+    if (answer == "YES"){
+      this.setState({Arena: []});
+      this.setState({courtsNum : '' });
+      this.setState({capacity : '' });
+      this.setState({masterList : [] });
+      this.setState({courtArr : [] });
+  }
+  else{return 0}
+  }
  
+  loadData = async() =>{
+    try{
+      let mas = await AsyncStorage.getItem('master');
+      let are = await AsyncStorage.getItem('arena');
+      console.log("mas: ", JSON.parse(mas));
+      console.log("arena: ", JSON.parse(are));
+      this.state.masterList = JSON.parse(mas)
+      this.state.Arena = JSON.parse(are)
+      this.setState({masterList:this.state.masterList})
+      this.setState({Arena:this.state.Arena})
+    }
+    catch(error){
+      alert(error);
+    }
+  }
+
+  loadData = async() =>{
+    try{
+      let mas = await AsyncStorage.getItem('master');
+      let are = await AsyncStorage.getItem('arena');
+      let cap = await AsyncStorage.getItem('capacity');
+      let cNum = await AsyncStorage.getItem('courtN');
+      let cArray = await AsyncStorage.getItem('courtA');
+      console.log("mas: ", JSON.parse(mas));
+      console.log("arena: ", JSON.parse(are) , 'cNUM' ,cNum );
+      this.state.masterList = JSON.parse(mas);
+      this.state.Arena = JSON.parse(are);
+      this.state.capacity = JSON.parse(cap);
+      this.state.courtsNum = JSON.parse(cNum);
+      this.state.courtArr = JSON.parse(cArray);
+      this.setState({masterList:this.state.masterList})
+      this.setState({Arena:this.state.Arena})
+      this.setState({capacity:this.state.capacity});
+      this.setState({courtsNum:this.state.courtsNum});
+      this.setState({courtArr:this.state.courtArr});
+
+      this.props.navigation.navigate("List", {arena: this.state.Arena, cap:this.state.capacity, 
+      courtsNum:this.state.courtsNum, courtArr: this.state.courtArr, masterList:this.state.masterList });
+    }
+    catch(error){
+      alert(error);
+    }
+  }
+
   SetupCourts=()=>{
     var courts = {}
-    // console.log(this.state.Capacity % 2 )
-    if (isNaN(this.state.CourtsNum) ){
+    console.log("SETUP NUUM : ", this.state.courtsNum)
+    // console.log(this.state.capacity % 2 )
+    if (isNaN(this.state.courtsNum ) || this.state.courtsNum.replace(/\s/g, '').length == 0) {
       Alert.alert("Please enter the number of available Courts")
     }
-    else if(this.state.Capacity % 2 != 0){
+    else if(this.state.capacity % 2 != 0 || this.state.capacity.replace(/\s/g, '').length==0){
      Alert.alert("Please enter 'EVEN' Number Players") 
     }
     else if(this.state.Arena.length>0){
       Alert.alert("Already Setup, restart app. Restarting app will delete all data!")
-      this.props.navigation.navigate("List", {arena: this.state.Arena, cap:this.state.Capacity, 
-      courtsNum:this.state.CourtsNum });
+      this.props.navigation.navigate("List", {arena: this.state.Arena, cap:this.state.capacity, 
+      courtsNum:this.state.courtsNum, masterList:this.state.masterList, courtArr: this.state.courtArr });
+      // this.setState({courtsNum:''});
+      // this.setState({capacity:''}); 
     }
     else{
     
-    for (var i=0; i<this.state.CourtsNum; i++){
+    for (var i=0; i<this.state.courtsNum; i++){
       courts['Num'] = i+1
       courts["teamANum"] = 0
       courts["teamBNum"] = 0
@@ -55,12 +127,21 @@ export default class Setup extends React.Component {
     }
     // console.log("FINAL: ",this.state.Arena, this.state.courtArr)
 
-    this.setState({Arena:this.state.Arena}) 
-       this.props.navigation.navigate("List", {arena: this.state.Arena, cap:this.state.Capacity, 
-      courtsNum:this.state.CourtsNum, courtArr: this.state.courtArr });
+    this.setState({Arena:this.state.Arena}); 
+    // this.state.courtsNum =  '';
+       this.props.navigation.navigate("List", {arena: this.state.Arena, cap:this.state.capacity, 
+      courtsNum:this.state.courtsNum, courtArr: this.state.courtArr, masterList:this.state.masterList });      
+    console.log("No way") 
   }}
+
+
+  // backToGames=()=>{
+  //   this.props.navigation.navigate("List", {arena: this.state.Arena, cap:this.state.capacity, 
+  //     courtsNum:this.state.courtsNum, courtArr: this.state.courtArr, masterList:this.state.masterList });
+  // }
  
  render() {
+  console.log("WTF: ", this.state.courtsNum)
    return (    
    		<View style={styles.wrapper}>
       <KeyboardAvoidingView>    
@@ -69,8 +150,9 @@ export default class Setup extends React.Component {
               placeholderTextColor= "red" 
               underlineColorAndroid="gray" 
               placeholder="Enter Number Of Courts "
-              onChangeText={CourtsNum => this.setState({ CourtsNum: CourtsNum}) }
-              style={styles.textInput}
+              onChangeText={(courtsNum) => this.setState({courtsNum: courtsNum }) }
+              value={ this.state.courtsNum}
+              style = {styles.textInput}
               keyboardType={'numeric'}  
             />
 
@@ -78,13 +160,23 @@ export default class Setup extends React.Component {
               placeholderTextColor= "red" 
               underlineColorAndroid="gray"
               placeholder="Enter Num Of Players PER Team"
-              onChangeText={Capacity => this.setState({ Capacity: Capacity }) }
-				      style={styles.textInput}    
+              onChangeText={capacity => this.setState({ capacity: capacity }) }
+				      style={styles.textInput}  
+              value = {this.state.capacity} 
               keyboardType={'numeric'}  
             />
 
     <TouchableOpacity  onPress={this.SetupCourts.bind(this)} style={styles.button} >
       <Text style={styles.text}> DONE </Text>
+    </TouchableOpacity>
+
+
+    <TouchableOpacity  onPress={this.resetAll.bind(this)} style={styles.button} >
+      <Text style={styles.text}> RESET </Text>
+    </TouchableOpacity>
+
+    <TouchableOpacity  onPress={this.loadData.bind(this)} style={styles.button} >
+      <Text style={styles.text}> LOAD DATA </Text>
     </TouchableOpacity>
      </KeyboardAvoidingView>
       </View>
@@ -115,6 +207,7 @@ const styles = StyleSheet.create({
 		fontSize: 24,
 		color: "red",
 		backgroundColor: '#e8eae7',
+    textAlign:"center"
 
 	},
   text: {
