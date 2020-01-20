@@ -40,6 +40,7 @@ export default class MainActivity extends React.Component {
          curPlayersB: {},
          tempCourt: [],
          winnersW: [],
+         completeList: new Set(),
          move: [], 
          team: '',
          tempNum: 0,
@@ -54,42 +55,59 @@ export default class MainActivity extends React.Component {
          Name: '',
          shooters: [],
          prefCourt: [],
-         totalPlayers:10,
+         totalPlayers:0,
          SampleArray : [],
-         masterList : [
-         [{pref:0}, [{player: "Lebron", replacement: false}, {player:"AntDavis", replacement: false}]],
-         [{pref:0}, [{player:"Kyrie", replacement: true}, {player:"Durant", replacement: true}]],
-        [{pref:0}, [{player:"Majerle", replacement: false}]],
-        [{pref:0}, [{player:"Kawhi", replacement: false}, {player:"PG13", replacement: false}]],
-         [{pref:0}, [{player:'Larry', replacement: false}, {player:'Parish', replacement: false}]], 
-          [{pref:0}, [{player:'CONZ', replacement: false}]]
-          ],  
+        //  masterList : [
+        //  [{pref:0}, [{player: "Lebron", replacement: false}, {player:"AntDavis", replacement: false}]],
+        //  [{pref:0}, [{player:"Kyrie", replacement: true}, {player:"Durant", replacement: true}]],
+        // [{pref:0}, [{player:"Majerle", replacement: false}]],
+        // [{pref:0}, [{player:"Kawhi", replacement: false}, {player:"PG13", replacement: false}]],
+        //  [{pref:0}, [{player:'Larry', replacement: false}, {player:'Parish', replacement: false}]], 
+        //   [{pref:0}, [{player:'CONZ', replacement: false}]]
+        //   ],  
          cap: this.props.navigation.getParam("cap", "blank"),
          Arena: this.props.navigation.getParam("arena", "blank"),
          courtsNum: this.props.navigation.getParam("courtsNum", "blank"),
          courtArr: this.props.navigation.getParam("courtArr", "blank"),
          courtArrPref: [],
-         // masterList: this.props.navigation.getParam("masterList", "blank"),
+         masterList: this.props.navigation.getParam("masterList", "blank"),
          current: 0,
          answer: 'none'
        };
      }
   
- 
-  AddItemsToArray=()=>{
-    // console.log("NAME ", this.state.Name, this.state.Name.length, this.state.Name.replace(/\s/g, ''), this.state.Name.replace(/\s/g, '').length)
-      if (this.state.Name.length != 0 && this.state.Name.replace(/\s/g, '').length != 0 ){
-      this.state.SampleArray.push({player: this.state.Name, replacement: false});
-    }
-    else{
-      Alert.alert("Please Enter A Name")
-    }
-    this.setState({Name:''})
-    this.setState({SampleArray: this.state.SampleArray})
-    this.setState({totalPlayers: this.state.totalPlayers + 1})
-    // console.log(this.state.SampleArray, this.state.SampleArray.length, "total", this.state.totalPlayers);
-  }//good
+ checkDuplicate=(name)=>{
 
+  console.log("Check Duplicates: ", this.state.completeList)
+    let  x = name.toLowerCase() 
+    console.log("LOWER CASE ",x)
+    if (this.state.completeList.has(x)){
+      Alert.alert("Name Already Exists ")
+      return false
+
+    }
+    return true
+}
+
+  AddItemsToArray=()=>{
+    let san = this.state.Name.replace(/\s/g, '').toLowerCase()
+    if (this.checkDuplicate(san)){
+      if (this.state.Name.length != 0 && this.state.Name.replace(/\s/g, '').length != 0 ){
+        this.state.SampleArray.push({player: this.state.Name, replacement: false});
+      }
+      else{
+        Alert.alert("Please Enter A Name")
+      }
+      // console.log("ALL avail: ", this.state.completeList)
+
+      let noSpace = this.state.Name.replace(/\s/g, '')
+      console.log("No space", noSpace)
+      this.state.completeList.add(this.state.Name.replace(/\s/g, '').toLowerCase())
+      this.setState({Name:''})
+      this.setState({SampleArray: this.state.SampleArray})
+      this.setState({totalPlayers: this.state.totalPlayers + 1})
+  }//good
+}
   clearList=()=>{
     this.setState({SampleArray:[]})
   }
@@ -132,19 +150,15 @@ export default class MainActivity extends React.Component {
       rest.push({player: this.state.shooters[i], replacement: false});
       }
     }
-    // console.log("RestNUm:  ",this.state.restNum, rest)
     this.state.masterList.splice(this.state.restNum, 0, [{pref:0}, rest])
-    // this.state.masterList.unshift([{pref:0}, rest])
     if (hit.length != 0){
       this.state.masterList.unshift([{pref:0}, hit])
     }
-    // console.log("ADD MASTER 2 ",this.state.masterList)
     this.setState({hitShot: [] });
     this.setState({restNum: 0 });
     this.state.shooters = [];
     this.setState({shooters: this.state.shooters });  
     this.setState({masterList: this.state.masterList});
-    // console.log("ADD MASTER 2 ",this.state.masterList, this.state.shooters)
     this.StartGame();
   }//good
 
@@ -158,7 +172,6 @@ export default class MainActivity extends React.Component {
   }
 
   useInfo=()=>{
-    // console.log("Useinfo", this.state.remPlayer)
     if (this.state.remPlayer.length == 0){
       this.setState({ tempCourt:[] });
       this.setState({ remPlayer:[] });
@@ -167,7 +180,7 @@ export default class MainActivity extends React.Component {
             
     for (k in this.state.Arena[this.state.tempNum-1][this.state.team]){
         if (this.state.remPlayer[0]['label'] == this.state.Arena[this.state.tempNum-1][this.state.team][k][0]["player"]){
-          delete this.state.Arena[this.state.tempNum-1][this.state.team][k]
+          this.state.Arena[this.state.tempNum-1][this.state.team].splice(k,1)
           this.state.Arena[this.state.tempNum-1][this.state.team+"Num"] -= 1
         }
       }
@@ -177,11 +190,13 @@ export default class MainActivity extends React.Component {
           repP.push(val[1][j]['player']);
         }
       });
+    this.state.masterList.unshift([{pref:"W"}, [{player: this.state.remPlayer[0]['label'], replacement: false}]] )
     this.setState({ tempCourt: [] });
     this.setState({ allAvailable: repP });   
     this.setState({ remPlayer:[] });
     this.setState({ Arena: this.state.Arena });
     this.setState({ current:this.state.tempNum-1 })
+
     if(this.state.repFlag == false){
     this.setModalRepPlayerVisible(!this.state.modalRepPlayerVisible, "Enter Correction");
     }
@@ -191,15 +206,18 @@ export default class MainActivity extends React.Component {
   }
 
   updateMaster=()=>{
+    console.log(this.state.allAvailable)
     if (this.state.move.length == 0){
        Alert.alert("No one selected as replacement.")
        return 0
     }
     for(i in this.state.masterList){
-      for (j in this.state.masterList[i][1]){
+      // console.log("test:: ", this.state.masterList[i][1].length)
+      for (j = 0; j < this.state.masterList[i][1].length ; j++){
         if (this.state.masterList[i][1][j]['player'] == this.state.move[0]['value']){
-          this.state.masterList[i][1].splice(j,1)  
-          if (this.state.masterList[i][1].length == 0){
+          this.state.masterList[i][1].splice(j,1);
+          j--;  
+        if (this.state.masterList[i][1].length == 0){
             this.state.masterList.splice(i,1);
           }
           break;
@@ -325,7 +343,7 @@ export default class MainActivity extends React.Component {
                   names++;
               }
               else if(this.state.masterList[names][1].length + this.state.Arena[this.state.current]["teamANum"]  <= teamcap){
-                var set = this.extractFromList(names);
+                let set = this.extractFromList(names);
                 this.state.Arena[this.state.current]["teamANum"] += this.state.masterList[names][1].length;
                 delArray += [names];
                 for (i in set){
@@ -440,15 +458,10 @@ export default class MainActivity extends React.Component {
   async endGame(courtNum, loser, winner, status){
     if ( (this.state.Arena[courtNum-1]["teamBNum"] + this.state.Arena[courtNum-1]["teamANum"]) < this.state.cap){
       alert("Game has not started");
-      // console.log( this.state.Arena[courtNum-1]["teamBNum"] , " + ",  this.state.Arena[courtNum-1]["teamANum"] ," = ", this.state.cap )
       return
     }
     
-      // console.log("endgame court arr: ", this.state.courtArr, courtNum)
-      // var shallow =  this.state.courtArr;
-      // this.state.courtArrPref = shallow;
-      // this.state.courtArrPref.splice([courtNum-1], 1)
-      // console.log('endgame court after: ', this.state.courtArrPref, "shallow", shallow, "courtarr ", this.state.courtArr)
+    // console.log('cn ', courtNum,'loser ', loser,'winner ', winner,'status ', status, this.state.Arena)
       var temp = [];
       var titleP = '';
       this.state.current = courtNum-1
@@ -456,11 +469,13 @@ export default class MainActivity extends React.Component {
       for (i in this.state.Arena[courtNum-1][winner]){
         this.state.Arena[courtNum-1][winner][i][0]['replacement'] = false 
       }
-      for (i in this.state.Arena[courtNum-1][loser]){
+      for (i=0; i< this.state.Arena[courtNum-1][loser].length; i++){
+        // console.log(this.state.Arena[courtNum-1][loser][i])
         if (this.state.Arena[courtNum-1][loser][i][0]['replacement'] == false){
             temp.push(this.state.Arena[courtNum-1][loser][i][0])
             titleP += " " + (this.state.Arena[courtNum-1][loser][i][0]['player'])
-            delete this.state.Arena[courtNum-1][loser][i]
+            this.state.Arena[courtNum-1][loser].splice(i, 1);
+            i--;
             tempC += 1            
         }
         else{
@@ -485,28 +500,24 @@ export default class MainActivity extends React.Component {
             });
           ans = await prefAlert();
           if (ans == "YES"){
-            this.setModalPrefVisible(!this.state.modalPrefVisible, "Select Preferred Court: ")
-           // this.state.masterList.unshift([{pref:2}, temp])
-
-
-         
-          this.setState({masterList: this.state.masterList});
-           this.setState({Arena:this.state.Arena});
-           this.setState({winnersW: temp})
+            this.setModalPrefVisible(!this.state.modalPrefVisible, "Select Preferred Court: ")     
+            this.setState({masterList: this.state.masterList});
+            this.setState({Arena:this.state.Arena});
+            this.setState({winnersW: temp})
            return 0
        }
         }}
       this.setState({Arena:this.state.Arena});
+      // console.log("right before start", this.state.Arena)
       this.StartGame();
   
 }
 
 winnersWinners(){
   if (this.state.prefCourt.length == 0){
-    this.state.masterList.unshift([{pref:"Waiting"}, this.state.winnersW])
+    this.state.masterList.unshift([{pref:"W"}, this.state.winnersW])
     return 0
   } 
-  // console.log(" VALUE", this.state.prefCourt[0]['value'])
   var t = this.state.prefCourt[0]['value']  
   this.state.masterList.unshift([{pref: t[t.length - 1]}, this.state.winnersW])
   this.setState({masterList: this.state.masterList});
@@ -555,11 +566,11 @@ winnersWinners(){
       return t
   });
 
+
    return (
       <KeyboardAvoidingView style={styles.wrapper} behavior="padding" enabled>
       <ScrollView>
       <View>
-
           <TextInput
               placeholder="Enter 1 NAME at a Time : "
               onChangeText={(Name) => this.setState({ Name}) }
@@ -568,19 +579,19 @@ winnersWinners(){
               placeholderTextColor='gray' />
 
     <TouchableOpacity  onPress={this.AddItemsToArray.bind(this)} style={styles.addButton} >
-        <Text style={{color:'black', fontSize:24, textAlign: 'center'}}>+ ADD</Text>
+        <Text style={{color:'black', fontSize: 21, textAlign: 'center'}}>+ ADD</Text>
     </TouchableOpacity>     
 
     <Text style={{fontSize:40, marginBottom: 50}}> Names </Text>
       <TouchableOpacity onPress={this.clearList.bind(this)} style={styles.clearList} >
-        <Text style={{color:'gray', fontSize:20}}> CLEAR LIST</Text>
+        <Text style={{color:'gray', fontSize:20}}> CLEAR NAMES </Text>
       </TouchableOpacity>
 
     <View>
       <FlatList
         data={pending}
         style={styles.sampleArrayStye}
-        renderItem={({item}) => <Text style={{color:'purple', fontSize:24, alignItems:'center'}}>{item.key}</Text>}/>
+        renderItem={({item}) => <Text style={{color:'#e1a8ff', fontSize:24, alignItems:'center'}}>{item.key}</Text>}/>
     </View>  
 
     <TouchableOpacity  onPress={this.AddMaster.bind(this)} style={styles.doneAdding} >
@@ -665,17 +676,16 @@ winnersWinners(){
       <View  style={styles.modalStyle }>
         <Text style={{fontSize:30, backgroundColor:'yellow', color:'black'}}>{this.state.title} </Text>
         <SelectMultiple
-          maxSelect= {1}
-         
+          maxSelect= {1}        
           items={ this.state.allAvailable }
           selectedItems={ this.state.move }
           onSelectionsChange={this.onSelectionsChangePlayerTop} />
         
           <TouchableHighlight   onPress={() => 
-            this.setModalRepPlayerVisible(!this.state.modalRepPlayerVisible, "Replacements").then(this.updateMaster())} 
-            style={styles.modalButton}>
+              this.setModalRepPlayerVisible(!this.state.modalRepPlayerVisible, "Replacements").then(this.updateMaster())} 
+              style={styles.modalButton}>
             <Text style={styles.modalText}>Done</Text>
-        </TouchableHighlight>
+          </TouchableHighlight>
            </View>
      
     </Modal>
@@ -688,6 +698,7 @@ winnersWinners(){
         <SelectMultiple
 
           items={this.state.courtArr}
+          maxSelect = {1}
           selectedItems={ this.state.prefCourt }
           onSelectionsChange={this.onSelectionsChangePref} />
 
@@ -705,18 +716,8 @@ winnersWinners(){
 
    );
  }
-
 }
-     // <TouchableHighlight   onPress={() => 
-     //        this.saveData()}>
-     //        <Text>SSave</Text>
-     //    </TouchableHighlight>
 
-
-     // <TouchableHighlight   onPress={() => 
-     //        this.displayData()}>
-     //        <Text>SHOW DTATATATATAT</Text>
-     //    </TouchableHighlight>
 
 
 const styles = StyleSheet.create({
@@ -732,6 +733,7 @@ const styles = StyleSheet.create({
   sampleArrayStye: {
     width:150,
     alignSelf: 'stretch',
+    backgroundColor: '#fffaf4',
     fontSize: 30,
     borderColor: 'red',
     borderWidth: 1,
@@ -798,8 +800,8 @@ const styles = StyleSheet.create({
     color: "red",
     marginBottom: 25,
     width: '80%',
-    borderWidth: 3,
-    borderColor: 'pink',
+    borderWidth: 2,
+    borderColor: 'black',
     height: 65,
     backgroundColor: 'white',
     textAlign: "center", 
@@ -812,7 +814,6 @@ const styles = StyleSheet.create({
     addButtonText: {
     color: 'white',
     fontSize: 18,
-    borderColor: 'red',
     justifyContent: 'center',
      alignItems: 'center',
     flexDirection: 'row-reverse',
@@ -821,13 +822,13 @@ const styles = StyleSheet.create({
    addButton: {
     // zIndex: 1,
      position: 'absolute',
-    backgroundColor: 'orange',
+    backgroundColor: '#fcbf07',
     flexDirection:'row',
     width: '20%',
     height: 65,
-    borderWidth: 3,
+    borderWidth: 2,
     alignSelf:'flex-end',
-    borderColor: 'gray',
+    borderColor: 'black',
     alignItems: 'center',
     justifyContent: 'center',
      position: 'absolute',
@@ -853,7 +854,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     marginTop: 200,
     borderWidth: 2,
-    borderColor: 'orange',
+    borderColor: '#ff8c1d',
     flexDirection: 'row-reverse',
     height: 45,
     alignItems: 'center',

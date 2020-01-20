@@ -107,11 +107,22 @@ removePlayers = () =>{
 
 
   async setPref(names){
-    var t = names.slice(2, names.length-5)
-      prefAlert = (t) => new Promise((resolve, reject) => {  
+    var t = names.slice(3, names.length-5)
+    var name = t.split(" ")
+    var dName = '';
+    for (i in name){
+      console.log(i, i.length)
+      if(name[i].length>1)
+
+        dName +=' '+ name[i]
+
+    }
+    
+    console.log("NAME ", name, name[1], dName)
+      prefAlert = () => new Promise((resolve, reject) => {  
         Alert.alert(
                     "Add Court Pref for: ",
-                    t,
+                    dName,
                     [ {text: "Yes", onPress: () => { resolve('YES') }},
                       {text: "NO", onPress: () => { resolve('NO') }}  ],
                     { cancelable: true},
@@ -145,7 +156,7 @@ let currentList = Object.values(this.state.masterList).map(function(vals, i) {
       var t= {} ;
       for (val in vals[1]){
         if (t["key"] === undefined){
-          t["key"] = i+1 + " " + vals[1][val].player; }
+          t["key"] = i+1 + " : " + vals[1][val].player; }
         else{
           t["key"] += "  &  " + vals[1][val].player; }
       }
@@ -157,18 +168,18 @@ this.state.playerList = this.getNames()
 
  // console.log("GAME : ", this.state.playerList)
  // console.log("currentList", currentList)
- // console.log("courtArr ", this.state.courtArr, this.state.masterList)
+ console.log("courtArr ", this.state.courtArr)
 return (
 <ScrollView>
-<View>  
+<View style={styles.wrapper}>  
     
-<Text style={{fontSize:40, backgroundColor:'orange'}}>WAITING LIST</Text>
+<Text style={{fontSize:40, backgroundColor:'gray'}}>WAITING LIST</Text>
 
 <FlatList
     data={currentList} style={styles.textInput}
     renderItem={({item}) => 
     <TouchableHighlight onPress={()=>{this.setPref(item.key)} } >
-    <Text style={{fontSize:30, color:'yellow', marginBottom: 12}} >{item.key}</Text>
+    <Text style={{fontSize:30, color:'gray', marginBottom: 12}} >{item.key}</Text>
     </TouchableHighlight>
 
   }/>
@@ -229,9 +240,14 @@ return (
 
 
 const styles = StyleSheet.create({
-	textInput: {
+	wrapper:{
+    backgroundColor: 'white',
+    height: '100%',
+
+  },
+  textInput: {
 		marginBottom: "10%",
-		backgroundColor: 'purple',
+		backgroundColor: '#e6f0f7',
 	},
   modalText: {
     fontSize:30,
