@@ -56,12 +56,10 @@ export default class Setup extends React.Component {
     try{
       let mas = await AsyncStorage.getItem('master');
       let are = await AsyncStorage.getItem('arena');
-      console.log("mas: ", JSON.parse(mas));
-      console.log("arena: ", JSON.parse(are));
-      this.state.masterList = JSON.parse(mas)
-      this.state.Arena = JSON.parse(are)
-      this.setState({masterList:this.state.masterList})
-      this.setState({Arena:this.state.Arena})
+      this.state.masterList = JSON.parse(mas);
+      this.state.Arena = JSON.parse(are);
+      this.setState({masterList:this.state.masterList});
+      this.setState({Arena:this.state.Arena});
     }
     catch(error){
       alert(error);
@@ -75,8 +73,6 @@ export default class Setup extends React.Component {
       let cap = await AsyncStorage.getItem('capacity');
       let cNum = await AsyncStorage.getItem('courtN');
       let cArray = await AsyncStorage.getItem('courtA');
-      console.log("mas: ", JSON.parse(mas));
-      console.log("arena: ", JSON.parse(are) , 'cNUM' ,cNum );
       this.state.masterList = JSON.parse(mas);
       this.state.Arena = JSON.parse(are);
       this.state.capacity = JSON.parse(cap);
@@ -98,10 +94,9 @@ export default class Setup extends React.Component {
 
   SetupCourts=()=>{
     var courts = {}
-    console.log("SETUP NUUM : ", this.state.courtsNum)
-    // console.log(this.state.capacity % 2 )
+    console.log(this.state.capacity)
     if (isNaN(this.state.courtsNum ) || this.state.courtsNum.replace(/\s/g, '').length == 0) {
-      Alert.alert("Please enter the number of available Courts")
+      Alert.alert("Enter # of available Courts")
     }
     else if(this.state.capacity % 2 != 0 || this.state.capacity.replace(/\s/g, '').length==0){
      Alert.alert("Please enter 'EVEN' Number Players") 
@@ -125,13 +120,11 @@ export default class Setup extends React.Component {
       courts={}
       this.state.courtArr.push("Court : "+ (i+1))
     }
-    // console.log("FINAL: ",this.state.Arena, this.state.courtArr)
-
+    this.state.courtArr.push("Waiting : "+ 'W')
+    console.log("COURT ARRAY", this.state.courtArr)
     this.setState({Arena:this.state.Arena}); 
-    // this.state.courtsNum =  '';
-       this.props.navigation.navigate("List", {arena: this.state.Arena, cap:this.state.capacity, 
+    this.props.navigation.navigate("List", {arena: this.state.Arena, cap:this.state.capacity, 
       courtsNum:this.state.courtsNum, courtArr: this.state.courtArr, masterList:this.state.masterList });      
-    console.log("No way") 
   }}
 
 
@@ -141,7 +134,6 @@ export default class Setup extends React.Component {
   // }
  
  render() {
-  console.log("WTF: ", this.state.courtsNum)
    return (    
    		<View style={styles.wrapper}>
       <KeyboardAvoidingView>    
@@ -149,7 +141,7 @@ export default class Setup extends React.Component {
             <TextInput
               placeholderTextColor= "red" 
               underlineColorAndroid="gray" 
-              placeholder="Enter Number Of Courts "
+              placeholder="Enter # Of Courts "
               onChangeText={(courtsNum) => this.setState({courtsNum: courtsNum }) }
               value={ this.state.courtsNum}
               style = {styles.textInput}
@@ -159,8 +151,8 @@ export default class Setup extends React.Component {
             <TextInput 
               placeholderTextColor= "red" 
               underlineColorAndroid="gray"
-              placeholder="Enter Num Of Players PER Team"
-              onChangeText={capacity => this.setState({ capacity: capacity }) }
+              placeholder="Total Players On Each Court: "
+              onChangeText={capacity => this.setState({ capacity: capacity}) }
 				      style={styles.textInput}  
               value = {this.state.capacity} 
               keyboardType={'numeric'}  
