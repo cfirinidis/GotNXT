@@ -461,6 +461,19 @@ export default class MainActivity extends React.Component {
       return
     }
     
+    makeSure = () => new Promise((resolve) => {  
+            Alert.alert(
+                    "Are you Sure: ",
+                    winner + " WON?",
+                    [ {text: "Yes", onPress: () => { resolve('YES') }},
+                      {text: "NO", onPress: () => { resolve('NO') }}  ],
+                    { cancelable: false},
+                    );
+            });
+    let winnerConfirmation = await makeSure();
+    if (winnerConfirmation== "NO"){
+      return
+    }
     // console.log('cn ', courtNum,'loser ', loser,'winner ', winner,'status ', status, this.state.Arena)
       var temp = [];
       var titleP = '';
@@ -509,8 +522,7 @@ export default class MainActivity extends React.Component {
         }}
       this.setState({Arena:this.state.Arena});
       // console.log("right before start", this.state.Arena)
-      this.StartGame();
-  
+      this.StartGame();  
 }
 
 winnersWinners(){
@@ -614,14 +626,13 @@ winnersWinners(){
     <View>
     <Text style={{fontSize:30, color:'black'}}>Game {item.key} : </Text>
 
-      <TouchableHighlight onPress={()=>this.replacePlayer(item.key, "teamA", this.state.curPlayersA) } style={styles.teamStyle}>
-        
+      <TouchableHighlight onPress={()=>this.replacePlayer(item.key, "teamA", this.state.curPlayersA) } style={styles.teamStyle}>  
         <Text style={{color:"gray", fontSize:28}}>TEAM A :{"\n"}{item.valA}</Text>
       </TouchableHighlight>
 
-      <Text style={{color:"black", fontSize:34}}>- V S -</Text>
+      <Text style={{color:"black", fontSize:34, textAlign: 'center'}}>- V S -</Text>
+
     <TouchableHighlight onPress={()=>this.replacePlayer(item.key, "teamB", this.state.curPlayersB) } style={styles.teamStyle}>
-      
       <Text style={{color:"red", fontSize:28}}>TEAM B :{"\n"}{item.valB}</Text>
     </TouchableHighlight>
 
@@ -680,7 +691,6 @@ winnersWinners(){
           items={ this.state.allAvailable }
           selectedItems={ this.state.move }
           onSelectionsChange={this.onSelectionsChangePlayerTop} />
-        
           <TouchableHighlight   onPress={() => 
               this.setModalRepPlayerVisible(!this.state.modalRepPlayerVisible, "Replacements").then(this.updateMaster())} 
               style={styles.modalButton}>
