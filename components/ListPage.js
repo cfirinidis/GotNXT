@@ -33,6 +33,7 @@ export default class ShowList extends React.Component {
            testList: [],
            title: '',
            position: 0,
+           playerCount: 0,
        };
      }
 
@@ -68,7 +69,7 @@ removePlayers = () =>{
         }
       });
 
-  // console.log("removeplayer ",removePlayer)
+  // console.log("nums: ", r)
   for (k in removePlayer){
     for(i in this.state.masterList){
       for (j in this.state.masterList[i][1]){
@@ -97,11 +98,16 @@ removePlayers = () =>{
 
   getNames=()=>{
     r = [];
+    c = 0;
      Object.values(this.state.masterList).map(function(val) {
         for (j in val[1]){
           r.push(val[1][j]['player']);
+          c += 1;
         }
       });
+     // console.log("getNames", r, c)
+     this.state.playerCount = c;
+
     return r
   }
 
@@ -111,29 +117,14 @@ removePlayers = () =>{
     var name = t.split(" ")
     var dName = '';
     for (i in name){
-      console.log(i, i.length)
+      // console.log(i, i.length)
       if(name[i].length>1)
 
         dName +=' '+ name[i]
 
     }
     
-    console.log("NAME ", name, name[1], dName)
-      prefAlert = () => new Promise((resolve, reject) => {  
-        Alert.alert(
-                    "Add Court Pref for: ",
-                    dName,
-                    [ {text: "Yes", onPress: () => { resolve('YES') }},
-                      {text: "NO", onPress: () => { resolve('NO') }}  ],
-                    { cancelable: true},
-                    );
-        });
-    ans = await prefAlert(t);
-    if (ans == "YES"){
-      this.setModalPrefVisible(!this.state.modalPrefVisible, "Select Preferred Court: ")
-
-    }
-    
+   this.setModalPrefVisible(!this.state.modalPrefVisible, "Select Preferred Court: ")
     var t = names.slice(2, names.length)
     this.setState({prefPos: names[0] - 1})
   }
@@ -156,11 +147,11 @@ let currentList = Object.values(this.state.masterList).map(function(vals, i) {
       var t= {} ;
       for (val in vals[1]){
         if (t["key"] === undefined){
-          t["key"] = i+1 + " : " + vals[1][val].player; }
+          t["key"] = " " + (i+1) + ": " + vals[1][val].player; }
         else{
-          t["key"] += "  &  " + vals[1][val].player; }
+          t["key"] += "\n" +" "+ vals[1][val].player; }
       }
-      t["key"] += " ( " + vals[0].pref + " )" 
+      t["key"] += "\n (court pref: " + vals[0].pref + " )" 
       return t
 });
 
@@ -168,18 +159,18 @@ this.state.playerList = this.getNames()
 
  // console.log("GAME : ", this.state.playerList)
  // console.log("currentList", currentList)
- console.log("courtArr ", this.state.courtArr)
+ // console.log("courtArr ", this.state.courtArr)
 return (
 <ScrollView>
-<View style={styles.wrapper}>  
+<View>  
     
-<Text style={{fontSize:40, backgroundColor:'gray'}}>WAITING LIST</Text>
+<Text style={styles.header}>WAITING LIST -> {this.state.playerCount}</Text>
 
 <FlatList
-    data={currentList} style={styles.textInput}
+    data={currentList} style={styles.textList}
     renderItem={({item}) => 
     <TouchableHighlight onPress={()=>{this.setPref(item.key)} } >
-    <Text style={{fontSize:30, color:'gray', marginBottom: 12}} >{item.key}</Text>
+    <Text style={{fontSize:28, color:'#000bef', marginBottom: 12}} >{item.key}</Text>
     </TouchableHighlight>
 
   }/>
@@ -205,7 +196,7 @@ return (
 
 
 <TouchableHighlight onPress={()=> {
-    this.setModalVisible(!this.state.modalVisible, "Choose Player To Remove"); }}
+    this.setModalVisible(!this.state.modalVisible, "Choose Player(s) To Remove"); }}
      style={styles.buttons}>  
     <Text style={{fontSize:28, color:"white"}}> - Remove </Text>  
 </TouchableHighlight>
@@ -218,6 +209,7 @@ return (
         <SelectMultiple
 
           items={this.state.courtArr}
+          maxSelect = {1}
           selectedItems={ this.state.prefCourt }
           onSelectionsChange={this.onSelectionsChangePref} />
 
@@ -237,15 +229,33 @@ return (
   }
 }
 
+ // console.log("NAME ", name, name[1], dName)
+ //      prefAlert = () => new Promise((resolve, reject) => {  
+ //        Alert.alert(
+ //                    "Add Court Pref for: ",
+ //                    dName,
+ //                    [ {text: "Yes", onPress: () => { resolve('YES') }},
+ //                      {text: "NO", onPress: () => { resolve('NO') }}  ],
+ //                    { cancelable: true},
+ //                    );
+ //        });
+ //    ans = await prefAlert(t);
+ //    if (ans == "YES"){
+ //      this.setModalPrefVisible(!this.state.modalPrefVisible, "Select Preferred Court: ")
+
+ //    }
+
 
 
 const styles = StyleSheet.create({
-	wrapper:{
-    backgroundColor: 'white',
-    height: '100%',
+  header: {
+    fontSize:38,
+    backgroundColor:'gray',
+    color: 'white',
+    width:"100%",
 
-  },
-  textInput: {
+ },
+  textList: {
 		marginBottom: "10%",
 		backgroundColor: '#e6f0f7',
 	},
@@ -255,7 +265,7 @@ const styles = StyleSheet.create({
   },
   buttons: {
     width: "40%",
-    height: 40,
+    height: 45,
     backgroundColor:'black',
     marginBottom: 10,
   },
@@ -270,26 +280,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  inputs:{
-    padding: 18,
-    marginBottom: 8,
-    fontSize: 22,
-    color: "red",
-    backgroundColor: '#e8eae7',
-  },
-  list: {
-    position: 'absolute',
-    zIndex: 11,
-    backgroundColor: 'white',
-    width: 90,
-    left: 130,
-    top: 175,
-    flexDirection: 'row',
-    height: 90,
-    borderRadius: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-    elevation: 8,
-  }
 
 });	

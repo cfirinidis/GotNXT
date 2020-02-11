@@ -25,7 +25,6 @@ import Games from './currentGames';
 import StartFunction from './function';
 import SelectMultiple from 'react-native-select-multiple';
 
-const STORAGE_KEY = '@save_arena'
 export default class MainActivity extends React.Component { 
   constructor(props) {
        super(props);
@@ -40,7 +39,6 @@ export default class MainActivity extends React.Component {
          curPlayersB: {},
          tempCourt: [],
          winnersW: [],
-         completeList: new Set(),
          move: [], 
          team: '',
          tempNum: 0,
@@ -57,20 +55,21 @@ export default class MainActivity extends React.Component {
          prefCourt: [],
          totalPlayers:0,
          SampleArray : [],
-        //  masterList : [
-        //  [{pref:0}, [{player: "Lebron", replacement: false}, {player:"AntDavis", replacement: false}]],
-        //  [{pref:0}, [{player:"Kyrie", replacement: true}, {player:"Durant", replacement: true}]],
-        // [{pref:0}, [{player:"Majerle", replacement: false}]],
-        // [{pref:0}, [{player:"Kawhi", replacement: false}, {player:"PG13", replacement: false}]],
-        //  [{pref:0}, [{player:'Larry', replacement: false}, {player:'Parish', replacement: false}]], 
-        //   [{pref:0}, [{player:'CONZ', replacement: false}]]
-        //   ],  
+         masterList : [
+         [{pref:0}, [{player: "Lebron", replacement: false}, {player:"AntDavis", replacement: false}]],
+         [{pref:0}, [{player:"Kyrie", replacement: true}, {player:"Durant", replacement: true}]],
+        [{pref:0}, [{player:"Majerle", replacement: false}]],
+        [{pref:0}, [{player:"Kawhi", replacement: false}, {player:"PG13", replacement: false}]],
+         [{pref:0}, [{player:'Larry', replacement: false}, {player:'Parish', replacement: false}]], 
+          [{pref:0}, [{player:'Kidd', replacement: false}]]
+          ],  
          cap: this.props.navigation.getParam("cap", "blank"),
          Arena: this.props.navigation.getParam("arena", "blank"),
          courtsNum: this.props.navigation.getParam("courtsNum", "blank"),
          courtArr: this.props.navigation.getParam("courtArr", "blank"),
          courtArrPref: [],
-         masterList: this.props.navigation.getParam("masterList", "blank"),
+         // masterList: this.props.navigation.getParam("masterList", "blank"),
+         completeList: this.props.navigation.getParam("completeList", "blank"),
          current: 0,
          answer: 'none'
        };
@@ -78,10 +77,10 @@ export default class MainActivity extends React.Component {
   
  checkDuplicate=(name)=>{
 
-  console.log("Check Duplicates: ", this.state.completeList)
+  // console.log("Check Duplicates: ", this.state.completeList)
     let  x = name.toLowerCase() 
-    console.log("LOWER CASE ",x)
-    if (this.state.completeList.has(x)){
+    // console.log("LOWER CASE ",x, " ", this.state.completeList)
+    if (this.state.completeList.includes(x)){
       Alert.alert("Name Already Exists ")
       return false
 
@@ -101,8 +100,8 @@ export default class MainActivity extends React.Component {
       // console.log("ALL avail: ", this.state.completeList)
 
       let noSpace = this.state.Name.replace(/\s/g, '')
-      console.log("No space", noSpace)
-      this.state.completeList.add(this.state.Name.replace(/\s/g, '').toLowerCase())
+      // console.log("No space", noSpace)
+      this.state.completeList.push(this.state.Name.replace(/\s/g, '').toLowerCase())
       this.setState({Name:''})
       this.setState({SampleArray: this.state.SampleArray})
       this.setState({totalPlayers: this.state.totalPlayers + 1})
@@ -206,7 +205,7 @@ export default class MainActivity extends React.Component {
   }
 
   updateMaster=()=>{
-    console.log(this.state.allAvailable)
+    // console.log(this.state.allAvailable)
     if (this.state.move.length == 0){
        Alert.alert("No one selected as replacement.")
        return 0
@@ -277,12 +276,14 @@ export default class MainActivity extends React.Component {
     let CAP = JSON.stringify(this.state.cap);
     let CN = JSON.stringify(this.state.courtsNum);
     let CARRAY = JSON.stringify(this.state.courtArr);
+    let CL = JSON.stringify(this.state.completeList);
     // console.log("MS: ", this.state.masterList)
     AsyncStorage.setItem('arena', AR);
     AsyncStorage.setItem('master', MS);
     AsyncStorage.setItem('capacity', CAP);
     AsyncStorage.setItem('courtN', CN);
     AsyncStorage.setItem('courtA', CARRAY);
+    AsyncStorage.setItem('completeList', CL)
 
   }
 
@@ -461,6 +462,19 @@ export default class MainActivity extends React.Component {
       return
     }
     
+    makeSure = () => new Promise((resolve) => {  
+            Alert.alert(
+                    "Are you Sure: ",
+                    winner + " WON?",
+                    [ {text: "Yes", onPress: () => { resolve('YES') }},
+                      {text: "NO", onPress: () => { resolve('NO') }}  ],
+                    { cancelable: false},
+                    );
+            });
+    let winnerConfirmation = await makeSure();
+    if (winnerConfirmation== "NO"){
+      return
+    }
     // console.log('cn ', courtNum,'loser ', loser,'winner ', winner,'status ', status, this.state.Arena)
       var temp = [];
       var titleP = '';
@@ -509,8 +523,7 @@ export default class MainActivity extends React.Component {
         }}
       this.setState({Arena:this.state.Arena});
       // console.log("right before start", this.state.Arena)
-      this.StartGame();
-  
+      this.StartGame();  
 }
 
 winnersWinners(){
@@ -539,16 +552,24 @@ winnersWinners(){
       if (keys == "teamA"){
         for (things in val[keys]){
           for (players in val[keys][things]){
-            A += [val[keys][things][players]['player'] + '    ']
+            A += [val[keys][things][players]['player']+'\n']
             currentPlayerA.push(val[keys][things][players]['player'])
-      }}}
+      }}
+      if(A.length>1){
+        A = A.replace(/\n$/, "") 
+      }
+    }
       else{
         for (things in val[keys]){
           for (players in val[keys][things]){
-            B += [val[keys][things][players]['player'] + '    ']
+            B += [val[keys][things][players]['player']+'\n']
             currentPlayerB.push(val[keys][things][players]['player'])
-      }}}
-  }
+      }}
+      if(B.length>1){
+        B = B.replace(/\n$/, "") 
+      }
+    }}
+  
      t["key"] =  val.Num.toString()
      t["valA"] = A 
      t["valB"] = B
@@ -567,8 +588,12 @@ winnersWinners(){
   });
 
 
+    // <TouchableOpacity  onPress={this.StartGame.bind(this)} style={styles.addStart } >
+    //     <Text style={{color:'black', fontSize:32}}>Start</Text>
+    // </TouchableOpacity>
+
    return (
-      <KeyboardAvoidingView style={styles.wrapper} behavior="padding" enabled>
+      <KeyboardAvoidingView style={styles.wrapper}>
       <ScrollView>
       <View>
           <TextInput
@@ -598,40 +623,48 @@ winnersWinners(){
         < Text style={{color:'white', fontSize:20}}> DONE ADDING </Text>
     </TouchableOpacity>
 
-    <TouchableOpacity  onPress={this.StartGame.bind(this)} style={styles.addStart } >
-        <Text style={{color:'black', fontSize:32}}>Start</Text>
-    </TouchableOpacity>
-
     <TouchableOpacity  onPress={this.GoToLists.bind(this)} style={styles.list} >
         <Text style={{color:'grey', fontSize:32}}>  List  </Text>
     </TouchableOpacity>
 
-    <View style={{padding:20}}>  
+    <View style={{padding:'1%'}}>  
     <Text style={{fontSize:40, backgroundColor:'black', color:'white', textAlign:'center',flexDirection:'row', justifyContent:'flex-end'}}>Current Games</Text>
     <FlatList
     data={Game} 
     renderItem={({ item }) => (
     <View>
-    <Text style={{fontSize:30, color:'black'}}>Game {item.key} : </Text>
 
-      <TouchableHighlight onPress={()=>this.replacePlayer(item.key, "teamA", this.state.curPlayersA) } style={styles.teamStyle}>
-        
-        <Text style={{color:"gray", fontSize:28}}>TEAM A :{"\n"}{item.valA}</Text>
+    <TouchableOpacity onPress={()=>this.StartGame() } style={{ backgroundColor: '#e8ffdd',
+    borderColor: '#51ff00', width:"40%", borderWidth: 5, margin: "3%" }}>      
+      <Text style={styles.gameBottonText}>Game {item.key} </Text>
+    </TouchableOpacity>
+
+
+<View style={{flex:1}}>
+
+
+      <TouchableHighlight onPress={()=>this.replacePlayer(item.key, "teamA", this.state.curPlayersA) } style={styles.teamStyle}>  
+        <Text style={{color:"gray", fontSize:28}}>{item.valA}</Text>
       </TouchableHighlight>
 
-      <Text style={{color:"black", fontSize:34}}>- V S -</Text>
-    <TouchableHighlight onPress={()=>this.replacePlayer(item.key, "teamB", this.state.curPlayersB) } style={styles.teamStyle}>
-      
-      <Text style={{color:"red", fontSize:28}}>TEAM B :{"\n"}{item.valB}</Text>
-    </TouchableHighlight>
-
-    <TouchableHighlight onPress={()=>this.endGame(item.key, "teamB", "teamA", 'reg')} style={styles.teamAWonStyle} >
+    <TouchableHighlight onPress={()=>this.endGame(item.key, "teamB", "teamA", 'reg')} style={styles.teamAWonStyleB} >
       <Text style={{color:"white", fontSize:26}}>Team A Won</Text>
     </TouchableHighlight>
 
-    <TouchableHighlight onPress={()=>this.endGame(item.key, "teamA", "teamB", 'reg') } style={styles.teamBWonStyle}>
+
+</View>
+      <Text style={{color:"black", fontSize:34, textAlign: 'center'}}>- V S -</Text>
+
+<View style={{flex:1}}>
+    <TouchableHighlight onPress={()=>this.replacePlayer(item.key, "teamB", this.state.curPlayersB) } style={styles.teamStyle}>
+      <Text style={{color:"red", fontSize:28}}>{item.valB}</Text>
+    </TouchableHighlight>
+
+    <TouchableHighlight onPress={()=>this.endGame(item.key, "teamA", "teamB", 'reg') } style={styles.teamBWonStyleB}>
       <Text style={{color:"white", fontSize:26}}>Team B Won</Text>
     </TouchableHighlight>
+
+</View>
     
     </View>)}/>
     </View>
@@ -657,7 +690,7 @@ winnersWinners(){
     <Modal 
     visible={this.state.modalPlayerVisible}>
       <View  style={styles.modalStyle }>
-        <Text style={{fontSize:30, backgroundColor:'red', color:'white'}}>{this.state.title} </Text>
+        <Text style={{fontSize:30, backgroundColor:'red', color:'white'}} >{this.state.title} </Text>
         <SelectMultiple
           maxSelect= {1}
           items={this.state.tempCourt}
@@ -680,7 +713,6 @@ winnersWinners(){
           items={ this.state.allAvailable }
           selectedItems={ this.state.move }
           onSelectionsChange={this.onSelectionsChangePlayerTop} />
-        
           <TouchableHighlight   onPress={() => 
               this.setModalRepPlayerVisible(!this.state.modalRepPlayerVisible, "Replacements").then(this.updateMaster())} 
               style={styles.modalButton}>
@@ -724,12 +756,9 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     backgroundColor: '#e8eae7',
-    padding: 5,
+    padding: "2%",
   },
-  teamStyle: {
-    backgroundColor: 'white',
-    borderWidth:3,
-  },
+
   sampleArrayStye: {
     width:150,
     alignSelf: 'stretch',
@@ -764,35 +793,65 @@ const styles = StyleSheet.create({
     fontSize: 22,
     color:'white', 
   },
+
+  teamStyle: {
+    position:'relative',
+    backgroundColor: 'white',
+    borderWidth:3,
+    width: "50%",
+  },
   
    teamAWonStyle:{
+    // position:'absolute',
     marginTop: 5,
     backgroundColor:'gray',
     flexDirection: 'row',
     width:'45%',
     alignItems: 'center',
     justifyContent: 'center',
-    height: 60,
+    height: 50,
+    borderWidth: 2,
+    borderColor: 'black',
+  },
+  teamAWonStyleB:{
+    flex:1,
+    position:'absolute',
+     alignSelf:'flex-end',
+    marginTop: 5,
+    backgroundColor:'gray',
+    flexDirection: 'row',
+    width:'45%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 50,
     borderWidth: 2,
     borderColor: 'black',
   },
   teamBWonStyle:{
+    // position:'relative',
     backgroundColor:'red',
     flexDirection: 'row',
     alignSelf: 'flex-end',
-    width:'45%',
-    bottom: 60,
-    height: 60,
+    width:'40%',
+    bottom: 50,
+    height: 50,
     borderWidth: 2,
     borderColor: 'black',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  header: {
-    fontSize: 24,
-    marginBottom: 60,
-    color: '#fff',
-    fontWeight: 'bold',
+   teamBWonStyleB:{
+    position:'relative',
+    backgroundColor:'red',
+    flexDirection: 'row',
+    alignSelf: 'flex-end',
+    width:'45%',
+    bottom: 50,
+    height: 50,
+    borderWidth: 2,
+    borderColor: 'black',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   textInput: {
     // alignSelf: '',
@@ -817,6 +876,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
      alignItems: 'center',
     flexDirection: 'row-reverse',
+
+  },
+
+   gameBottonText: {
+    fontSize:30,
+    color:'green',
+        alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
+
 
   },
    addButton: {
@@ -852,7 +921,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     width: '35%',
     alignSelf: 'flex-end',
-    marginTop: 200,
+    marginTop: 150,
     borderWidth: 2,
     borderColor: '#ff8c1d',
     flexDirection: 'row-reverse',
@@ -862,4 +931,3 @@ const styles = StyleSheet.create({
   },
  
 }); 
-
