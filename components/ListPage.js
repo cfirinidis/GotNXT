@@ -147,11 +147,11 @@ let currentList = Object.values(this.state.masterList).map(function(vals, i) {
       var t= {} ;
       for (val in vals[1]){
         if (t["key"] === undefined){
-          t["key"] = i+1 + ": " + vals[1][val].player; }
+          t["key"] = " " + (i+1) + ": " + vals[1][val].player; }
         else{
-          t["key"] += "  /  " + vals[1][val].player; }
+          t["key"] += "\n" +" "+ vals[1][val].player; }
       }
-      t["key"] += " ( " + vals[0].pref + " )" 
+      t["key"] += "\n (court pref: " + vals[0].pref + " )" 
       return t
 });
 
@@ -170,7 +170,7 @@ return (
     data={currentList} style={styles.textList}
     renderItem={({item}) => 
     <TouchableHighlight onPress={()=>{this.setPref(item.key)} } >
-    <Text style={{fontSize:28, color:'blue', marginBottom: 12}} >{item.key}</Text>
+    <Text style={{fontSize:28, color:'#000bef', marginBottom: 12}} >{item.key}</Text>
     </TouchableHighlight>
 
   }/>
@@ -196,7 +196,7 @@ return (
 
 
 <TouchableHighlight onPress={()=> {
-    this.setModalVisible(!this.state.modalVisible, "Choose Player To Remove"); }}
+    this.setModalVisible(!this.state.modalVisible, "Choose Player(s) To Remove"); }}
      style={styles.buttons}>  
     <Text style={{fontSize:28, color:"white"}}> - Remove </Text>  
 </TouchableHighlight>
@@ -209,6 +209,7 @@ return (
         <SelectMultiple
 
           items={this.state.courtArr}
+          maxSelect = {1}
           selectedItems={ this.state.prefCourt }
           onSelectionsChange={this.onSelectionsChangePref} />
 

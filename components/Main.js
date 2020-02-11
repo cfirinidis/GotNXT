@@ -55,20 +55,20 @@ export default class MainActivity extends React.Component {
          prefCourt: [],
          totalPlayers:0,
          SampleArray : [],
-        //  masterList : [
-        //  [{pref:0}, [{player: "Lebron", replacement: false}, {player:"AntDavis", replacement: false}]],
-        //  [{pref:0}, [{player:"Kyrie", replacement: true}, {player:"Durant", replacement: true}]],
-        // [{pref:0}, [{player:"Majerle", replacement: false}]],
-        // [{pref:0}, [{player:"Kawhi", replacement: false}, {player:"PG13", replacement: false}]],
-        //  [{pref:0}, [{player:'Larry', replacement: false}, {player:'Parish', replacement: false}]], 
-        //   [{pref:0}, [{player:'CONZ', replacement: false}]]
-        //   ],  
+         masterList : [
+         [{pref:0}, [{player: "Lebron", replacement: false}, {player:"AntDavis", replacement: false}]],
+         [{pref:0}, [{player:"Kyrie", replacement: true}, {player:"Durant", replacement: true}]],
+        [{pref:0}, [{player:"Majerle", replacement: false}]],
+        [{pref:0}, [{player:"Kawhi", replacement: false}, {player:"PG13", replacement: false}]],
+         [{pref:0}, [{player:'Larry', replacement: false}, {player:'Parish', replacement: false}]], 
+          [{pref:0}, [{player:'Kidd', replacement: false}]]
+          ],  
          cap: this.props.navigation.getParam("cap", "blank"),
          Arena: this.props.navigation.getParam("arena", "blank"),
          courtsNum: this.props.navigation.getParam("courtsNum", "blank"),
          courtArr: this.props.navigation.getParam("courtArr", "blank"),
          courtArrPref: [],
-         masterList: this.props.navigation.getParam("masterList", "blank"),
+         // masterList: this.props.navigation.getParam("masterList", "blank"),
          completeList: this.props.navigation.getParam("completeList", "blank"),
          current: 0,
          answer: 'none'
@@ -554,15 +554,22 @@ winnersWinners(){
           for (players in val[keys][things]){
             A += [val[keys][things][players]['player']+'\n']
             currentPlayerA.push(val[keys][things][players]['player'])
-      }}}
+      }}
+      if(A.length>1){
+        A = A.replace(/\n$/, "") 
+      }
+    }
       else{
         for (things in val[keys]){
           for (players in val[keys][things]){
             B += [val[keys][things][players]['player']+'\n']
             currentPlayerB.push(val[keys][things][players]['player'])
-      }}}
-  }
-  console.log("HWAT is A B", A, " ", B)
+      }}
+      if(B.length>1){
+        B = B.replace(/\n$/, "") 
+      }
+    }}
+  
      t["key"] =  val.Num.toString()
      t["valA"] = A 
      t["valB"] = B
@@ -637,7 +644,7 @@ winnersWinners(){
 
 
       <TouchableHighlight onPress={()=>this.replacePlayer(item.key, "teamA", this.state.curPlayersA) } style={styles.teamStyle}>  
-        <Text style={{color:"gray", fontSize:28}}>TEAM A :{"\n"}{item.valA}</Text>
+        <Text style={{color:"gray", fontSize:28}}>{item.valA}</Text>
       </TouchableHighlight>
 
     <TouchableHighlight onPress={()=>this.endGame(item.key, "teamB", "teamA", 'reg')} style={styles.teamAWonStyleB} >
@@ -650,7 +657,7 @@ winnersWinners(){
 
 <View style={{flex:1}}>
     <TouchableHighlight onPress={()=>this.replacePlayer(item.key, "teamB", this.state.curPlayersB) } style={styles.teamStyle}>
-      <Text style={{color:"red", fontSize:28}}>TEAM B :{"\n"}{item.valB}</Text>
+      <Text style={{color:"red", fontSize:28}}>{item.valB}</Text>
     </TouchableHighlight>
 
     <TouchableHighlight onPress={()=>this.endGame(item.key, "teamA", "teamB", 'reg') } style={styles.teamBWonStyleB}>
