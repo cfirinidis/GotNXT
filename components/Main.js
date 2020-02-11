@@ -55,20 +55,20 @@ export default class MainActivity extends React.Component {
          prefCourt: [],
          totalPlayers:0,
          SampleArray : [],
-         masterList : [
-         [{pref:0}, [{player: "Lebron", replacement: false}, {player:"AntDavis", replacement: false}]],
-         [{pref:0}, [{player:"Kyrie", replacement: true}, {player:"Durant", replacement: true}]],
-        [{pref:0}, [{player:"Majerle", replacement: false}]],
-        [{pref:0}, [{player:"Kawhi", replacement: false}, {player:"PG13", replacement: false}]],
-         [{pref:0}, [{player:'Larry', replacement: false}, {player:'Parish', replacement: false}]], 
-          [{pref:0}, [{player:'Kidd', replacement: false}]]
-          ],  
+        //  masterList : [
+        //  [{pref:0}, [{player: "Lebron", replacement: false}, {player:"AntDavis", replacement: false}]],
+        //  [{pref:0}, [{player:"Kyrie", replacement: true}, {player:"Durant", replacement: true}]],
+        // [{pref:0}, [{player:"Majerle", replacement: false}]],
+        // [{pref:0}, [{player:"Kawhi", replacement: false}, {player:"PG13", replacement: false}]],
+        //  [{pref:0}, [{player:'Larry', replacement: false}, {player:'Parish', replacement: false}]], 
+        //   [{pref:0}, [{player:'Kidd', replacement: false}]]
+        //   ],  
          cap: this.props.navigation.getParam("cap", "blank"),
          Arena: this.props.navigation.getParam("arena", "blank"),
          courtsNum: this.props.navigation.getParam("courtsNum", "blank"),
          courtArr: this.props.navigation.getParam("courtArr", "blank"),
          courtArrPref: [],
-         // masterList: this.props.navigation.getParam("masterList", "blank"),
+         masterList: this.props.navigation.getParam("masterList", "blank"),
          completeList: this.props.navigation.getParam("completeList", "blank"),
          current: 0,
          answer: 'none'
