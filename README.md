@@ -2,17 +2,18 @@
 
 
 <p float='left'>
-<img src="https://github.com/cfirinidis/GotNXT/blob/MASTER/PICTURES/Screenshot_1579062434.png" width="250" height="375">
+<img src="https://github.com/cfirinidis/GotNXT/blob/MASTER/PICTURES/Screenshot_1581445804.png" width="250" height="375">
 
 
-<img src="https://github.com/cfirinidis/GotNXT/blob/MASTER/PICTURES/Screenshot_1579062861.png" width="250" height="375">
-
+<img src="https://github.com/cfirinidis/GotNXT/blob/MASTER/PICTURES/Screenshot_1581445815.png" width="250" height="375">
+<img src="https://github.com/cfirinidis/GotNXT/blob/MASTER/PICTURES/Screenshot_1581445821.png" width="250" height="375">
  </p>
 
 ## Features:
 ###### Players go directly back into queue after game is over and aren't removed until they declare they're done.
 
-<img src="https://github.com/cfirinidis/GotNXT/blob/MASTER/PICTURES/Screenshot_1579062874.png" width="250" height="375">
+<img src="https://github.com/cfirinidis/GotNXT/blob/MASTER/PICTURES/Screenshot_1581446293.png" width="250" height="375">
+
 
 
 Allows for mid game substitutions to account for emergencies/injuries:
