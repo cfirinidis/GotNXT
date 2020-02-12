@@ -113,20 +113,8 @@ removePlayers = () =>{
 
 
   async setPref(names){
-    var t = names.slice(3, names.length-5)
-    var name = t.split(" ")
-    var dName = '';
-    for (i in name){
-      // console.log(i, i.length)
-      if(name[i].length>1)
-
-        dName +=' '+ name[i]
-
-    }
-    
-   this.setModalPrefVisible(!this.state.modalPrefVisible, "Select Preferred Court: ")
-    var t = names.slice(2, names.length)
-    this.setState({prefPos: names[0] - 1})
+  this.setModalPrefVisible(!this.state.modalPrefVisible, "Select Preferred Court: ")
+  this.setState({prefPos: names[1] - 1})
   }
 
 setPrefMaster=()=>{
@@ -151,7 +139,7 @@ let currentList = Object.values(this.state.masterList).map(function(vals, i) {
         else{
           t["key"] += "\n" +" "+ vals[1][val].player; }
       }
-      t["key"] += "\n (court pref: " + vals[0].pref + " )" 
+      t["key"] += "\n [Court Pref: " + vals[0].pref + " ]" 
       return t
 });
 
