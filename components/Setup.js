@@ -73,7 +73,7 @@ export default class Setup extends React.Component {
       // console.log("load ", tempList) 
       // tempList = new Set(tempList);
       // console.log("load ", tempList)
-      console.log("LOAD::  ", this.state.completeList, this.state.masterList) 
+      // console.log("LOAD::  ", this.state.completeList, this.state.masterList) 
 
       this.setState({masterList:this.state.masterList})
       this.setState({Arena:this.state.Arena})
