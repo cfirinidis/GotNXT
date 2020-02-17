@@ -25,7 +25,7 @@ export default class Setup extends React.Component {
          masterList: [],
          courtArr:[],
          test:'',
-         completeList: [],
+         completeList: {},
        };
      }
 
@@ -49,7 +49,7 @@ export default class Setup extends React.Component {
       this.setState({capacity : '' });
       this.setState({masterList : [] });
       this.setState({courtArr : [] });
-      this.setState({completeList: [] });
+      this.setState({completeList: {} });
     }
      else{return 0}
   }

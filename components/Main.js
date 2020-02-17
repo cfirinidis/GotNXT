@@ -79,8 +79,8 @@ export default class MainActivity extends React.Component {
 
   // console.log("Check Duplicates: ", this.state.completeList)
     let  x = name.toLowerCase() 
-    // console.log("LOWER CASE ",x, " ", this.state.completeList)
-    if (this.state.completeList.includes(x)){
+    console.log("LOWER CASE ",x, " ", this.state.completeList)
+    if (x in this.state.completeList){
       Alert.alert("Name Already Exists ")
       return false
 
@@ -101,7 +101,7 @@ export default class MainActivity extends React.Component {
 
       let noSpace = this.state.Name.replace(/\s/g, '')
       // console.log("No space", noSpace)
-      this.state.completeList.push(this.state.Name.replace(/\s/g, '').toLowerCase())
+      this.state.completeList[this.state.Name.replace(/\s/g, '').toLowerCase()]= 1
       this.setState({Name:''})
       this.setState({SampleArray: this.state.SampleArray})
       this.setState({totalPlayers: this.state.totalPlayers + 1})
@@ -163,7 +163,7 @@ export default class MainActivity extends React.Component {
 
   GoToLists=()=>{
     this.props.navigation.navigate("Show", {arena: this.state.Arena,
-     list: this.state.masterList, courtArr: this.state.courtArr});  
+     list: this.state.masterList, courtArr: this.state.courtArr, completeList: this.state.completeList});  
   }
    
   GoToModal=()=>{
@@ -376,7 +376,7 @@ export default class MainActivity extends React.Component {
                                     this.state.Arena[this.state.current]["teamBNum"] );
                   if ( this.state.diff >= this.state.shooters.length ){
                     this.state.command = " Shoot for " + ((this.state.cap/2) - this.state.Arena[this.state.current]["teamANum"] + 
-                      "To Play On TEAM-A")
+                      " To Play On TEAM-A")
                     this.state.diff = ((this.state.cap/2) - this.state.Arena[this.state.current]["teamANum"])
                   }
                   else{
@@ -438,7 +438,6 @@ export default class MainActivity extends React.Component {
       this.state.tempNum = num
       this.state.team = team
       if (sub =="WIN"){
-        // alert("one day this will work")
         this.endGame(num, team, team, "win")
       }
       else{
@@ -502,26 +501,30 @@ export default class MainActivity extends React.Component {
         if (status == 'reg'){
           this.state.masterList.push([{pref:0}, temp])
         }
+        //winnerWinner
         else{
-          prefAlert = () => new Promise((resolve) => {  
-            Alert.alert(
-                    "Add Court Pref for: ",
-                    titleP,
-                    [ {text: "Yes", onPress: () => { resolve('YES') }},
-                      {text: "NO", onPress: () => { resolve('NO') }}  ],
-                    { cancelable: true},
-                    );
-            });
-          ans = await prefAlert();
-          if (ans == "YES"){
+          // prefAlert = () => new Promise((resolve) => {  
+          //   Alert.alert(
+          //           "Add Court Pref for: ",
+          //           titleP,
+          //           [ {text: "Yes", onPress: () => { resolve('YES') }},
+          //             {text: "NO", onPress: () => { resolve('NO') }}  ],
+          //           { cancelable: true},
+          //           );
+          //   });
+          // ans = await prefAlert();
+          //if (ans == "YES"){
             this.setModalPrefVisible(!this.state.modalPrefVisible, "Select Preferred Court: ")     
             this.setState({masterList: this.state.masterList});
-            this.setState({Arena:this.state.Arena});
+            // this.setState({Arena:this.state.Arena});
+            this.setState({current: 0});
             this.setState({winnersW: temp})
-           return 0
-       }
+            this.saveData();
+           
+       //}
         }}
       this.setState({Arena:this.state.Arena});
+      
       // console.log("right before start", this.state.Arena)
       this.StartGame();  
 }
@@ -535,6 +538,7 @@ winnersWinners(){
   this.state.masterList.unshift([{pref: t[t.length - 1]}, this.state.winnersW])
   this.setState({masterList: this.state.masterList});
   this.setState({prefCourt:[] })
+  this.saveData();
 }
 
  render() {

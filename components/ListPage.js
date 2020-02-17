@@ -25,6 +25,7 @@ export default class ShowList extends React.Component {
        this.state = {
          masterList : this.props.navigation.getParam("list", "blank"),
          courtArr: this.props.navigation.getParam("courtArr", "blank"),
+         completeList : this.props.navigation.getParam("completeList", "blank"),
            modalVisible: false,
            modalPrefVisible: false,
            toRemove: [],
@@ -69,8 +70,13 @@ removePlayers = () =>{
         }
       });
 
-  // console.log("nums: ", r)
+  console.log("COMP: ", this.state.completeList)
   for (k in removePlayer){
+    console.log("KKK", k)
+    if (removePlayer[k] in this.state.completeList){
+      console.log("SMAHHT", k)
+      delete this.state.completeList[removePlayer[k]]
+    }
     for(i in this.state.masterList){
       for (j in this.state.masterList[i][1]){
         // console.log("for loop", this.state.masterList[i][1][j]['player'])
@@ -105,7 +111,6 @@ removePlayers = () =>{
           c += 1;
         }
       });
-     // console.log("getNames", r, c)
      this.state.playerCount = c;
 
     return r
