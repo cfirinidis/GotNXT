@@ -79,7 +79,7 @@ export default class MainActivity extends React.Component {
 
   // console.log("Check Duplicates: ", this.state.completeList)
     let  x = name.toLowerCase() 
-    console.log("LOWER CASE ",x, " ", this.state.completeList)
+    // console.log("LOWER CASE ",x, " ", this.state.completeList)
     if (x in this.state.completeList){
       Alert.alert("Name Already Exists ")
       return false
@@ -387,10 +387,7 @@ export default class MainActivity extends React.Component {
                 if (response == "YES"){
                     delArray += [names]
                     this.state.restNum = names - (delArray.length - 1)
-                    // console.log("START: ", names, " ", delArray.length)
                     delArray = this.removeFromList(delArray)
-                  
-                    
                     this.setModalVisible(!this.state.modalVisible,  "Select Player(s) That Hit");
                     break
                   } 
@@ -407,7 +404,6 @@ export default class MainActivity extends React.Component {
         this.setState({masterList: this.state.masterList});
         this.setState({Arena:this.state.Arena});
         this.saveData();
-
   }
 
 
@@ -483,7 +479,6 @@ export default class MainActivity extends React.Component {
         this.state.Arena[courtNum-1][winner][i][0]['replacement'] = false 
       }
       for (i=0; i< this.state.Arena[courtNum-1][loser].length; i++){
-        // console.log(this.state.Arena[courtNum-1][loser][i])
         if (this.state.Arena[courtNum-1][loser][i][0]['replacement'] == false){
             temp.push(this.state.Arena[courtNum-1][loser][i][0])
             titleP += " " + (this.state.Arena[courtNum-1][loser][i][0]['player'])

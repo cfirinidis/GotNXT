@@ -69,23 +69,16 @@ removePlayers = () =>{
           r.push(val[1][j]['player']);
         }
       });
-
-  console.log("COMP: ", this.state.completeList)
   for (k in removePlayer){
-    console.log("KKK", k)
     if (removePlayer[k] in this.state.completeList){
-      console.log("SMAHHT", k)
       delete this.state.completeList[removePlayer[k]]
     }
     for(i in this.state.masterList){
       for (j in this.state.masterList[i][1]){
-        // console.log("for loop", this.state.masterList[i][1][j]['player'])
         if (removePlayer.includes(this.state.masterList[i][1][j]['player'])){
-          // console.log("remove: ", this.state.masterList[i][1][j]['player'] )
           this.state.masterList[i][1].splice(j,1)
         }}
           if (this.state.masterList[i][1].length == 0){
-            // console.log("remove all: ", this.state.masterList[i][1] )
             this.state.masterList.splice(i,1);
           }
       }    
