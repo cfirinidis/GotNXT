@@ -3,13 +3,11 @@
 
 <p float='left'>
 <img src="https://github.com/cfirinidis/GotNXT/blob/MASTER/PICTURES/Screenshot_1581445804.png" width="250" height="375">
- 
- ## VID
-<video src="https://github.com/cfirinidis/GotNXT/blob/MASTER/PICTURES/vid1.webm" width="320" height="200"></video>
-
 <img src="https://github.com/cfirinidis/GotNXT/blob/MASTER/PICTURES/Screenshot_1581445815.png" width="250" height="375">
 <img src="https://github.com/cfirinidis/GotNXT/blob/MASTER/PICTURES/Screenshot_1581445821.png" width="250" height="375">
  </p>
+<img src="https://github.com/cfirinidis/GotNXT/blob/MASTER/PICTURES/vid1.gif" width="250" height="375">
+
 
 ## Features:
 ###### Players go directly back into queue after game is over and aren't removed until they declare they're done.
