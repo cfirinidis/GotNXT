@@ -19,9 +19,7 @@ import { createAppContainer } from 'react-navigation';
 import { createStackNavigator} from 'react-navigation-stack'; 
 import Setup from './Setup';
 import PopUp from './PopUp';
-import Dialog from "react-native-dialog";
 import CustomPromptComponent from './Modal';
-import Games from './currentGames';
 import StartFunction from './function';
 import SelectMultiple from 'react-native-select-multiple';
 
@@ -76,10 +74,7 @@ export default class MainActivity extends React.Component {
      }
   
  checkDuplicate=(name)=>{
-
-  // console.log("Check Duplicates: ", this.state.completeList)
     let  x = name.toLowerCase() 
-    // console.log("LOWER CASE ",x, " ", this.state.completeList)
     if (x in this.state.completeList){
       Alert.alert("Name Already Exists ")
       return false
@@ -97,10 +92,7 @@ export default class MainActivity extends React.Component {
       else{
         Alert.alert("Please Enter A Name")
       }
-      // console.log("ALL avail: ", this.state.completeList)
-
       let noSpace = this.state.Name.replace(/\s/g, '')
-      // console.log("No space", noSpace)
       this.state.completeList[this.state.Name.replace(/\s/g, '').toLowerCase()]= 1
       this.setState({Name:''})
       this.setState({SampleArray: this.state.SampleArray})
@@ -205,13 +197,11 @@ export default class MainActivity extends React.Component {
   }
 
   updateMaster=()=>{
-    // console.log(this.state.allAvailable)
     if (this.state.move.length == 0){
        Alert.alert("No one selected as replacement.")
        return 0
     }
     for(i in this.state.masterList){
-      // console.log("test:: ", this.state.masterList[i][1].length)
       for (j = 0; j < this.state.masterList[i][1].length ; j++){
         if (this.state.masterList[i][1][j]['player'] == this.state.move[0]['value']){
           this.state.masterList[i][1].splice(j,1);
@@ -258,7 +248,6 @@ export default class MainActivity extends React.Component {
     for (i in delArray){
       this.state.masterList.splice(delArray[i]-i, 1)
     }
-    // this.setState({restNum:0});
     return [];
   }
 
@@ -382,7 +371,6 @@ export default class MainActivity extends React.Component {
                   else{
                   this.state.command = "Shoot for " + this.state.diff
                   }
-                  // console.log("SHOOTERS BEFORE RESPONSE: ", this.state.shooters)
                 let response = await AsyncAlert(this.state.command, s);
                 if (response == "YES"){
                     delArray += [names]
@@ -537,9 +525,6 @@ winnersWinners(){
 }
 
  render() {
-  // console.log("NUMMM: ", this.state.courtsNum)
-  // console.log("MasterList : ", this.state.masterList)
-  // console.log("RENDER THE ARENA : ", this.state.Arena, this.state.curPlayers, "TEMPO: ", this.state.tempCourt)
   let Game = this.state.Arena.map((val, key)=> {
     let A = []
     let B = []
@@ -720,7 +705,6 @@ winnersWinners(){
            </View>
      
     </Modal>
-
 
 <Modal 
     visible={this.state.modalPrefVisible}>
