@@ -7,12 +7,22 @@ import ShowList from './ListPage';
 import PopUp from './PopUp';
 import ModalExample from './Modal'
 import StartFunction from './function'
+import Login from './Login';
+import SignUp from './SignUp'
 
 
 const MainNavigator = createStackNavigator({
+    Login:{
+        screen: Login
+    },
+    SignUp:{
+        screen: SignUp
+    },
+
     Main: { 
         screen: Setup,
     },
+  
     List: {
     	screen: MainActivity,
     },
