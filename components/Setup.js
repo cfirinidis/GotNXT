@@ -139,7 +139,7 @@ export default class Setup extends React.Component {
    return (    
    		<View style={styles.wrapper}>
       <KeyboardAvoidingView>    
-      <Text style={styles.title}>GotNXT</Text>
+      <Text style={styles.title}> GotNXT </Text>
             <TextInput
               placeholderTextColor= "purple" 
               underlineColorAndroid="gray" 
@@ -179,7 +179,7 @@ export default class Setup extends React.Component {
  }
 }
  
-
+// backgroundColor: '#e8eae7',
 const styles = StyleSheet.create({
 	wrapper: {
     flex: 1,

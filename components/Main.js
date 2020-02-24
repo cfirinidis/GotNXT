@@ -60,6 +60,23 @@ export default class MainActivity extends React.Component {
         // [{pref:0}, [{player:"Kawhi", replacement: false}, {player:"PG13", replacement: false}]],
         //  [{pref:0}, [{player:'Larry', replacement: false}, {player:'Parish', replacement: false}]], 
         //   [{pref:0}, [{player:'Kidd', replacement: false}]]
+        //   ,
+        //     [{pref:0}, [{player: "Lebron1", replacement: false}, {player:"Ant1Davis", replacement: false}]],
+        //  [{pref:0}, [{player:"Kyrie1", replacement: true}, {player:"Dur1ant", replacement: true}]],
+        // [{pref:0}, [{player:"Majerle1", replacement: false}]],
+        // [{pref:0}, [{player:"Kawhi1", replacement: false}, {player:"PG113", replacement: false}]],
+        //  [{pref:0}, [{player:'Larr1y', replacement: false}, {player:'Pa1rish', replacement: false}]], 
+        //   [{pref:0}, [{player:'Kidd1', replacement: false}]]
+        //   ,
+        //     [{pref:0}, [{player: "Le2bron", replacement: false}, {player:"Ant2Davis", replacement: false}]],
+        //  [{pref:0}, [{player:"Ky2rie", replacement: true}, {player:"Dura2nt", replacement: true}]],
+        // [{pref:0}, [{player:"Majer2le", replacement: false}]],
+        // [{pref:0}, [{player:"Kawh2i", replacement: false}, {player:"P2G13", replacement: false}]],
+        //  [{pref:0}, [{player:'Lar2ry', replacement: false}, {player:'Par2ish', replacement: false}]], 
+        //   [{pref:0}, [{player:'Ki2dd', replacement: false}]]
+         
+
+
         //   ],  
          cap: this.props.navigation.getParam("cap", "blank"),
          Arena: this.props.navigation.getParam("arena", "blank"),
@@ -74,9 +91,10 @@ export default class MainActivity extends React.Component {
      }
   
  checkDuplicate=(name)=>{
-    let  x = name.toLowerCase() 
-    if (x in this.state.completeList){
-      Alert.alert("Name Already Exists ")
+    // let  x = name.toLowerCase() 
+    console.log("completet list ",this.state.completeList)
+    if (name in this.state.completeList){
+      Alert.alert("Name Already Exists ", JSON.stringify(this.state.completeList))
       return false
 
     }
@@ -92,8 +110,9 @@ export default class MainActivity extends React.Component {
       else{
         Alert.alert("Please Enter A Name")
       }
-      let noSpace = this.state.Name.replace(/\s/g, '')
+      // let noSpace = this.state.Name.replace(/\s/g, '')
       this.state.completeList[this.state.Name.replace(/\s/g, '').toLowerCase()]= 1
+      // this.state.completeList.push(this.state.Name.replace(/\s/g, '').toLowerCase())
       this.setState({Name:''})
       this.setState({SampleArray: this.state.SampleArray})
       this.setState({totalPlayers: this.state.totalPlayers + 1})
@@ -150,12 +169,13 @@ export default class MainActivity extends React.Component {
     this.state.shooters = [];
     this.setState({shooters: this.state.shooters });  
     this.setState({masterList: this.state.masterList});
+    this.setState({completeList: this.state.completeList})
     this.StartGame();
   }//good
 
   GoToLists=()=>{
     this.props.navigation.navigate("Show", {arena: this.state.Arena,
-     list: this.state.masterList, courtArr: this.state.courtArr, completeList: this.state.completeList});  
+     list: this.state.masterList, courtArr: this.state.courtArr, compList: this.state.completeList});  
   }
    
   GoToModal=()=>{
@@ -277,8 +297,6 @@ export default class MainActivity extends React.Component {
   }
 
   async StartGame(){
-    this.func = new StartFunction();
-    // this.func.printF();
       let teamcap = (this.state.cap/2);
       let delArray = [];
       let crash = 0;
@@ -296,30 +314,31 @@ export default class MainActivity extends React.Component {
                     );
       });
 
-      // let start = await AsyncAlert("Pick teams from List", '')
-      // if (start =="YES"){
-      //   console.log(this.state.masterList)
-      //   for(i in this.state.masterList){
-      //     console.log("i", i, this.state.masterList[i].length)
-      //     if (this.state.masterList[i].length > 1){
-      //       for (j in this.state.masterList[i]){
-      //         console.log("FOR j ", this.state.masterList[i][j]['player'])
-      //         this.state.shooters.push(this.state.masterList[i][j]['player'])
+      let start = await AsyncAlert("Pick teams from List", '')
+      if (start =="YES"){
+        console.log(this.state.masterList)
+        for(i in this.state.masterList){
+          console.log("i", i, this.state.masterList[i].length)
+          if (this.state.masterList[i].length > 1){
+            for (j in this.state.masterList[i]){
+              console.log("FOR j ", this.state.masterList[i][j]['player'])
+              this.state.shooters.push(this.state.masterList[i][j]['player'])
 
-      //       }
-      //     }
-      //     else{
-      //       console.log("single player", this.state.masterList[i][0])
-      //     this.state.shooters.push(this.state.masterList[i][0]['player'])
-      //   }
-      //   }
-      //   // console.log("SHooter", this.state.shooters)
-      //   this.setState({modalVisible: true});
-      //   console.log(this.state.theyHit)
+            }
+          }
+          else{
+            console.log("single player", this.state.masterList[i][0])
+          this.state.shooters.push(this.state.masterList[i][0]['player'])
+        }
+        }
+        // console.log("SHooter", this.state.shooters)
+        this.setState({modalVisible: true});
+        console.log(this.state.theyHit)
 
-      // }
+      }
 
-      // else{
+      else{ 
+
         while(crash < this.state.masterList.length){//add full contingency
               if (this.state.current >= this.state.Arena.length){
                    Alert.alert("GAMES FULL!")
@@ -331,7 +350,7 @@ export default class MainActivity extends React.Component {
               if(this.state.current + 1 != this.state.masterList[names][0]['pref'] && this.state.masterList[names][0]['pref'] != 0 ){
                   // console.log("Wanted to be skipped")
                   names++;
-              }
+                }
               else if(this.state.masterList[names][1].length + this.state.Arena[this.state.current]["teamANum"]  <= teamcap){
                 let set = this.extractFromList(names);
                 this.state.Arena[this.state.current]["teamANum"] += this.state.masterList[names][1].length;
@@ -354,6 +373,7 @@ export default class MainActivity extends React.Component {
                   names = 0
                   delArray = this.removeFromList(delArray)
                 }}
+                
               else{
                   if( this.state.Arena[this.state.current]["teamANum"] + this.state.Arena[this.state.current]["teamBNum"] != this.state.cap){
                   let s = '';
@@ -386,14 +406,16 @@ export default class MainActivity extends React.Component {
           this.setState({ current: this.state.current+1 })
           this.removeFromList( delArray )
           break;
-          }//if full
+ 
+         }//if full
           crash++;          
           }//end of while
+
+        }//esle
         this.setState({masterList: this.state.masterList});
         this.setState({Arena:this.state.Arena});
         this.saveData();
   }
-
 
   onSelectionsChangePref = (prefCourt) => {
     // selectedFruits is array of { label, value }
@@ -408,14 +430,14 @@ export default class MainActivity extends React.Component {
   async replacePlayer(num, team, players){
       replaceAlert = (title, msg) => new Promise((resolve) => {  
         Alert.alert(
-                    title,
-                    msg,
-                    [ {text: "Winners / Winners", onPress: () => {resolve('WIN') }},  
-                      {text: "Correction", onPress: () => { resolve('NO') }},
-                      {text: "Subtitute", onPress: () => { resolve('YES') }} 
-                      ],
-                    { cancelable: true},
-                    );
+            title,
+            msg,
+            [ {text: "Winners / Winners", onPress: () => {resolve('WIN') }},  
+              {text: "Correction", onPress: () => { resolve('NO') }},
+              {text: "Subtitute", onPress: () => { resolve('YES') }} 
+              ],
+            { cancelable: true},
+            );
       });
 
       var sub = await replaceAlert("Replace Player", "Replacement / Correction")

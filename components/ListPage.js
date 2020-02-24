@@ -25,7 +25,7 @@ export default class ShowList extends React.Component {
        this.state = {
          masterList : this.props.navigation.getParam("list", "blank"),
          courtArr: this.props.navigation.getParam("courtArr", "blank"),
-         completeList : this.props.navigation.getParam("completeList", "blank"),
+         completeList : this.props.navigation.getParam("compList", "blank"),
            modalVisible: false,
            modalPrefVisible: false,
            toRemove: [],
@@ -57,32 +57,28 @@ AddPlayer=()=>{
 }
 
 removePlayers = () =>{
-  var removePlayer = [];
-  var r = [];
-  var tempML = [];
+  let removePlayer = [];
+  let removeComp = [];
 
   for ( i in this.state.toRemove){
     removePlayer.push(this.state.toRemove[i]['label'])
+    removeComp.push(this.state.toRemove[i]['label'].toLowerCase())
   }
-  Object.values(this.state.masterList).map(function(val) {
-        for (j in val[1]){
-          r.push(val[1][j]['player']);
-        }
-      });
-  for (k in removePlayer){
-    if (removePlayer[k] in this.state.completeList){
-      delete this.state.completeList[removePlayer[k]]
+
+  for (k in removeComp){
+    if (removeComp[k] in this.state.completeList){
+      delete this.state.completeList[removeComp[k]]
+    }}
+
+  for(i in this.state.masterList){
+    for (j in this.state.masterList[i][1]){
+      if (removePlayer.includes(this.state.masterList[i][1][j]['player'])){
+        this.state.masterList[i][1].splice(j,1)
+    }}
+    if (this.state.masterList[i][1].length == 0){
+      this.state.masterList.splice(i,1);
     }
-    for(i in this.state.masterList){
-      for (j in this.state.masterList[i][1]){
-        if (removePlayer.includes(this.state.masterList[i][1][j]['player'])){
-          this.state.masterList[i][1].splice(j,1)
-        }}
-          if (this.state.masterList[i][1].length == 0){
-            this.state.masterList.splice(i,1);
-          }
-      }    
-  }
+  }    
 }
 
   setModalVisible=(visible, p)=> new Promise((resolve)=> {
@@ -111,8 +107,10 @@ removePlayers = () =>{
 
 
   async setPref(names){
+    console.log("Setpref : ", names.split(':'))
+    let temp =  names.split(':')
   this.setModalPrefVisible(!this.state.modalPrefVisible, "Select Preferred Court: ")
-  this.setState({prefPos: names[1] - 1})
+  this.setState({prefPos: temp[0] - 1})
   }
 
 setPrefMaster=()=>{
@@ -120,8 +118,9 @@ setPrefMaster=()=>{
     return 0
   } 
   var t = this.state.prefCourt[0]['value'] 
+  console.log("SET PREF T: ", t , this.state.prefPos , this.state.masterList[this.state.prefPos], this.state.masterList[this.state.prefPos][0]['pref'])
   this.state.masterList[this.state.prefPos][0]['pref'] = t[t.length - 1]
-  this.setState({ masterList: this.state.masterList })
+  // this.setState({ masterList: this.state.masterList })
   this.setState({prefPos: '' })  
   this.setState({prefCourt:[] })
 
@@ -158,9 +157,7 @@ return (
     <TouchableHighlight onPress={()=>{this.setPref(item.key)} } >
     <Text style={{fontSize:28, color:'#000bef', marginBottom: 12}} >{item.key}</Text>
     </TouchableHighlight>
-
   }/>
-
 
 <Modal visible={this.state.modalVisible}>
       <View style={styles.modalStyle}>
@@ -242,7 +239,7 @@ const styles = StyleSheet.create({
 
  },
   textList: {
-		marginBottom: "10%",
+		marginBottom: 10,
 		backgroundColor: '#e6f0f7',
 	},
   modalText: {
@@ -256,7 +253,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   modalStyle:{
-    marginBottom:120,
+    marginBottom:130,
   },
   modalButtons:{
     width: '40%',
