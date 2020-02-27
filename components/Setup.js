@@ -98,7 +98,7 @@ export default class Setup extends React.Component {
     if (isNaN(this.state.courtsNum ) || this.state.courtsNum.replace(/\s/g, '').length == 0) {
       Alert.alert("Enter # of available Courts")
     }
-    else if(this.state.capacity % 2 != 0 || this.state.capacity.replace(/\s/g, '').length==0){
+    else if(this.state.capacity.replace(/\s/g, '').length==0){
      Alert.alert("Please enter 'EVEN' Number Players") 
     }
     else if(this.state.Arena.length>0){
@@ -153,7 +153,8 @@ export default class Setup extends React.Component {
             <TextInput 
               placeholderTextColor= "purple" 
               underlineColorAndroid="gray"
-              placeholder="Total Players On Each Court: "
+              type='numeric'
+              placeholder="Total Players On Each Team: "
               onChangeText={capacity => this.setState({ capacity: capacity}) }
 				      style={styles.textInput}  
               value = {this.state.capacity} 

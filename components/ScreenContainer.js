@@ -24,9 +24,7 @@ const MainNavigator = createStackNavigator({
     },
   
     List: {
-    	screen: MainActivity,
-
-        params: {compList: 'completeList'}
+    	screen: MainActivity
     },
     Show: {
     	screen: ShowList,

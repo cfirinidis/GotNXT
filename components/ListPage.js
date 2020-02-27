@@ -44,7 +44,6 @@ onSelectionsChange = (toRemove) => {
   }
 
 onSelectionsChangePref = (prefCourt) => {
-    // selectedFruits is array of { label, value }
     this.setState({ prefCourt })
   }
 
