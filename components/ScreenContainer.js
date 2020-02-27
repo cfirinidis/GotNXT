@@ -29,7 +29,6 @@ const MainNavigator = createStackNavigator({
   
     List: {
     	screen: MainActivity,
-        
     },
     Show: {
     	screen: ShowList,

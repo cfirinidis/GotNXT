@@ -315,7 +315,12 @@ updateMaster=()=>{
 
   }
 
+<<<<<<< HEAD
    async StartGame(){
+=======
+  async StartGame(){
+      let teamcap = this.state.cap;
+>>>>>>> Add signup and login pages.
       let delArray = [];
       let names = 0;
       AsyncAlert = (title, msg) => new Promise((resolve, reject) => {  
@@ -327,6 +332,7 @@ updateMaster=()=>{
                     { cancelable: false},
                     );
       });
+<<<<<<< HEAD
         for(let run = 0; run < this.state.masterList.length; run++){//add full contingency
                 while(this.state.current < this.state.Arena.length && this.state.Arena[this.state.current]["teamANum"]  + this.state.Arena[this.state.current]["teamBNum"] == 2*this.state.cap){
                   // console.log(this.state.current)
@@ -335,6 +341,36 @@ updateMaster=()=>{
                   }
                   if (this.state.current >= this.state.Arena.length){
                     this.setState({ current: this.state.current})
+=======
+
+      // let start = await AsyncAlert("Pick teams from List", '')
+      // if (start =="YES"){
+      //   console.log(this.state.masterList)
+      //   for(i in this.state.masterList){
+      //     console.log("i", i, this.state.masterList[i].length)
+      //     if (this.state.masterList[i].length > 1){
+      //       for (j in this.state.masterList[i]){
+      //         console.log("FOR j ", this.state.masterList[i][j]['player'])
+      //         this.state.shooters.push(this.state.masterList[i][j]['player'])
+
+      //       }
+      //     }
+      //     else{
+      //       console.log("single player", this.state.masterList[i][0])
+      //     this.state.shooters.push(this.state.masterList[i][0]['player'])
+      //   }
+      //   }
+      //   // console.log("SHooter", this.state.shooters)
+      //   this.setState({modalVisible: true});
+      //   console.log(this.state.theyHit)
+
+      // }
+
+      // else{ 
+
+        while(crash < this.state.masterList.length){//add full contingency
+              if (this.state.current >= this.state.Arena.length){
+>>>>>>> Add signup and login pages.
                    Alert.alert("GAMES FULL!")
                    break
                 }
@@ -396,6 +432,10 @@ updateMaster=()=>{
          }//if full        
           }//end of while
 
+<<<<<<< HEAD
+=======
+        // }//esle
+>>>>>>> Add signup and login pages.
         this.setState({masterList: this.state.masterList});
         this.setState({Arena:this.state.Arena});
         console.log("ARENA in startgame: ", this.state.Arena)

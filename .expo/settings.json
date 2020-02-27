@@ -3,6 +3,10 @@
   "lanType": "ip",
   "dev": true,
   "minify": false,
+<<<<<<< HEAD
   "urlRandomness": "dr-gft",
+=======
+  "urlRandomness": "97-cmy",
+>>>>>>> Add signup and login pages.
   "https": false
 }

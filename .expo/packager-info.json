@@ -1,10 +1,10 @@
 {
   "devToolsPort": 19002,
-  "expoServerPort": null,
-  "packagerPort": null,
-  "packagerPid": null,
-  "expoServerNgrokUrl": "https://z3-55s.conz.gotnxt.exp.direct",
-  "packagerNgrokUrl": "https://packager.z3-55s.conz.gotnxt.exp.direct",
-  "ngrokPid": 17808,
+  "expoServerPort": 19000,
+  "packagerPort": 19001,
+  "packagerPid": 4054,
+  "expoServerNgrokUrl": "https://97-cmy.conz.gotnxt.exp.direct",
+  "packagerNgrokUrl": "https://packager.97-cmy.conz.gotnxt.exp.direct",
+  "ngrokPid": 4083,
   "webpackServerPort": null
 }
