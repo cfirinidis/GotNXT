@@ -92,9 +92,9 @@ export default class MainActivity extends React.Component {
   
  checkDuplicate=(name)=>{
     // let  x = name.toLowerCase() 
-    console.log("completet list ",this.state.completeList)
+    // console.log("completet list ",this.state.completeList)
     if (name in this.state.completeList){
-      Alert.alert("Name Already Exists ", JSON.stringify(this.state.completeList))
+      Alert.alert("Name Already Exists ")
       return false
 
     }
@@ -297,7 +297,7 @@ export default class MainActivity extends React.Component {
   }
 
   async StartGame(){
-      let teamcap = (this.state.cap/2);
+      let teamcap = this.state.cap;
       let delArray = [];
       let crash = 0;
       let names = 0;
@@ -314,30 +314,30 @@ export default class MainActivity extends React.Component {
                     );
       });
 
-      let start = await AsyncAlert("Pick teams from List", '')
-      if (start =="YES"){
-        console.log(this.state.masterList)
-        for(i in this.state.masterList){
-          console.log("i", i, this.state.masterList[i].length)
-          if (this.state.masterList[i].length > 1){
-            for (j in this.state.masterList[i]){
-              console.log("FOR j ", this.state.masterList[i][j]['player'])
-              this.state.shooters.push(this.state.masterList[i][j]['player'])
+      // let start = await AsyncAlert("Pick teams from List", '')
+      // if (start =="YES"){
+      //   console.log(this.state.masterList)
+      //   for(i in this.state.masterList){
+      //     console.log("i", i, this.state.masterList[i].length)
+      //     if (this.state.masterList[i].length > 1){
+      //       for (j in this.state.masterList[i]){
+      //         console.log("FOR j ", this.state.masterList[i][j]['player'])
+      //         this.state.shooters.push(this.state.masterList[i][j]['player'])
 
-            }
-          }
-          else{
-            console.log("single player", this.state.masterList[i][0])
-          this.state.shooters.push(this.state.masterList[i][0]['player'])
-        }
-        }
-        // console.log("SHooter", this.state.shooters)
-        this.setState({modalVisible: true});
-        console.log(this.state.theyHit)
+      //       }
+      //     }
+      //     else{
+      //       console.log("single player", this.state.masterList[i][0])
+      //     this.state.shooters.push(this.state.masterList[i][0]['player'])
+      //   }
+      //   }
+      //   // console.log("SHooter", this.state.shooters)
+      //   this.setState({modalVisible: true});
+      //   console.log(this.state.theyHit)
 
-      }
+      // }
 
-      else{ 
+      // else{ 
 
         while(crash < this.state.masterList.length){//add full contingency
               if (this.state.current >= this.state.Arena.length){
@@ -381,12 +381,12 @@ export default class MainActivity extends React.Component {
                     s += this.state.masterList[names][1][i]['player'] + '  '  
                     this.state.shooters.push(this.state.masterList[names][1][i]['player'])
                   } 
-                  this.state.diff = this.state.cap - ( this.state.Arena[this.state.current]["teamANum"]  + 
+                  this.state.diff = (this.state.cap*2) - ( this.state.Arena[this.state.current]["teamANum"]  + 
                                     this.state.Arena[this.state.current]["teamBNum"] );
                   if ( this.state.diff >= this.state.shooters.length ){
-                    this.state.command = " Shoot for " + ((this.state.cap/2) - this.state.Arena[this.state.current]["teamANum"] + 
+                    this.state.command = " Shoot for " + ( this.state.cap - this.state.Arena[this.state.current]["teamANum"] + 
                       " To Play On TEAM-A")
-                    this.state.diff = ((this.state.cap/2) - this.state.Arena[this.state.current]["teamANum"])
+                    this.state.diff = ( this.state.cap - this.state.Arena[this.state.current]["teamANum"])
                   }
                   else{
                   this.state.command = "Shoot for " + this.state.diff
@@ -411,7 +411,7 @@ export default class MainActivity extends React.Component {
           crash++;          
           }//end of while
 
-        }//esle
+        // }//esle
         this.setState({masterList: this.state.masterList});
         this.setState({Arena:this.state.Arena});
         this.saveData();

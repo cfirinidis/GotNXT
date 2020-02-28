@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/GotNXT.iml" filepath="$PROJECT_DIR$/GotNXT.iml" />
+      <module fileurl="file://$PROJECT_DIR$/GotNXT.iml" filepath="$PROJECT_DIR$/GotNXT.iml" group="GotNXT" />
     </modules>
   </component>
 </project>

@@ -98,11 +98,11 @@ export default class Setup extends React.Component {
     if (isNaN(this.state.courtsNum ) || this.state.courtsNum.replace(/\s/g, '').length == 0) {
       Alert.alert("Enter # of available Courts")
     }
-    else if(this.state.capacity % 2 != 0 || this.state.capacity.replace(/\s/g, '').length==0){
-     Alert.alert("Please enter 'EVEN' Number Players") 
+    else if(this.state.capacity.replace(/\s/g, '').length==0){
+     Alert.alert("Please enter Number of Players PER TEAM") 
     }
     else if(this.state.Arena.length>0){
-      Alert.alert("Already Setup, restart app. Restarting app will delete all data!")
+      Alert.alert("Already Setup, to erase press RESET")
       this.props.navigation.navigate("List", {arena: this.state.Arena, cap:this.state.capacity, 
       courtsNum:this.state.courtsNum, masterList:this.state.masterList, courtArr: this.state.courtArr,
       completeList:this.state.completeList });
@@ -143,7 +143,7 @@ export default class Setup extends React.Component {
             <TextInput
               placeholderTextColor= "purple" 
               underlineColorAndroid="gray" 
-              placeholder="Enter # Of Courts "
+              placeholder=" Enter # Of Courts "
               onChangeText={(courtsNum) => this.setState({courtsNum: courtsNum }) }
               value={ this.state.courtsNum}
               style = {styles.textInput}
@@ -153,7 +153,7 @@ export default class Setup extends React.Component {
             <TextInput 
               placeholderTextColor= "purple" 
               underlineColorAndroid="gray"
-              placeholder="Total Players On Each Court: "
+              placeholder=" Total Players On Each TEAM "
               onChangeText={capacity => this.setState({ capacity: capacity}) }
 				      style={styles.textInput}  
               value = {this.state.capacity} 
