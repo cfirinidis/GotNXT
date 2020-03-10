@@ -59,9 +59,7 @@ AddPlayer=()=>{
 removePlayers = () =>{
   let removePlayer = [];
   let removeComp = [];
-  console.log("PRINRT PROPS: ", this.state.toRemove, this.state.masterList)
-  this.props.toRemove+="CONZ"
-  console.log("PRINRT PROPS2: ", this.props.toRemove, this.state.toRemove)
+
 
   for ( i in this.state.toRemove){
     removePlayer.push(this.state.toRemove[i]['label'])
@@ -70,24 +68,24 @@ removePlayers = () =>{
 
   for (k in removeComp){
     if (removeComp[k] in this.state.completeList){
-      delete this.props.completeList[removeComp[k]]
+      delete this.state.completeList[removeComp[k]]
     }}
 
   for(i=0; i<this.state.masterList.length ; i++){
     for (j=0; j<this.state.masterList[i][1].length; j++){
       if (removePlayer.includes(this.state.masterList[i][1][j]['player'])){
-        // console.log(this.state.masterList[i][1][j]['player'])
-        this.props.masterList[i][1].splice(j,1)
+        console.log(this.state.masterList[i][1][j]['player'])
+        this.state.masterList[i][1].splice(j,1)
         j--;
     }}
-    if (this.props.masterList[i][1].length == 0){
-      this.props.masterList.splice(i,1);
+    if (this.state.masterList[i][1].length == 0){
+      this.state.masterList.splice(i,1);
       i--;
     }
   } 
 
-  this.setState({masterList})
-  this.setState({completeList})   
+  this.setState({masterList: this.state.masterList})
+  this.setState({completeList: this.state.completeList})   
 }
 
   setModalVisible=(visible, p)=> new Promise((resolve)=> {

@@ -7,7 +7,6 @@ import{
   Button,
   TextInput,
   FlatList,
-  Platform,
   ScrollView,
   KeyboardAvoidingView,
   TouchableHighlight,
@@ -20,8 +19,7 @@ import { createAppContainer } from 'react-navigation';
 import { createStackNavigator} from 'react-navigation-stack'; 
 import Setup from './Setup';
 import PopUp from './PopUp';
-import ListButton from './function'
-import ModalShoot from './Modal';
+import CustomPromptComponent from './Modal';
 import StartFunction from './function';
 import SelectMultiple from 'react-native-select-multiple';
 
@@ -44,8 +42,7 @@ export default class MainActivity extends React.Component {
          tempNum: 0,
          repFlag: false,
          anotherCourt: [],
-        correctionNum: 0,
-        selectedItems: [],
+         selectedItems: [],
         modalVisible: false,
         modalPlayerVisible: false,
         modalRepPlayerVisible: false, 
@@ -55,79 +52,73 @@ export default class MainActivity extends React.Component {
          shooters: [],
          prefCourt: [],
          totalPlayers:0,
-         SampleArray : ["ACONSDON"],
-        //  masterList : [
-        //  [{pref:0}, [{player: "Lebron", replacement: false}, {player:"AntDavis", replacement: false}]],
-        //  [{pref:0}, [{player:"Kyrie", replacement: true}, {player:"Durant", replacement: true}]],
-        // [{pref:0}, [{player:"Majerle", replacement: false}]],
-        // [{pref:0}, [{player:"Kawhi", replacement: false}, {player:"PG13", replacement: false}]],
-        //  [{pref:0}, [{player:'Larry', replacement: false}, {player:'Parish', replacement: false}]], 
-        //   [{pref:0}, [{player:'Kidd', replacement: false}]]
-        //   ,
-        //     [{pref:0}, [{player: "Lebron1", replacement: false}, {player:"Ant1Davis", replacement: false}]],
-        //  [{pref:0}, [{player:"Kyrie1", replacement: true}, {player:"Dur1ant", replacement: true}]],
-        // [{pref:0}, [{player:"Majerle1", replacement: false}]],
-        // [{pref:0}, [{player:"Kawhi1", replacement: false}, {player:"PG113", replacement: false}]],
-        //  [{pref:0}, [{player:'Larr1y', replacement: false}, {player:'Pa1rish', replacement: false}]], 
-        //   [{pref:0}, [{player:'Kidd1', replacement: false}]]
-        //   ,
-        //     [{pref:0}, [{player: "Le2bron", replacement: false}, {player:"Ant2Davis", replacement: false}]],
-        //  [{pref:0}, [{player:"Ky2rie", replacement: true}, {player:"Dura2nt", replacement: true}]],
-        // [{pref:0}, [{player:"Majer2le", replacement: false}]],
+         SampleArray : [],
+         masterList : [
+         [{pref:0}, [{player: "Lebron", replacement: false}, {player:"AntDavis", replacement: false}]],
+         [{pref:0}, [{player:"Kyrie", replacement: true}, {player:"Durant", replacement: true}]],
+        [{pref:0}, [{player:"Majerle", replacement: false}]],
+        [{pref:0}, [{player:"Kawhi", replacement: false}, {player:"PG13", replacement: false}]],
+         [{pref:0}, [{player:'Larry', replacement: false}, {player:'Parish', replacement: false}]], 
+          [{pref:0}, [{player:'Kidd', replacement: false}]]
+          ,
+            [{pref:0}, [{player: "Lebron1", replacement: false}, {player:"Ant1Davis", replacement: false}]],
+         [{pref:0}, [{player:"Kyrie1", replacement: true}, {player:"Dur1ant", replacement: true}]],
+        [{pref:0}, [{player:"Majerle1", replacement: false}]],
+        [{pref:0}, [{player:"Kawhi1", replacement: false}, {player:"PG113", replacement: false}]],
+         [{pref:0}, [{player:'Larr1y', replacement: false}, {player:'Pa1rish', replacement: false}]], 
+          [{pref:0}, [{player:'Kidd1', replacement: false}]]
+          ,
+            [{pref:0}, [{player: "Le2bron", replacement: false}, {player:"Ant2Davis", replacement: false}]],
+         [{pref:0}, [{player:"Ky2rie", replacement: true}, {player:"Dura2nt", replacement: true}]],
+        [{pref:0}, [{player:"Majer2le", replacement: false}]],
+        [{pref:0}, [{player:"Kawh2i", replacement: false}, {player:"P2G13", replacement: false}]],
+         [{pref:0}, [{player:'Lar2ry', replacement: false}, {player:'Par2ish', replacement: false}]], 
+          [{pref:0}, [{player:'Ki2dd', replacement: false}]]
+         
 
-        // [{pref:0}, [{player:"Kawh2i", replacement: false}, {player:"P2G13", replacement: false}]],
-        //  [{pref:0}, [{player:'Lar2ry', replacement: false}, {player:'Par2ish', replacement: false}]], 
-        //   [{pref:0}, [{player:'Ki2dd', replacement: false}]]
-        //   ],  
+
+          ],  
          cap: this.props.navigation.getParam("cap", "blank"),
          Arena: this.props.navigation.getParam("arena", "blank"),
          courtsNum: this.props.navigation.getParam("courtsNum", "blank"),
          courtArr: this.props.navigation.getParam("courtArr", "blank"),
          courtArrPref: [],
-         masterList: this.props.navigation.getParam("masterList", "blank"),
+         // masterList: this.props.navigation.getParam("masterList", "blank"),
          completeList: this.props.navigation.getParam("completeList", "blank"),
          current: 0,
          answer: 'none'
        };
      }
   
-//  checkDuplicate=(name)=>{
-//     if (name in this.state.completeList){
-//       Alert.alert("Name Already Exists ")
-//       return false
-//     }
-//     return true
-// }
+ checkDuplicate=(name)=>{
+    // let  x = name.toLowerCase() 
+    // console.log("completet list ",this.state.completeList)
+    if (name in this.state.completeList){
+      Alert.alert("Name Already Exists ")
+      return false
 
-print=(mes)=>{
-  console.log(mes)
+    }
+    return true
 }
 
-//   AddItemsToArray=()=>{
-//     let san = this.state.Name.replace(/\s/g, '').toLowerCase()
-//     new ListButton().printListButton()
-//     if (new ListButton().checkDuplicate(san, this.state.completeList)){
-//       if (this.state.Name.length != 0 && this.state.Name.replace(/\s/g, '').length != 0 ){
-//         this.state.SampleArray.push({player: this.state.Name, replacement: false});
-//       }
-//       else{
-//         Alert.alert("Please Enter A Name")
-//       }
-//       this.state.completeList[this.state.Name.replace(/\s/g, '').toLowerCase()]= 1
-//       this.setState({Name:''})
-//       // this.state.Name = '';
-//       console.log("SampleArray", this.state.SampleArray)
-//       this.setState({SampleArray: this.state.SampleArray})
-//       console.log("SampleArray", this.state.SampleArray)
-//       this.setState({totalPlayers: this.state.totalPlayers + 1})
-//   }//good
-// }
-
+  AddItemsToArray=()=>{
+    let san = this.state.Name.replace(/\s/g, '').toLowerCase()
+    if (this.checkDuplicate(san)){
+      if (this.state.Name.length != 0 && this.state.Name.replace(/\s/g, '').length != 0 ){
+        this.state.SampleArray.push({player: this.state.Name, replacement: false});
+      }
+      else{
+        Alert.alert("Please Enter A Name")
+      }
+      // let noSpace = this.state.Name.replace(/\s/g, '')
+      this.state.completeList[this.state.Name.replace(/\s/g, '').toLowerCase()]= 1
+      // this.state.completeList.push(this.state.Name.replace(/\s/g, '').toLowerCase())
+      this.setState({Name:''})
+      this.setState({SampleArray: this.state.SampleArray})
+      this.setState({totalPlayers: this.state.totalPlayers + 1})
+  }//good
+}
   clearList=()=>{
-    console.log("CLearLIST: ")
-    for (k in this.state.SampleArray){
-      delete this.state.completeList[this.state.SampleArray[k]['player'].toLowerCase()]
-    }
     this.setState({SampleArray:[]})
   }
 
@@ -150,7 +141,37 @@ print=(mes)=>{
     }
   }//good
 
-  
+  AddMaster2=()=>{
+    // console.log("Add2: ", this.state.hitShot, this.state.shooters)
+    // if (this.state.hitShot.length==0){
+    //   console.log("Empty")
+    //   this.state.masterList.splice(this.state.restNum, 0, [{pref:0}, this.state.shooters]);
+    //   return 0
+    // }
+      var hit= [];
+      var rest = [];
+      var hitList = [];
+      for  (i in this.state.hitShot){
+            hit.push({player: this.state.hitShot[i]["label"], replacement: false});
+            hitList.push(this.state.hitShot[i]["label"]);
+    }
+    for (i in this.state.shooters){
+      if (!hitList.includes(this.state.shooters[i]) ){
+      rest.push({player: this.state.shooters[i], replacement: false});
+      }
+    }
+    this.state.masterList.splice(this.state.restNum, 0, [{pref:0}, rest])
+    if (hit.length != 0){
+      this.state.masterList.unshift([{pref:0}, hit])
+    }
+    this.setState({hitShot: [] });
+    this.setState({restNum: 0 });
+    this.state.shooters = [];
+    this.setState({shooters: this.state.shooters });  
+    this.setState({masterList: this.state.masterList});
+    this.setState({completeList: this.state.completeList})
+    this.StartGame();
+  }//good
 
   GoToLists=()=>{
     this.props.navigation.navigate("Show", {arena: this.state.Arena,
@@ -161,32 +182,26 @@ print=(mes)=>{
     this.props.navigation.navigate("Modal");
   }
 
-  CorrectionOrSub=()=>{
+  useInfo=()=>{
     if (this.state.remPlayer.length == 0){
       this.setState({ tempCourt:[] });
       this.setState({ remPlayer:[] });
       return 0
     }
-      
-    this.state.correctionNum = this.state.remPlayer.length
-    for (i=0; i<this.state.remPlayer.length; i++){      
-      for (k=0;  k<this.state.Arena[this.state.tempNum-1][this.state.team].length; k++){
-        if (this.state.remPlayer[i]['label'] == this.state.Arena[this.state.tempNum-1][this.state.team][k][0]["player"]){
+            
+    for (k in this.state.Arena[this.state.tempNum-1][this.state.team]){
+        if (this.state.remPlayer[0]['label'] == this.state.Arena[this.state.tempNum-1][this.state.team][k][0]["player"]){
           this.state.Arena[this.state.tempNum-1][this.state.team].splice(k,1)
           this.state.Arena[this.state.tempNum-1][this.state.team+"Num"] -= 1
-          k--;
         }
-      }}
+      }
       let repP = [];
       Object.values(this.state.masterList).map(function(val) {
         for (j in val[1]){
           repP.push(val[1][j]['player']);
         }
       });
-
-    for(i in this.state.remPlayer){
-      this.state.masterList.unshift([{pref:"W"}, [{player: this.state.remPlayer[i]['label'], replacement: false}]] )  
-    }
+    this.state.masterList.unshift([{pref:"W"}, [{player: this.state.remPlayer[0]['label'], replacement: false}]] )
     this.setState({ tempCourt: [] });
     this.setState({ allAvailable: repP });   
     this.setState({ remPlayer:[] });
@@ -203,35 +218,22 @@ print=(mes)=>{
 
   updateMaster=()=>{
     if (this.state.move.length == 0){
-      // Alert.alert("No one selected as replacement.")
-      this.setState( { move: [] } );
-      this.setState( { repFlag: false } );
-      this.state.correctionNum = 0;
+       Alert.alert("No one selected as replacement.")
        return 0
     }
-    let movePlayers = [] 
-    for (i in this.state.move){
-      movePlayers.push(this.state.move[i]['value'])
-    }
-
-    for(i=0; i<this.state.masterList.length; i++){
+    for(i in this.state.masterList){
       for (j = 0; j < this.state.masterList[i][1].length ; j++){
-        if (movePlayers.includes(this.state.masterList[i][1][j]['player'])){
+        if (this.state.masterList[i][1][j]['player'] == this.state.move[0]['value']){
           this.state.masterList[i][1].splice(j,1);
           j--;  
         if (this.state.masterList[i][1].length == 0){
             this.state.masterList.splice(i,1);
-            i--;
           }
+          break;
     }}}
-
-    for(i in movePlayers){
-       this.state.masterList.unshift([{pref: 0},[{player:movePlayers[i], replacement: this.state.repFlag}]])
-    }
-    
+    this.state.masterList.unshift([{pref: 0},[{player:this.state.move[0]['value'], replacement: this.state.repFlag}]])
     this.setState( { move: [] } );
     this.setState( { repFlag: false } );
-    this.state.correctionNum = 0;
     this.StartGame();
   }
 
@@ -284,6 +286,7 @@ print=(mes)=>{
     let CN = JSON.stringify(this.state.courtsNum);
     let CARRAY = JSON.stringify(this.state.courtArr);
     let CL = JSON.stringify(this.state.completeList);
+    // console.log("MS: ", this.state.masterList)
     AsyncStorage.setItem('arena', AR);
     AsyncStorage.setItem('master', MS);
     AsyncStorage.setItem('capacity', CAP);
@@ -571,6 +574,7 @@ winnersWinners(){
         B = B.replace(/\n$/, "") 
       }
     }}
+  
      t["key"] =  val.Num.toString()
      t["valA"] = A 
      t["valB"] = B
@@ -579,14 +583,19 @@ winnersWinners(){
   return t
 }); 
 
-  // let pending = Object.values(this.state.SampleArray).map(function(vals) {
-  //     var t= {} ;
-  //     for (val in vals){
-  //         if(vals[val] != false && vals[val] != true){
-  //             t["key"] = vals[val]; 
-  //       }}
-  //     return t
-  // });
+  let pending = Object.values(this.state.SampleArray).map(function(vals) {
+      var t= {} ;
+      for (val in vals){
+          if(vals[val] != false && vals[val] != true){
+              t["key"] = vals[val]; 
+        }}
+      return t
+  });
+
+
+    // <TouchableOpacity  onPress={this.StartGame.bind(this)} style={styles.addStart } >
+    //     <Text style={{color:'black', fontSize:32}}>Start</Text>
+    // </TouchableOpacity>
 
    return (
       <KeyboardAvoidingView style={styles.wrapper}>
@@ -599,19 +608,30 @@ winnersWinners(){
               style={styles.textInput} 
               placeholderTextColor='gray' />
 
-    <TouchableOpacity  onPress={()=> new ListButton().AddItemsToArray(this.state.completeList, this.state.Name, this.state.SampleArray)} style={styles.addButton} >
+    <TouchableOpacity  onPress={this.AddItemsToArray.bind(this)} style={styles.addButton} >
         <Text style={{color:'black', fontSize: 21, textAlign: 'center'}}>+ ADD</Text>
     </TouchableOpacity>     
 
+    <Text style={{fontSize:40, marginBottom: 50}}> Names </Text>
+      <TouchableOpacity onPress={this.clearList.bind(this)} style={styles.clearList} >
+        <Text style={{color:'gray', fontSize:20}}> CLEAR NAMES </Text>
+      </TouchableOpacity>
 
+    <View>
+      <FlatList
+        data={pending}
+        style={styles.sampleArrayStye}
+        renderItem={({item}) => <Text style={{color:'#e1a8ff', fontSize:24, alignItems:'center'}}>{item.key}</Text>}/>
+    </View>  
 
+    <TouchableOpacity  onPress={this.AddMaster.bind(this)} style={styles.doneAdding} >
+        < Text style={{color:'white', fontSize:20}}> DONE ADDING </Text>
+    </TouchableOpacity>
 
-    <View style={{padding:'1%'}}>  
-  <ListButton
-      GoToListsMethod={ ()=> this.GoToLists()}
-      clearListMethod={()=>this.clearList()}
-      AddMasterMethod={()=>this.AddMaster()}
-    />
+    <TouchableOpacity  onPress={this.GoToLists.bind(this)} style={styles.list} >
+        <Text style={{color:'grey', fontSize:32}}>  List  </Text>
+    </TouchableOpacity>
+
 
     <Text style={{fontSize:40, backgroundColor:'black', color:'white', textAlign:'center',flexDirection:'row', justifyContent:'flex-end'}}>Current Games</Text>
     <FlatList
@@ -647,26 +667,38 @@ winnersWinners(){
 </View>
     
     </View>)}/>
-    </View>
-
-    <ModalShoot
-    visible={this.state.modalVisible}
-    onSelectionsChangeMethod={ ()=> this.onSelectionsChange()}
-    setModalVisibleMethod={()=> this.setModalVisible()}
-    AddMasterAfterShootoutMethod={()=>this.AddMasterAfterShootout()}
-
-    />
+    
+</View>
+<View>
+    <Modal 
+    visible={this.state.modalVisible}>
+      <View style={styles.modalStyle}>
+        <Text style={{fontSize:30, backgroundColor:'gray', color:'white'}}>{this.state.title} </Text>
+        <SelectMultiple
+          maxSelect= {this.state.diff}
+          items={this.state.shooters}
+          style={styles.modalStyle}
+          selectedItems={ this.state.hitShot }
+          onSelectionsChange={this.onSelectionsChange} />
+        <TouchableHighlight   onPress={() => 
+            this.setModalVisible(!this.state.modalVisible, "something").then(this.AddMaster2())}
+             style={styles.modalButton}>
+            <Text style={styles.modalText}>Done</Text>
+        </TouchableHighlight>
+      </View>
+    </Modal>
 
     <Modal 
-    visible={this.state.modalPlayerVisible} >
+    visible={this.state.modalPlayerVisible}>
       <View  style={styles.modalStyle }>
         <Text style={{fontSize:30, backgroundColor:'red', color:'white'}} >{this.state.title} </Text>
         <SelectMultiple
+          maxSelect= {1}
           items={this.state.tempCourt}
           selectedItems={ this.state.remPlayer }
           onSelectionsChange={this.onSelectionsChangePlayer} />
         <TouchableHighlight   onPress={() => 
-            this.setModalPlayerVisible(!this.state.modalPlayerVisible, "something").then(this.CorrectionOrSub())}
+            this.setModalPlayerVisible(!this.state.modalPlayerVisible, "something").then(this.useInfo())}
              style={styles.modalButton}>
             <Text style={styles.modalText}>Done</Text>
         </TouchableHighlight>
@@ -678,7 +710,7 @@ winnersWinners(){
       <View  style={styles.modalStyle }>
         <Text style={{fontSize:30, backgroundColor:'yellow', color:'black'}}>{this.state.title} </Text>
         <SelectMultiple
-          maxSelect = {this.state.correctionNum}        
+          maxSelect= {1}        
           items={ this.state.allAvailable }
           selectedItems={ this.state.move }
           onSelectionsChange={this.onSelectionsChangePlayerTop} />
@@ -720,11 +752,58 @@ winnersWinners(){
 
 
 
+
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     backgroundColor: '#e8eae7',
     padding: "2%",
+  },
+    list: {
+    position: 'absolute',
+    backgroundColor: 'white',
+    width: '35%',
+    alignSelf: 'flex-end',
+    marginTop: 150,
+    borderWidth: 2,
+    borderColor: '#ff8c1d',
+    flexDirection: 'row-reverse',
+    height: 45,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+   header: {
+    fontSize:38,
+    backgroundColor:'gray',
+    color: 'white',
+    width:"100%",
+
+ },
+  textList: {
+    marginBottom: 10,
+    backgroundColor: '#e6f0f7',
+  },
+  modalText: {
+    fontSize:30,
+    color: 'white',
+  },
+  buttons: {
+    width: "40%",
+    height: 45,
+    backgroundColor:'black',
+    marginBottom: 10,
+  },
+  modalStyle:{
+    marginTop: 20,
+    marginBottom:130,
+  },
+  modalButtons:{
+    width: '40%',
+    height: 60,
+    left: '50%',
+    backgroundColor: '#388fe7',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   sampleArrayStye: {
