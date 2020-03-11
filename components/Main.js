@@ -75,9 +75,7 @@ export default class MainActivity extends React.Component {
         [{pref:0}, [{player:"Kawh2i", replacement: false}, {player:"P2G13", replacement: false}]],
          [{pref:0}, [{player:'Lar2ry', replacement: false}, {player:'Par2ish', replacement: false}]], 
           [{pref:0}, [{player:'Ki2dd', replacement: false}]]
-         
-
-
+        
           ],  
          cap: this.props.navigation.getParam("cap", "blank"),
          Arena: this.props.navigation.getParam("arena", "blank"),
@@ -111,9 +109,8 @@ export default class MainActivity extends React.Component {
       else{
         Alert.alert("Please Enter A Name")
       }
-      // let noSpace = this.state.Name.replace(/\s/g, '')
       this.state.completeList[this.state.Name.replace(/\s/g, '').toLowerCase()]= 1
-      // this.state.completeList.push(this.state.Name.replace(/\s/g, '').toLowerCase())
+      
       this.setState({Name:''})
       this.setState({SampleArray: this.state.SampleArray})
       this.setState({totalPlayers: this.state.totalPlayers + 1})
@@ -323,7 +320,7 @@ updateMaster=()=>{
 
   }
 
-  async StartGame(){
+   async StartGame(){
       let delArray = [];
       let names = 0;
       AsyncAlert = (title, msg) => new Promise((resolve, reject) => {  
@@ -778,8 +775,6 @@ winnersWinners(){
 }
 
 
-
-
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
@@ -795,6 +790,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: '#ff8c1d',
     flexDirection: 'row-reverse',
+     borderRadius: 50,
     height: 45,
     alignItems: 'center',
     justifyContent: 'center',
