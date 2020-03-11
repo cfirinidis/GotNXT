@@ -3,7 +3,7 @@
   "displayName": "GotNXT",
   "expo": {
     "name": "GotNXT",
-    "icon": "./badLogo.png",
+    "icon": "badLogo.png",
     "slug": "expo-template-bare",
     "privacy": "public",
     "sdkVersion": "35.0.0",
@@ -16,6 +16,7 @@
     ],
   "android": {
     "package": "com.conzstructions.GotNXT",
+    "icon": "badLogo.png",
   },
   "ios": {
       "bundleIdentifier": "com.conzstructions.GotNXT",

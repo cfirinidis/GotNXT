@@ -8,6 +8,7 @@ import{
   TextInput,
   FlatList,
   ScrollView,
+  Platform,
   KeyboardAvoidingView,
   TouchableHighlight,
   TouchableOpacity,
@@ -53,37 +54,37 @@ export default class MainActivity extends React.Component {
          prefCourt: [],
          totalPlayers:0,
          SampleArray : [],
-        //  masterList : [
-        //  [{pref:0}, [{player: "Lebron", replacement: false}, {player:"AntDavis", replacement: false}]],
-        //  [{pref:0}, [{player:"Kyrie", replacement: true}, {player:"Durant", replacement: true}]],
-        // [{pref:0}, [{player:"Majerle", replacement: false}]],
-        // [{pref:0}, [{player:"Kawhi", replacement: false}, {player:"PG13", replacement: false}]],
-        //  [{pref:0}, [{player:'Larry', replacement: false}, {player:'Parish', replacement: false}]], 
-        //   [{pref:0}, [{player:'Kidd', replacement: false}]]
-        //   ,
-        //     [{pref:0}, [{player: "Lebron1", replacement: false}, {player:"Ant1Davis", replacement: false}]],
-        //  [{pref:0}, [{player:"Kyrie1", replacement: true}, {player:"Dur1ant", replacement: true}]],
-        // [{pref:0}, [{player:"Majerle1", replacement: false}]],
-        // [{pref:0}, [{player:"Kawhi1", replacement: false}, {player:"PG113", replacement: false}]],
-        //  [{pref:0}, [{player:'Larr1y', replacement: false}, {player:'Pa1rish', replacement: false}]], 
-        //   [{pref:0}, [{player:'Kidd1', replacement: false}]]
-        //   ,
-        //     [{pref:0}, [{player: "Le2bron", replacement: false}, {player:"Ant2Davis", replacement: false}]],
-        //  [{pref:0}, [{player:"Ky2rie", replacement: true}, {player:"Dura2nt", replacement: true}]],
-        // [{pref:0}, [{player:"Majer2le", replacement: false}]],
-        // [{pref:0}, [{player:"Kawh2i", replacement: false}, {player:"P2G13", replacement: false}]],
-        //  [{pref:0}, [{player:'Lar2ry', replacement: false}, {player:'Par2ish', replacement: false}]], 
-        //   [{pref:0}, [{player:'Ki2dd', replacement: false}]]
+         masterList : [
+         [{pref:0}, [{player: "Lebron", replacement: false}, {player:"AntDavis", replacement: false}]],
+         [{pref:0}, [{player:"Kyrie", replacement: true}, {player:"Durant", replacement: true}]],
+        [{pref:0}, [{player:"Majerle", replacement: false}]],
+        [{pref:0}, [{player:"Kawhi", replacement: false}, {player:"PG13", replacement: false}]],
+         [{pref:0}, [{player:'Larry', replacement: false}, {player:'Parish', replacement: false}]], 
+          [{pref:0}, [{player:'Kidd', replacement: false}]]
+          ,
+            [{pref:0}, [{player: "Lebron1", replacement: false}, {player:"Ant1Davis", replacement: false}]],
+         [{pref:0}, [{player:"Kyrie1", replacement: true}, {player:"Dur1ant", replacement: true}]],
+        [{pref:0}, [{player:"Majerle1", replacement: false}]],
+        [{pref:0}, [{player:"Kawhi1", replacement: false}, {player:"PG113", replacement: false}]],
+         [{pref:0}, [{player:'Larr1y', replacement: false}, {player:'Pa1rish', replacement: false}]], 
+          [{pref:0}, [{player:'Kidd1', replacement: false}]]
+          ,
+            [{pref:0}, [{player: "Le2bron", replacement: false}, {player:"Ant2Davis", replacement: false}]],
+         [{pref:0}, [{player:"Ky2rie", replacement: true}, {player:"Dura2nt", replacement: true}]],
+        [{pref:0}, [{player:"Majer2le", replacement: false}]],
+        [{pref:0}, [{player:"Kawh2i", replacement: false}, {player:"P2G13", replacement: false}]],
+         [{pref:0}, [{player:'Lar2ry', replacement: false}, {player:'Par2ish', replacement: false}]], 
+          [{pref:0}, [{player:'Ki2dd', replacement: false}]]
          
 
 
-        //   ],  
+          ],  
          cap: this.props.navigation.getParam("cap", "blank"),
          Arena: this.props.navigation.getParam("arena", "blank"),
          courtsNum: this.props.navigation.getParam("courtsNum", "blank"),
          courtArr: this.props.navigation.getParam("courtArr", "blank"),
          courtArrPref: [],
-         masterList: this.props.navigation.getParam("masterList", "blank"),
+         // masterList: this.props.navigation.getParam("masterList", "blank"),
          completeList: this.props.navigation.getParam("completeList", "blank"),
          current: 0,
          answer: 'none'
@@ -118,7 +119,11 @@ export default class MainActivity extends React.Component {
       this.setState({totalPlayers: this.state.totalPlayers + 1})
   }//good
 }
+
   clearList=()=>{
+    for (k in this.state.SampleArray){
+      delete this.state.completeList[this.state.SampleArray[k]['player'].toLowerCase()]
+    }
     this.setState({SampleArray:[]})
   }
 
@@ -142,12 +147,6 @@ export default class MainActivity extends React.Component {
   }//good
 
   AddMaster2=()=>{
-    // console.log("Add2: ", this.state.hitShot, this.state.shooters)
-    // if (this.state.hitShot.length==0){
-    //   console.log("Empty")
-    //   this.state.masterList.splice(this.state.restNum, 0, [{pref:0}, this.state.shooters]);
-    //   return 0
-    // }
       var hit= [];
       var rest = [];
       var hitList = [];
@@ -170,7 +169,16 @@ export default class MainActivity extends React.Component {
     this.setState({shooters: this.state.shooters });  
     this.setState({masterList: this.state.masterList});
     this.setState({completeList: this.state.completeList})
+
+    if (Platform.OS == 'android'){
     this.StartGame();
+      }
+    else{
+       setTimeout(()=>{
+        this.StartGame();
+    }, 100);
+   }
+
   }//good
 
   GoToLists=()=>{
@@ -182,26 +190,32 @@ export default class MainActivity extends React.Component {
     this.props.navigation.navigate("Modal");
   }
 
-  useInfo=()=>{
+  CorrectionOrSub=()=>{
     if (this.state.remPlayer.length == 0){
       this.setState({ tempCourt:[] });
       this.setState({ remPlayer:[] });
       return 0
     }
-            
-    for (k in this.state.Arena[this.state.tempNum-1][this.state.team]){
-        if (this.state.remPlayer[0]['label'] == this.state.Arena[this.state.tempNum-1][this.state.team][k][0]["player"]){
+      
+    this.state.correctionNum = this.state.remPlayer.length
+    for (i=0; i<this.state.remPlayer.length; i++){      
+      for (k=0;  k<this.state.Arena[this.state.tempNum-1][this.state.team].length; k++){
+        if (this.state.remPlayer[i]['label'] == this.state.Arena[this.state.tempNum-1][this.state.team][k][0]["player"]){
           this.state.Arena[this.state.tempNum-1][this.state.team].splice(k,1)
           this.state.Arena[this.state.tempNum-1][this.state.team+"Num"] -= 1
+          k--;
         }
-      }
+      }}
       let repP = [];
       Object.values(this.state.masterList).map(function(val) {
         for (j in val[1]){
           repP.push(val[1][j]['player']);
         }
       });
-    this.state.masterList.unshift([{pref:"W"}, [{player: this.state.remPlayer[0]['label'], replacement: false}]] )
+
+    for(i in this.state.remPlayer){
+      this.state.masterList.unshift([{pref:"W"}, [{player: this.state.remPlayer[i]['label'], replacement: false}]] )  
+    }
     this.setState({ tempCourt: [] });
     this.setState({ allAvailable: repP });   
     this.setState({ remPlayer:[] });
@@ -216,24 +230,37 @@ export default class MainActivity extends React.Component {
     }
   }
 
-  updateMaster=()=>{
+updateMaster=()=>{
     if (this.state.move.length == 0){
-       Alert.alert("No one selected as replacement.")
+      // Alert.alert("No one selected as replacement.")
+      this.setState( { move: [] } );
+      this.setState( { repFlag: false } );
+      this.state.correctionNum = 0;
        return 0
     }
-    for(i in this.state.masterList){
+    let movePlayers = [] 
+    for (i in this.state.move){
+      movePlayers.push(this.state.move[i]['value'])
+    }
+
+    for(i=0; i<this.state.masterList.length; i++){
       for (j = 0; j < this.state.masterList[i][1].length ; j++){
-        if (this.state.masterList[i][1][j]['player'] == this.state.move[0]['value']){
+        if (movePlayers.includes(this.state.masterList[i][1][j]['player'])){
           this.state.masterList[i][1].splice(j,1);
           j--;  
         if (this.state.masterList[i][1].length == 0){
             this.state.masterList.splice(i,1);
+            i--;
           }
-          break;
     }}}
-    this.state.masterList.unshift([{pref: 0},[{player:this.state.move[0]['value'], replacement: this.state.repFlag}]])
+
+    for(i in movePlayers){
+       this.state.masterList.unshift([{pref: 0},[{player:movePlayers[i], replacement: this.state.repFlag}]])
+    }
+    
     this.setState( { move: [] } );
     this.setState( { repFlag: false } );
+    this.state.correctionNum = 0;
     this.StartGame();
   }
 
@@ -297,13 +324,8 @@ export default class MainActivity extends React.Component {
   }
 
   async StartGame(){
-      let teamcap = this.state.cap;
       let delArray = [];
-      let crash = 0;
       let names = 0;
-      // console.log("START GAME TOP : WHAT GAME # - ", this.state.current)
-      // console.log('TeamAnum :'  ,this.state.Arena, "NBUMM: ",this.state.Arena['teamANum'], "NUM______", this.state.Arena['Num']  )
-      
       AsyncAlert = (title, msg) => new Promise((resolve, reject) => {  
         Alert.alert(
                     title,
@@ -313,69 +335,36 @@ export default class MainActivity extends React.Component {
                     { cancelable: false},
                     );
       });
-
-      // let start = await AsyncAlert("Pick teams from List", '')
-      // if (start =="YES"){
-      //   console.log(this.state.masterList)
-      //   for(i in this.state.masterList){
-      //     console.log("i", i, this.state.masterList[i].length)
-      //     if (this.state.masterList[i].length > 1){
-      //       for (j in this.state.masterList[i]){
-      //         console.log("FOR j ", this.state.masterList[i][j]['player'])
-      //         this.state.shooters.push(this.state.masterList[i][j]['player'])
-
-      //       }
-      //     }
-      //     else{
-      //       console.log("single player", this.state.masterList[i][0])
-      //     this.state.shooters.push(this.state.masterList[i][0]['player'])
-      //   }
-      //   }
-      //   // console.log("SHooter", this.state.shooters)
-      //   this.setState({modalVisible: true});
-      //   console.log(this.state.theyHit)
-
-      // }
-
-      // else{ 
-
-        while(crash < this.state.masterList.length){//add full contingency
-              if (this.state.current >= this.state.Arena.length){
+        for(let run = 0; run < this.state.masterList.length; run++){//add full contingency
+                while(this.state.current < this.state.Arena.length && this.state.Arena[this.state.current]["teamANum"]  + this.state.Arena[this.state.current]["teamBNum"] == 2*this.state.cap){
+                  console.log(this.state.current)
+                  this.state.current++;
+                   
+                  }
+                  if (this.state.current >= this.state.Arena.length){
+                    this.setState({ current: this.state.current})
                    Alert.alert("GAMES FULL!")
                    break
-              }
-              // console.log("The Cureenty place: ", this.state.current, this.state.masterList[names][0]['pref'], this.state.masterList[names])
-            // console.log("TOP : ", this.state.Arena[this.state.current]["teamANum"],this.state.Arena[this.state.current]["teamBNum"],"names", names,  this.state.masterList[names][1].length, this.state.masterList.length )
-              // console.log("TOP MS: ",this.state.masterList)
+                }
               if(this.state.current + 1 != this.state.masterList[names][0]['pref'] && this.state.masterList[names][0]['pref'] != 0 ){
-                  // console.log("Wanted to be skipped")
                   names++;
                 }
-              else if(this.state.masterList[names][1].length + this.state.Arena[this.state.current]["teamANum"]  <= teamcap){
+              else if(this.state.masterList[names][1].length + this.state.Arena[this.state.current]["teamANum"]  <= this.state.cap
+                || this.state.masterList[names][1].length + this.state.Arena[this.state.current]["teamBNum"]  <= this.state.cap){
+                // if(this.state.masterList[names][1].length + this.state.Arena[this.state.current]["teamANum"]  <= this.state.cap)
+                let team = (this.state.masterList[names][1].length + this.state.Arena[this.state.current]["teamANum"]  <= this.state.cap)? "teamA":"teamB"
                 let set = this.extractFromList(names);
-                this.state.Arena[this.state.current]["teamANum"] += this.state.masterList[names][1].length;
+                this.state.Arena[this.state.current][team+"Num"] += this.state.masterList[names][1].length;
                 delArray += [names];
                 for (i in set){
-                  this.state.Arena[this.state.current]["teamA"].push([set[i]]);}
+                  this.state.Arena[this.state.current][team].push([set[i]]);}
                 names++;
                 if (names == this.state.masterList.length){
                     names = 0
                     delArray = this.removeFromList(delArray)
                 }}
-              else if(this.state.masterList[names][1].length + this.state.Arena[this.state.current]["teamBNum"] <=teamcap){
-                var set = this.extractFromList(names);
-                this.state.Arena[this.state.current]["teamBNum"] += this.state.masterList[names][1].length;
-                delArray += [names]
-                for(i in set){
-                  this.state.Arena[this.state.current]["teamB"].push([set[i]])}
-                names++
-                if (names == this.state.masterList.length){
-                  names = 0
-                  delArray = this.removeFromList(delArray)
-                }}
-                
-              else{
-                  if( this.state.Arena[this.state.current]["teamANum"] + this.state.Arena[this.state.current]["teamBNum"] != this.state.cap){
+                else  if( this.state.Arena[this.state.current]["teamANum"] + this.state.Arena[this.state.current]["teamBNum"] != 2*this.state.cap){
+                  // console.log(this.state.Arena[this.state.current]["teamANum"] , this.state.Arena[this.state.current]["teamBNum"],  this.state.cap)
                   let s = '';
                   for (i in this.state.masterList[names][1]){
                     s += this.state.masterList[names][1][i]['player'] + '  '  
@@ -396,26 +385,65 @@ export default class MainActivity extends React.Component {
                     delArray += [names]
                     this.state.restNum = names - (delArray.length - 1)
                     delArray = this.removeFromList(delArray)
-                    this.setModalVisible(!this.state.modalVisible,  "Select Player(s) That Hit");
+                    this.setModalVisible(true,  "Select Player(s) That Hit");
                     break
-                  } 
+                } 
                   else{this.setState({shooters: []});}
-               names++; }}
+               names++;
+               console.log("names vs run: ",names, run)
+
+                }
             // GAME READY
-        if( this.state.Arena[this.state.current]["teamANum"]  == teamcap && this.state.Arena[this.state.current]["teamBNum"] == teamcap){
+        if( this.state.Arena[this.state.current]["teamANum"] + this.state.Arena[this.state.current]["teamBNum"] == 2*this.state.cap){
           this.setState({ current: this.state.current+1 })
           this.removeFromList( delArray )
           break;
  
-         }//if full
-          crash++;          
+         }//if full        
           }//end of while
 
-        // }//esle
         this.setState({masterList: this.state.masterList});
         this.setState({Arena:this.state.Arena});
         this.saveData();
   }
+
+
+  AddMasterAfterShootout=()=>{
+      var hit= [];
+      var rest = [];
+      var hitList = [];
+      for  (i in this.state.hitShot){
+            hit.push({player: this.state.hitShot[i]["label"], replacement: false});
+            hitList.push(this.state.hitShot[i]["label"]);
+    }
+    for (i in this.state.shooters){
+      if (!hitList.includes(this.state.shooters[i]) ){
+      rest.push({player: this.state.shooters[i], replacement: false});
+      }
+    }
+    this.state.masterList.splice(this.state.restNum, 0, [{pref:0}, rest])
+    if (hit.length != 0){
+      this.state.masterList.unshift([{pref:0}, hit])
+    }
+    this.setState({hitShot: [] });
+    this.setState({restNum: 0 });
+    this.state.shooters = [];
+    // this.state.modalVisible = false;
+    this.setState({shooters: this.state.shooters });  
+    this.setState({masterList: this.state.masterList});
+    this.setState({completeList: this.state.completeList})
+
+    if (Platform.OS == 'android'){
+    this.StartGame();
+      }
+    else{
+       setTimeout(()=>{
+        this.StartGame();
+    }, 100);
+
+    }
+    
+  }//good
 
   onSelectionsChangePref = (prefCourt) => {
     // selectedFruits is array of { label, value }
@@ -462,7 +490,7 @@ export default class MainActivity extends React.Component {
 
 
   async endGame(courtNum, loser, winner, status){
-    if ( (this.state.Arena[courtNum-1]["teamBNum"] + this.state.Arena[courtNum-1]["teamANum"]) < this.state.cap){
+    if ( (this.state.Arena[courtNum-1]["teamBNum"] + this.state.Arena[courtNum-1]["teamANum"]) < (this.state.cap*2)) {
       alert("Game has not started");
       return
     }
@@ -529,8 +557,6 @@ export default class MainActivity extends React.Component {
        //}
         }}
       this.setState({Arena:this.state.Arena});
-      
-      // console.log("right before start", this.state.Arena)
       this.StartGame();  
 }
 
@@ -633,7 +659,7 @@ winnersWinners(){
         <Text style={{color:'grey', fontSize:32}}>  List  </Text>
     </TouchableOpacity>
 
-    <View style={{padding:'1%'}}>  
+
     <Text style={{fontSize:40, backgroundColor:'black', color:'white', textAlign:'center',flexDirection:'row', justifyContent:'flex-end'}}>Current Games</Text>
     <FlatList
     data={Game} 
@@ -645,36 +671,32 @@ winnersWinners(){
       <Text style={styles.gameBottonText}>Game {item.key} </Text>
     </TouchableOpacity>
 
+<View>
 
-<View style={{flex:1}}>
-
-
-      <TouchableHighlight onPress={()=>this.replacePlayer(item.key, "teamA", this.state.curPlayersA) } style={styles.teamStyle}>  
+      <TouchableHighlight onPress={()=>this.replacePlayer(item.key, "teamA", this.state.curPlayersA) } style={styles.teamStyleA}>  
         <Text style={{color:"gray", fontSize:28}}>{item.valA}</Text>
       </TouchableHighlight>
 
-    <TouchableHighlight onPress={()=>this.endGame(item.key, "teamB", "teamA", 'reg')} style={styles.teamAWonStyleB} >
+    <TouchableHighlight onPress={()=>this.endGame(item.key, "teamB", "teamA", 'reg')} style={styles.teamAWonStyle}>
       <Text style={{color:"white", fontSize:26}}>Team A Won</Text>
     </TouchableHighlight>
 
 
-</View>
-      <Text style={{color:"black", fontSize:34, textAlign: 'center'}}>- V S -</Text>
 
-<View style={{flex:1}}>
-    <TouchableHighlight onPress={()=>this.replacePlayer(item.key, "teamB", this.state.curPlayersB) } style={styles.teamStyle}>
+    <TouchableHighlight onPress={()=>this.replacePlayer(item.key, "teamB", this.state.curPlayersB) } style={styles.teamStyleB}>
       <Text style={{color:"red", fontSize:28}}>{item.valB}</Text>
     </TouchableHighlight>
 
-    <TouchableHighlight onPress={()=>this.endGame(item.key, "teamA", "teamB", 'reg') } style={styles.teamBWonStyleB}>
+    <TouchableHighlight onPress={()=>this.endGame(item.key, "teamA", "teamB", 'reg') } style={styles.teamBWonStyle}>
       <Text style={{color:"white", fontSize:26}}>Team B Won</Text>
     </TouchableHighlight>
 
 </View>
     
     </View>)}/>
-    </View>
-
+    
+</View>
+<View>
     <Modal 
     visible={this.state.modalVisible}>
       <View style={styles.modalStyle}>
@@ -703,7 +725,7 @@ winnersWinners(){
           selectedItems={ this.state.remPlayer }
           onSelectionsChange={this.onSelectionsChangePlayer} />
         <TouchableHighlight   onPress={() => 
-            this.setModalPlayerVisible(!this.state.modalPlayerVisible, "something").then(this.useInfo())}
+            this.setModalPlayerVisible(!this.state.modalPlayerVisible, "something").then(this.CorrectionOrSub())}
              style={styles.modalButton}>
             <Text style={styles.modalText}>Done</Text>
         </TouchableHighlight>
@@ -757,11 +779,58 @@ winnersWinners(){
 
 
 
+
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     backgroundColor: '#e8eae7',
     padding: "2%",
+  },
+    list: {
+    position: 'absolute',
+    backgroundColor: 'white',
+    width: '35%',
+    alignSelf: 'flex-end',
+    marginTop: 150,
+    borderWidth: 2,
+    borderColor: '#ff8c1d',
+    flexDirection: 'row-reverse',
+    height: 45,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+   header: {
+    fontSize:38,
+    backgroundColor:'gray',
+    color: 'white',
+    width:"100%",
+
+ },
+  textList: {
+    marginBottom: 10,
+    backgroundColor: '#e6f0f7',
+  },
+  modalText: {
+    fontSize:30,
+    color: 'white',
+  },
+  buttons: {
+    width: "40%",
+    height: 45,
+    backgroundColor:'black',
+    marginBottom: 10,
+  },
+  modalStyle:{
+    marginTop: 20,
+    marginBottom:130,
+  },
+  modalButtons:{
+    width: '40%',
+    height: 60,
+    left: '50%',
+    backgroundColor: '#388fe7',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   sampleArrayStye: {
@@ -793,65 +862,50 @@ const styles = StyleSheet.create({
   },
   modalStyle:{
     marginBottom: 120 ,
+    marginTop: 20,
   },
   modalText:{
     fontSize: 22,
     color:'white', 
   },
 
-  teamStyle: {
-    position:'relative',
+  teamStyleA: {
+    // position:'absolute',
     backgroundColor: 'white',
     borderWidth:3,
-    width: "50%",
+    width: "45%",
   },
-  
-   teamAWonStyle:{
-    // position:'absolute',
-    marginTop: 5,
-    backgroundColor:'gray',
-    flexDirection: 'row',
-    width:'45%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 50,
-    borderWidth: 2,
-    borderColor: 'black',
-  },
-  teamAWonStyleB:{
-    flex:1,
+
+    teamStyleB: {
     position:'absolute',
-     alignSelf:'flex-end',
-    marginTop: 5,
-    backgroundColor:'gray',
-    flexDirection: 'row',
-    width:'45%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 50,
-    borderWidth: 2,
-    borderColor: 'black',
+    alignSelf: 'flex-end',
+    backgroundColor: 'white',
+    borderWidth:3,
+    width: "45%",
   },
-  teamBWonStyle:{
+
+  teamAWonStyle:{
+    // flexDirection: 'row',
+    // flex:1,
     // position:'relative',
-    backgroundColor:'red',
-    flexDirection: 'row',
-    alignSelf: 'flex-end',
-    width:'40%',
-    bottom: 50,
+    // alignSelf:'flex-end',
+    // marginTop: 5,
+    backgroundColor:'gray',
+    
+    width:'45%',
+    alignItems: 'center',
+    justifyContent: 'center',
     height: 50,
     borderWidth: 2,
     borderColor: 'black',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
-   teamBWonStyleB:{
+   teamBWonStyle:{
     position:'relative',
-    backgroundColor:'red',
     flexDirection: 'row',
     alignSelf: 'flex-end',
     width:'45%',
     bottom: 50,
+    backgroundColor:'red',
     height: 50,
     borderWidth: 2,
     borderColor: 'black',
@@ -919,20 +973,6 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-
-  list: {
-    position: 'absolute',
-    backgroundColor: 'white',
-    width: '35%',
-    alignSelf: 'flex-end',
-    marginTop: 150,
-    borderWidth: 2,
-    borderColor: '#ff8c1d',
-    flexDirection: 'row-reverse',
-    height: 45,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+  }
  
 }); 

@@ -16,217 +16,170 @@ import{
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator} from 'react-navigation-stack'; 
 
-export default class StartFunction extends React.Component { 
- constructor(props) {
+export default class ListButton extends React.Component { 
+    constructor(props) {
        super(props);
        this.state = {
-         hitShot: [],
-         diff: 0,
-         title: '',
-         command: '',
-         selectedItems: [],
-         modalVisible: false,
-         scrolledMultiPickerVisible: false,
-        scrolledMultiPickerSelectedItems: [],
-         Name: '',
-         shooters: [],
-         totalPlayers:10,
-         SampleArray : [],
-         masterList : [[{player: "Lebron", replacement: false}, {player:"AntDavis", replacement: false}], [{player:"Kyrie", replacement: false},
-          {player:"Durant", replacement: false}], [{player:"Majerle", replacement: false}],[{player:"Kawhi", replacement: false},
-           {player:"PG13", replacement: false}], [{player:'Larry', replacement: false}, {player:'Parish', replacement: false}], 
-           [{player:'CONZ', replacement: false}] ],
-      
-         current: 0,
-         answer: 'none'
+         masterList : {},
+         courtArr: [],
+         completeList : [],
+           modalVisible: false,
+           modalPrefVisible: false,
+           toRemove: [],
+           SampleArray: [],
+           prefCourt: [],
+           prefPos: '',
+           testList: [],
+           title: '',
+           position: 0,
+           playerCount: 0,
        };
      }
 
 
 
-
-  
-      printF=()=>{
-        console.log("PRINT in aother class")
-    }
-    
-
-
-
-  async StartGame(){
-
-     // this.func.printF();
-      let teamcap = (this.state.cap/2);
-      let delArray = [];
-      let crash = 0;
-      let names = 0;
-      // console.log("START GAME TOP : WHAT GAME # - ", this.state.current)
-      // console.log('TeamAnum :'  ,this.state.Arena, "NBUMM: ",this.state.Arena['teamANum'], "NUM______", this.state.Arena['Num']  )
-      
-      AsyncAlert = (title, msg) => new Promise((resolve, reject) => {  
-        Alert.alert(
-                    title,
-                    msg,
-                    [ {text: "YES", onPress: () => { resolve('YES') }},
-                      {text: "NO", onPress: () => { resolve('NO') }}  ],
-                    { cancelable: false },
-                    );
-      });
-
-      // let start = await AsyncAlert("Pick teams from List", '')
-      // if (start =="YES"){
-      //   console.log(this.state.masterList)
-      //   for(i in this.state.masterList){
-      //     console.log("i", i, this.state.masterList[i].length)
-      //     if (this.state.masterList[i].length > 1){
-      //       for (j in this.state.masterList[i]){
-      //         console.log("FOR j ", this.state.masterList[i][j]['player'])
-      //         this.state.shooters.push(this.state.masterList[i][j]['player'])
-
-      //       }
-      //     }
-      //     else{
-      //       console.log("single player", this.state.masterList[i][0])
-      //     this.state.shooters.push(this.state.masterList[i][0]['player'])
-      //   }
-      //   }
-      //   // console.log("SHooter", this.state.shooters)
-      //   this.setState({modalVisible: true});
-      //   console.log(this.state.theyHit)
-
-      // }
-
-      // else{
-        while(crash < this.state.masterList.length){//add full contingency
-              if (this.state.current >= this.state.Arena.length){
-                   Alert.alert("GAMES FULL!")
-                   break
-              }
-            // console.log("TOP : ", this.state.Arena[this.state.current]["teamANum"], this.state.masterList[names].length )
-              if(this.state.masterList[names].length +  this.state.Arena[this.state.current]["teamANum"]  <= teamcap){
-                var set = this.extractFromList(names);
-                this.state.Arena[this.state.current]["teamANum"] += this.state.masterList[names].length;
-                delArray += [names];
-                this.state.Arena[this.state.current]["teamA"].push(set);
-                names++;
-                if (names == this.state.masterList.length){
-                    names = 0
-                    delArray = this.removeFromList(delArray)
-                }}
-              else if(this.state.masterList[names].length + this.state.Arena[this.state.current]["teamBNum"] <=teamcap){
-                var set = this.extractFromList(names);
-                this.state.Arena[this.state.current]["teamBNum"] += this.state.masterList[names].length;
-                delArray += [names]
-                this.state.Arena[this.state.current]["teamB"].push(set)
-                names++
-                if (names == this.state.masterList.length){
-                  names = 0
-                  delArray = this.removeFromList(delArray)
-                }}
-              else{
-                  if( this.state.Arena[this.state.current]["teamANum"] + this.state.Arena[this.state.current]["teamBNum"] != this.state.cap){
-                  // If the number is EQUAL then the phrasing should be =choose num to of team a 
-                  let s = '';
-                  for (i in this.state.masterList[names]){
-                    s += this.state.masterList[names][i]['player'] + '  '  
-                    // console.log(" ADDED to Shooters list : ",this.state.masterList[names][i]['player'])
-                    this.state.shooters.push(this.state.masterList[names][i]['player'])
-                  } 
-
-                  this.state.diff = this.state.cap - ( this.state.Arena[this.state.current]["teamANum"]  + 
-                                    this.state.Arena[this.state.current]["teamBNum"] );
-                  console.log("THis is the DIFF AND STUFF", this.state.diff, this.state.shooters.length)
-                  if ( this.state.diff == this.state.shooters.length ){
-                    this.state.command = " Shoot for " + ((this.state.cap/2) - this.state.Arena[this.state.current]["teamANum"] + 
-                      "To Play On TEAM-A")
-                    this.state.diff = ((this.state.cap/2) - this.state.Arena[this.state.current]["teamANum"])
-                  }
-                  else{
-                  this.state.command = "Shoot for " + this.state.diff
-                  }
-
-                  let response = await AsyncAlert(this.state.command, s);
-                  // console.log("RESPONSE : ", response)
-                  if (response == "YES"){
-                    delArray += [names]
-                    delArray = this.removeFromList(delArray)
-                    this.setModalVisible(!this.state.modalVisible,  "Select Player(s) That Hit");
-                    break
-                  } 
-                  else{this.setState({shooters: []});}
-                 
-               names++; }}
-            // GAME READY
-        if( this.state.Arena[this.state.current]["teamANum"]  == teamcap && this.state.Arena[this.state.current]["teamBNum"] == teamcap){
-          this.setState({current: this.state.current+1})
-          this.removeFromList(delArray)
-          // console.log(" TEAMS FULL: on to - ", this.state.current)
-          break;
-          }//if full
-          crash++;          
-
-          }//end of while
-        //} select from list
-        // console.log("SET THE ARENA AND LIST")
-        this.setState({masterList: this.state.masterList});
-        this.setState({Arena:this.state.Arena});
-    
-  }
-
-
-
-
+printListButton=()=>{
+  console.log("PRINT ")
 }
 
 
-// <Modal 
-//     visible={this.state.modal2Visible}>
-//   <View>
-//     <Text style={{fontSize:30}}>{this.state.title} </Text>
-//     <Button onPress={this.print} title="Print"> u</Button>
-//     <TextInput 
-//             placeholderTextColor= "red" 
-//             underlineColorAndroid="gray"
-//             placeholder="Enter position on list"
-//             onChangeText={position => this.setState({ position: position }) }
-//             style={styles.inputs}
-//             keyboardType={'numeric'}  
-//     />
+ checkDuplicate=(name, compList)=>{
+  console.log("checkDuplicate")
+    if (name in compList){
+      Alert.alert("Name Already Exists ")
+      return false
+    }
+    return true
+}
 
-//     <TextInput 
-//               placeholderTextColor= "red" 
-//               underlineColorAndroid="gray"
-//               placeholder="Enter name"
-//               onChangeText={position => this.setState({ position: position }) }
-//               style={styles.inputs}
-//               keyboardType={'numeric'}  
-//     />
-//     <TouchableHighlight   onPress={() => {
-//       this.setModal2Visible(!this.state.modal2Visible, "something");}}>
-//       <Text style={{fontSize:28, backgroundColor:"red"}}>DONE</Text>
-//     </TouchableHighlight>
-//   </View>
-// </Modal>
+AddItemsToArray=(compList, name, SampleArray)=>{
+ 
+    let san = name.replace(/\s/g, '').toLowerCase()
+     console.log("AddItemsToArray", san, name, SampleArray)
+    if (this.checkDuplicate(san, compList)){
+      if (name != 0 && name.replace(/\s/g, '').length != 0 ){
+        SampleArray.push({player: name, replacement: false});
+      }
+      else{
+        Alert.alert("Please Enter A Name")
+      }
+      compList[name.replace(/\s/g, '').toLowerCase()]= 1
+      this.setState({name:''})
+      this.setState({SampleArray: SampleArray})
+      // this.setState({totalPlayers: this.props.totalPlayers + 1})
+  }//good
+}
+
+
+render(){
+
+  let pending = Object.values([this.props.SampleArray]).map(function(vals) {
+      var t= {} ;
+      for (val in vals){
+          if(vals[val] != false && vals[val] != true){
+              t["key"] = vals[val]; 
+        }}
+      return t
+  });
+
+console.log("NEXT", this.state.SampleArray)
+
+return (
   
-// <TouchableHighlight   onPress={() => {
-//   this.setModal2Visible(!this.state.modal2Visible, "something");}}>
-//   <Text style={styles.addButton}> + Add </Text>
-// </TouchableHighlight>
+<View>
+
+ <Text style={{fontSize:40, marginBottom: 50}}> Names </Text>
+    <TouchableOpacity  onPress={this.props.GoToListsMethod} style={styles.list} >
+        <Text style={{color:'#ff8c1d', fontSize:32}}>  List  </Text>
+    </TouchableOpacity> 
+
+  
+
+      <TouchableOpacity onPress={this.clearListMethod} style={styles.clearList} >
+        <Text style={{color:'gray', fontSize:20}}> CLEAR NAMES </Text>
+      </TouchableOpacity>
+
+    <View>
+      <FlatList
+        data={pending}
+        style={styles.sampleArrayStye}
+        renderItem={({item}) => <Text style={{color:'#e1a8ff', fontSize:24, alignItems:'center'}}>{item.key}</Text>}/>
+    </View>  
+
+
+  
+    <TouchableOpacity  onPress={this.props.AddMasterMethod} style={styles.doneAdding} >
+        < Text style={{color:'white', fontSize:20}}> DONE ADDING </Text>
+    </TouchableOpacity>
 
 
 
 
 
-// this.state.playerList = Object.values(this.state.masterList).map(function(vals, i){
-//   var test = [];
-//   for (val in vals[1]){
-//     console.log("val: ", vals[1][val].player)
-//     // for (pl in vals[1][val])
-//     // console.log("pl: ", pl, vals[1][val][pl])
-//     test.push(vals[1][val].player)
-   
-//   }
-//   console.log("test: ", test)
-//   return test
 
-// });
+
+</View>
+
+);}}
+
+
+const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+    backgroundColor: '#e8eae7',
+    padding: "2%",
+  },
+
+  sampleArrayStye: {
+    width:150,
+    alignSelf: 'stretch',
+    backgroundColor: '#fffaf4',
+    fontSize: 30,
+    borderColor: 'red',
+    borderWidth: 1,
+    textAlign:'right',
+    bottom: 40,
+    flex: 1,
+    flexDirection: 'row',
+  },
+  clearList: {
+    backgroundColor:'white', 
+    color:'black', 
+    width:150, 
+    fontSize:20, 
+    bottom:40
+  },
+
+  textInput: {
+    // alignSelf: '',
+    fontSize:22,
+    color: "red",
+    marginBottom: 25,
+    width: '80%',
+    borderWidth: 2,
+    borderColor: 'black',
+    height: 65,
+    backgroundColor: 'white',
+    textAlign: "center", 
+  },
+  doneAdding: {
+    backgroundColor:'grey',  
+    bottom:40, 
+    width:150, 
+  },
+
+  list: {
+    position: 'absolute',
+    backgroundColor: 'white',
+    width: '35%',
+    alignSelf: 'flex-end',
+    borderWidth: 2,
+    borderColor: '#ff8c1d',
+    flexDirection: 'row-reverse',
+    height: 45,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+ 
+}); 
+ 

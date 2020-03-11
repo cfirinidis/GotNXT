@@ -60,6 +60,7 @@ removePlayers = () =>{
   let removePlayer = [];
   let removeComp = [];
 
+
   for ( i in this.state.toRemove){
     removePlayer.push(this.state.toRemove[i]['label'])
     removeComp.push(this.state.toRemove[i]['label'].toLowerCase())
@@ -70,15 +71,21 @@ removePlayers = () =>{
       delete this.state.completeList[removeComp[k]]
     }}
 
-  for(i in this.state.masterList){
-    for (j in this.state.masterList[i][1]){
+  for(i=0; i<this.state.masterList.length ; i++){
+    for (j=0; j<this.state.masterList[i][1].length; j++){
       if (removePlayer.includes(this.state.masterList[i][1][j]['player'])){
+        console.log(this.state.masterList[i][1][j]['player'])
         this.state.masterList[i][1].splice(j,1)
+        j--;
     }}
     if (this.state.masterList[i][1].length == 0){
       this.state.masterList.splice(i,1);
+      i--;
     }
-  }    
+  } 
+
+  this.setState({masterList: this.state.masterList})
+  this.setState({completeList: this.state.completeList})   
 }
 
   setModalVisible=(visible, p)=> new Promise((resolve)=> {
@@ -107,7 +114,7 @@ removePlayers = () =>{
 
 
   async setPref(names){
-    console.log("Setpref : ", names.split(':'))
+    // console.log("Setpref : ", names.split(':'))
     let temp =  names.split(':')
   this.setModalPrefVisible(!this.state.modalPrefVisible, "Select Preferred Court: ")
   this.setState({prefPos: temp[0] - 1})
@@ -118,7 +125,7 @@ setPrefMaster=()=>{
     return 0
   } 
   var t = this.state.prefCourt[0]['value'] 
-  console.log("SET PREF T: ", t , this.state.prefPos , this.state.masterList[this.state.prefPos], this.state.masterList[this.state.prefPos][0]['pref'])
+  // console.log("SET PREF T: ", t , this.state.prefPos , this.state.masterList[this.state.prefPos], this.state.masterList[this.state.prefPos][0]['pref'])
   this.state.masterList[this.state.prefPos][0]['pref'] = t[t.length - 1]
   // this.setState({ masterList: this.state.masterList })
   this.setState({prefPos: '' })  
@@ -253,6 +260,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   modalStyle:{
+    marginTop: 20,
     marginBottom:130,
   },
   modalButtons:{

@@ -30,7 +30,6 @@ export default class Setup extends React.Component {
      }
 
   async resetAll(){
-
        AsyncAlert = (title, msg) => new Promise((resolve) => {  
         Alert.alert(
                     title,
@@ -185,6 +184,8 @@ const styles = StyleSheet.create({
     flex: 1,
 		backgroundColor: '#e8eae7',
     paddingTop: 10,
+    paddingLeft: 5,
+    paddingRight: 5,
 	},
   title: {
     fontSize: 40,
@@ -217,7 +218,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#ffe6e4',
     borderColor: 'red',
-    borderWidth: 3,
+    borderWidth: 4,
     marginBottom: "7%",
     width: "50%",
     height: 60,
@@ -227,7 +228,7 @@ const styles = StyleSheet.create({
      justifyContent: 'center',
     backgroundColor: '#e8ffdd',
     borderColor: '#51ff00',
-    borderWidth: 3,
+    borderWidth: 4,
     marginBottom: "7%",
     width: "50%",
     height: 60,
@@ -237,7 +238,7 @@ const styles = StyleSheet.create({
      justifyContent: 'center',
     backgroundColor: '#fff2d3',
     borderColor: '#ffd800',
-    borderWidth: 3,
+    borderWidth: 4,
     marginBottom: "7%",
     width: "50%",
     height: 60,
