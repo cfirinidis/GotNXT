@@ -8,6 +8,7 @@ import{
   TextInput,
   FlatList,
   ScrollView,
+  Platform,
   KeyboardAvoidingView,
   TouchableHighlight,
   TouchableOpacity,
@@ -118,7 +119,11 @@ export default class MainActivity extends React.Component {
       this.setState({totalPlayers: this.state.totalPlayers + 1})
   }//good
 }
+
   clearList=()=>{
+    for (k in this.state.SampleArray){
+      delete this.state.completeList[this.state.SampleArray[k]['player'].toLowerCase()]
+    }
     this.setState({SampleArray:[]})
   }
 
@@ -142,12 +147,6 @@ export default class MainActivity extends React.Component {
   }//good
 
   AddMaster2=()=>{
-    // console.log("Add2: ", this.state.hitShot, this.state.shooters)
-    // if (this.state.hitShot.length==0){
-    //   console.log("Empty")
-    //   this.state.masterList.splice(this.state.restNum, 0, [{pref:0}, this.state.shooters]);
-    //   return 0
-    // }
       var hit= [];
       var rest = [];
       var hitList = [];
@@ -170,7 +169,16 @@ export default class MainActivity extends React.Component {
     this.setState({shooters: this.state.shooters });  
     this.setState({masterList: this.state.masterList});
     this.setState({completeList: this.state.completeList})
+
+    if (Platform.OS == 'android'){
     this.StartGame();
+      }
+    else{
+       setTimeout(()=>{
+        this.StartGame();
+    }, 100);
+   }
+
   }//good
 
   GoToLists=()=>{
@@ -182,26 +190,32 @@ export default class MainActivity extends React.Component {
     this.props.navigation.navigate("Modal");
   }
 
-  useInfo=()=>{
+  CorrectionOrSub=()=>{
     if (this.state.remPlayer.length == 0){
       this.setState({ tempCourt:[] });
       this.setState({ remPlayer:[] });
       return 0
     }
-            
-    for (k in this.state.Arena[this.state.tempNum-1][this.state.team]){
-        if (this.state.remPlayer[0]['label'] == this.state.Arena[this.state.tempNum-1][this.state.team][k][0]["player"]){
+      
+    this.state.correctionNum = this.state.remPlayer.length
+    for (i=0; i<this.state.remPlayer.length; i++){      
+      for (k=0;  k<this.state.Arena[this.state.tempNum-1][this.state.team].length; k++){
+        if (this.state.remPlayer[i]['label'] == this.state.Arena[this.state.tempNum-1][this.state.team][k][0]["player"]){
           this.state.Arena[this.state.tempNum-1][this.state.team].splice(k,1)
           this.state.Arena[this.state.tempNum-1][this.state.team+"Num"] -= 1
+          k--;
         }
-      }
+      }}
       let repP = [];
       Object.values(this.state.masterList).map(function(val) {
         for (j in val[1]){
           repP.push(val[1][j]['player']);
         }
       });
-    this.state.masterList.unshift([{pref:"W"}, [{player: this.state.remPlayer[0]['label'], replacement: false}]] )
+
+    for(i in this.state.remPlayer){
+      this.state.masterList.unshift([{pref:"W"}, [{player: this.state.remPlayer[i]['label'], replacement: false}]] )  
+    }
     this.setState({ tempCourt: [] });
     this.setState({ allAvailable: repP });   
     this.setState({ remPlayer:[] });
@@ -216,24 +230,37 @@ export default class MainActivity extends React.Component {
     }
   }
 
-  updateMaster=()=>{
+updateMaster=()=>{
     if (this.state.move.length == 0){
-       Alert.alert("No one selected as replacement.")
+      // Alert.alert("No one selected as replacement.")
+      this.setState( { move: [] } );
+      this.setState( { repFlag: false } );
+      this.state.correctionNum = 0;
        return 0
     }
-    for(i in this.state.masterList){
+    let movePlayers = [] 
+    for (i in this.state.move){
+      movePlayers.push(this.state.move[i]['value'])
+    }
+
+    for(i=0; i<this.state.masterList.length; i++){
       for (j = 0; j < this.state.masterList[i][1].length ; j++){
-        if (this.state.masterList[i][1][j]['player'] == this.state.move[0]['value']){
+        if (movePlayers.includes(this.state.masterList[i][1][j]['player'])){
           this.state.masterList[i][1].splice(j,1);
           j--;  
         if (this.state.masterList[i][1].length == 0){
             this.state.masterList.splice(i,1);
+            i--;
           }
-          break;
     }}}
-    this.state.masterList.unshift([{pref: 0},[{player:this.state.move[0]['value'], replacement: this.state.repFlag}]])
+
+    for(i in movePlayers){
+       this.state.masterList.unshift([{pref: 0},[{player:movePlayers[i], replacement: this.state.repFlag}]])
+    }
+    
     this.setState( { move: [] } );
     this.setState( { repFlag: false } );
+    this.state.correctionNum = 0;
     this.StartGame();
   }
 
@@ -698,7 +725,7 @@ winnersWinners(){
           selectedItems={ this.state.remPlayer }
           onSelectionsChange={this.onSelectionsChangePlayer} />
         <TouchableHighlight   onPress={() => 
-            this.setModalPlayerVisible(!this.state.modalPlayerVisible, "something").then(this.useInfo())}
+            this.setModalPlayerVisible(!this.state.modalPlayerVisible, "something").then(this.CorrectionOrSub())}
              style={styles.modalButton}>
             <Text style={styles.modalText}>Done</Text>
         </TouchableHighlight>
@@ -843,11 +870,12 @@ const styles = StyleSheet.create({
   },
 
   teamStyleA: {
-    // position:'relative',
+    // position:'absolute',
     backgroundColor: 'white',
     borderWidth:3,
     width: "45%",
   },
+
     teamStyleB: {
     position:'absolute',
     alignSelf: 'flex-end',
