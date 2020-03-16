@@ -39,7 +39,6 @@ export default class Setup extends React.Component {
                     { cancelable: false},
                     );
       });
-    
     var answer =  await AsyncAlert ('RESET ALL', "Are you sure?")
   
     if (answer == "YES"){
@@ -69,18 +68,12 @@ export default class Setup extends React.Component {
       this.state.courtsNum = JSON.parse(cNum);
       this.state.courtArr = JSON.parse(cArray);
       this.state.completeList = JSON.parse(cList)
-      // console.log("load ", tempList) 
-      // tempList = new Set(tempList);
-      // console.log("load ", tempList)
-      // console.log("LOAD::  ", this.state.completeList, this.state.masterList) 
-
       this.setState({masterList:this.state.masterList})
       this.setState({Arena:this.state.Arena})
       this.setState({capacity:this.state.capacity});
       this.setState({courtsNum:this.state.courtsNum});
       this.setState({courtArr:this.state.courtArr});
       this.setState({completeList: this.state.completeList})
-      // console.log("initial load: ", this.state.completeList)
 
       this.props.navigation.navigate("List", {arena: this.state.Arena, cap:this.state.capacity, 
       courtsNum:this.state.courtsNum, courtArr: this.state.courtArr, masterList:this.state.masterList, 
@@ -91,9 +84,17 @@ export default class Setup extends React.Component {
     }
   }
 
-  SetupCourts=()=>{
+  async SetupCourt(){
     var courts = {}
-    // console.log(this.state.capacity)
+    AsyncAlert = (title, msg) => new Promise((resolve, reject) => {  
+        Alert.alert(
+                    title,
+                    msg,
+                    [ {text: "YES", onPress: () => { resolve('YES') }},
+                      {text: "NO", onPress: () => { resolve('NO') }}  ],
+                    { cancelable: false},
+                    );
+      });
     if (isNaN(this.state.courtsNum ) || this.state.courtsNum.replace(/\s/g, '').length == 0) {
       Alert.alert("Enter # of available Courts")
     }
@@ -105,35 +106,47 @@ export default class Setup extends React.Component {
       this.props.navigation.navigate("List", {arena: this.state.Arena, cap:this.state.capacity, 
       courtsNum:this.state.courtsNum, masterList:this.state.masterList, courtArr: this.state.courtArr,
       completeList:this.state.completeList });
-      // this.setState({courtsNum:''});
-      // this.setState({capacity:''}); 
     }
     else{
-    this.state.courtArr.push("NONE : "+ '0')
-    for (var i=0; i<this.state.courtsNum; i++){
-      courts['Num'] = i+1
-      courts["teamANum"] = 0
-      courts["teamBNum"] = 0
-      courts['teamA'] = new Array()
-      courts['teamB'] = new Array()
-      this.state.Arena.push(courts)
-      courts={}
-      this.state.courtArr.push("Court : "+ (i+1))
-    }
-    this.state.courtArr.push("Waiting : "+ 'W')
-    // console.log("COURT ARRAY", this.state.courtArr)
-    this.setState({Arena:this.state.Arena}); 
-    this.props.navigation.navigate("List", {arena: this.state.Arena, cap:this.state.capacity, 
-      courtsNum:this.state.courtsNum, courtArr: this.state.courtArr, masterList:this.state.masterList,
-      completeList:this.state.completeList });      
-  }}
+      let gameStart = await AsyncAlert("Have Games Started?", "")
+        if (gameStart == "YES"){
+          for (var i=0; i<this.state.courtsNum; i++){
+            courts['Num'] = i+1
+            courts["teamANum"] = parseInt(this.state.capacity)
+            courts["teamBNum"] = parseInt(this.state.capacity)
+            courts['teamA'] = new Array()
+            courts['teamB'] = new Array()
+            for (let j =0; j<2 * this.state.capacity; j++){
+          courts['teamA'].push([{"player": "*PLYR"+j + "CRT" + courts['Num'], "replacement": false }])
+          j++;
+          courts['teamB'].push([{"player": "*PLYR"+j + "CRT" + courts['Num'], "replacement": false }])
+        }
+          this.state.Arena.push(courts)
+          courts={}
+          this.state.courtArr.push("Court : "+ (i+1))
+        }
+        }
+  
+      else{
+        this.state.courtArr.push("NONE : "+ '0')
+        for (var i=0; i<this.state.courtsNum; i++){
+        courts['Num'] = i+1
+        courts["teamANum"] = 0
+        courts["teamBNum"] = 0
+        courts['teamA'] = new Array()
+        courts['teamB'] = new Array()
+        this.state.Arena.push(courts)
+        courts={}
+        this.state.courtArr.push("Court : "+ (i+1))
+      }}
+      this.state.courtArr.push("Waiting : "+ 'W')
+      this.setState({Arena:this.state.Arena}); 
+      this.props.navigation.navigate("List", {arena: this.state.Arena, cap:this.state.capacity, 
+        courtsNum:this.state.courtsNum, courtArr: this.state.courtArr, masterList:this.state.masterList,
+        completeList:this.state.completeList });      
+  }
+}
 
-
-  // backToGames=()=>{
-  //   this.props.navigation.navigate("List", {arena: this.state.Arena, cap:this.state.capacity, 
-  //     courtsNum:this.state.courtsNum, courtArr: this.state.courtArr, masterList:this.state.masterList });
-  // }
- 
  render() {
    return (    
    		<View style={styles.wrapper}>
@@ -159,7 +172,7 @@ export default class Setup extends React.Component {
               keyboardType={'numeric'}  
             />
 
-    <TouchableOpacity  onPress={this.SetupCourts.bind(this)} style={styles.doneButton} >
+    <TouchableOpacity  onPress={this.SetupCourt.bind(this)} style={styles.doneButton} >
       <Text style={styles.text}> DONE </Text>
     </TouchableOpacity>
 
@@ -169,8 +182,10 @@ export default class Setup extends React.Component {
     </TouchableOpacity>
 
     <TouchableOpacity  onPress={this.loadData.bind(this)} style={styles.loadButton} >
-      <Text style={styles.text}> LOAD DATA </Text>
+      <Text style={styles.text}> LOAD </Text>
     </TouchableOpacity>
+
+    <Text style={styles.footer}>ConzStructions</Text>
      </KeyboardAvoidingView>
       </View>
       
@@ -178,7 +193,6 @@ export default class Setup extends React.Component {
  }
 }
  
-// backgroundColor: '#e8eae7',
 const styles = StyleSheet.create({
 	wrapper: {
     flex: 1,
@@ -186,6 +200,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingLeft: 5,
     paddingRight: 5,
+    height: '100%',
 	},
   title: {
     fontSize: 40,
@@ -195,6 +210,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign:'center',
     fontWeight: 'bold',
+  },
+  footer:{
+    fontSize:14,
+    position:'absolute',
+    textAlign:'center',
+    top: "100%",
+    width:"100%",
   },
 	textInput: {
 		padding: 18,
@@ -217,10 +239,12 @@ const styles = StyleSheet.create({
     fontSize: 26,
     justifyContent: 'center',
     backgroundColor: '#ffe6e4',
+    alignItems: 'center',
     borderColor: 'red',
     borderWidth: 4,
-    marginBottom: "7%",
-    width: "50%",
+    borderRadius: 50,
+    marginBottom: "8%",
+    width: "45%",
     height: 60,
   },
    doneButton: {
@@ -229,18 +253,22 @@ const styles = StyleSheet.create({
     backgroundColor: '#e8ffdd',
     borderColor: '#51ff00',
     borderWidth: 4,
-    marginBottom: "7%",
-    width: "50%",
+    alignItems: 'center',
+     borderRadius: 50,
+    marginBottom: "8%",
+    width: "45%",
     height: 60,
   },
    loadButton: {
     fontSize: 26,
-     justifyContent: 'center',
+    justifyContent: 'center',
+    borderRadius: 50,
+    alignItems: 'center',
     backgroundColor: '#fff2d3',
     borderColor: '#ffd800',
     borderWidth: 4,
-    marginBottom: "7%",
-    width: "50%",
+    marginBottom: "8%",
+    width: "45%",
     height: 60,
   },
 
