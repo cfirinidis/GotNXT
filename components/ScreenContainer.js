@@ -7,20 +7,22 @@ import ShowList from './ListPage';
 import PopUp from './PopUp';
 import ModalExample from './Modal'
 import StartFunction from './function'
+import EditNames from './Edit'
 
 
 const MainNavigator = createStackNavigator({
     Main: { 
         screen: Setup,
     },
+    EditNames:{
+        screen: EditNames,
+    },
     List: {
     	screen: MainActivity,
-
-        params: {compList: 'completeList'}
+        
     },
     Show: {
     	screen: ShowList,
-
     },
     Test: {
     	screen: PopUp,
@@ -31,6 +33,7 @@ const MainNavigator = createStackNavigator({
     Functions: {
         screen: StartFunction,
     }
+
 });
 
 

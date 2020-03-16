@@ -5,14 +5,11 @@ import{
 	Alert,
 	View,
 	Button,
-	TextInput,
   Modal,
 	FlatList,
   TouchableHighlight,
   ScrollView,
 	KeyboardAvoidingView,
-	TouchableOpacity,
-	Image,
 } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator} from 'react-navigation-stack'; 
@@ -56,6 +53,13 @@ AddPlayer=()=>{
 
 }
 
+  GoToEdits=()=>{
+    // console.log("GoToEdits")
+    this.props.navigation.navigate("EditNames", {arena: this.state.Arena,
+     list: this.state.masterList, courtArr: this.state.courtArr, compList: this.state.completeList});  
+  }
+
+
 removePlayers = () =>{
   let removePlayer = [];
   let removeComp = [];
@@ -74,7 +78,6 @@ removePlayers = () =>{
   for(i=0; i<this.state.masterList.length ; i++){
     for (j=0; j<this.state.masterList[i][1].length; j++){
       if (removePlayer.includes(this.state.masterList[i][1][j]['player'])){
-        console.log(this.state.masterList[i][1][j]['player'])
         this.state.masterList[i][1].splice(j,1)
         j--;
     }}
@@ -108,16 +111,13 @@ removePlayers = () =>{
         }
       });
      this.state.playerCount = c;
-
     return r
   }
 
-
   async setPref(names){
-    // console.log("Setpref : ", names.split(':'))
     let temp =  names.split(':')
-  this.setModalPrefVisible(!this.state.modalPrefVisible, "Select Preferred Court: ")
-  this.setState({prefPos: temp[0] - 1})
+    this.setModalPrefVisible(!this.state.modalPrefVisible, "Select Preferred Court: ")
+    this.setState({prefPos: temp[0] - 1})
   }
 
 setPrefMaster=()=>{
@@ -125,17 +125,13 @@ setPrefMaster=()=>{
     return 0
   } 
   var t = this.state.prefCourt[0]['value'] 
-  // console.log("SET PREF T: ", t , this.state.prefPos , this.state.masterList[this.state.prefPos], this.state.masterList[this.state.prefPos][0]['pref'])
   this.state.masterList[this.state.prefPos][0]['pref'] = t[t.length - 1]
-  // this.setState({ masterList: this.state.masterList })
   this.setState({prefPos: '' })  
   this.setState({prefCourt:[] })
-
 }
 
 render() {
 let currentList = Object.values(this.state.masterList).map(function(vals, i) {
-    
       var t= {} ;
       for (val in vals[1]){
         if (t["key"] === undefined){
@@ -149,14 +145,11 @@ let currentList = Object.values(this.state.masterList).map(function(vals, i) {
 
 this.state.playerList = this.getNames()
 
- // console.log("GAME : ", this.state.playerList)
- // console.log("currentList", currentList)
- // console.log("courtArr ", this.state.courtArr)
 return (
 <ScrollView>
 <View>  
     
-<Text style={styles.header}>WAITING LIST -> {this.state.playerCount}</Text>
+<Text style={styles.header}>WAITING LIST: {this.state.playerCount}</Text>
 
 <FlatList
     data={currentList} style={styles.textList}
@@ -180,6 +173,7 @@ return (
         style={styles.modalButtons}>
             <Text style={styles.modalText}>DONE</Text>
         </TouchableHighlight>
+
       </View>
 </Modal>
 
@@ -189,6 +183,12 @@ return (
     this.setModalVisible(!this.state.modalVisible, "Choose Player(s) To Remove"); }}
      style={styles.buttons}>  
     <Text style={{fontSize:28, color:"white"}}> - Remove </Text>  
+</TouchableHighlight>
+
+<TouchableHighlight onPress={()=> {
+    this.GoToEdits()}} 
+     style={styles.EditButtons}>  
+    <Text style={{fontSize:33, color:"white"}}>Edit</Text>  
 </TouchableHighlight>
 
 
@@ -209,41 +209,24 @@ return (
             <Text style={styles.modalText} >DONE</Text>
         </TouchableHighlight>
       </View>
-</Modal>
-
-
-
+  </Modal>
 </View>
 </ScrollView>
     );
   }
 }
 
- // console.log("NAME ", name, name[1], dName)
- //      prefAlert = () => new Promise((resolve, reject) => {  
- //        Alert.alert(
- //                    "Add Court Pref for: ",
- //                    dName,
- //                    [ {text: "Yes", onPress: () => { resolve('YES') }},
- //                      {text: "NO", onPress: () => { resolve('NO') }}  ],
- //                    { cancelable: true},
- //                    );
- //        });
- //    ans = await prefAlert(t);
- //    if (ans == "YES"){
- //      this.setModalPrefVisible(!this.state.modalPrefVisible, "Select Preferred Court: ")
-
- //    }
-
-
 
 const styles = StyleSheet.create({
   header: {
-    fontSize:38,
+    fontSize:30,
+    height: 60,
+    padding: 8,
     backgroundColor:'gray',
     color: 'white',
     width:"100%",
-
+    alignItems: 'center',
+    justifyContent: 'center',
  },
   textList: {
 		marginBottom: 10,
@@ -256,8 +239,21 @@ const styles = StyleSheet.create({
   buttons: {
     width: "40%",
     height: 45,
-    backgroundColor:'black',
-    marginBottom: 10,
+    backgroundColor:'red',
+    marginBottom: "5%",
+  },
+  EditButtons: {
+    width: "20%",
+    position:'absolute',
+    height: 45,
+    top: 7,
+    flexDirection: 'row',
+    borderRadius: 50,
+    alignSelf: 'flex-end',
+    backgroundColor:'pink',
+    right: "2%",
+    alignItems: 'center',
+  justifyContent: 'center',
   },
   modalStyle:{
     marginTop: 20,
