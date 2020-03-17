@@ -117,9 +117,9 @@ export default class Setup extends React.Component {
             courts['teamA'] = new Array()
             courts['teamB'] = new Array()
             for (let j =0; j<2 * this.state.capacity; j++){
-          courts['teamA'].push([{"player": "*PLYR"+j + "CRT" + courts['Num'], "replacement": false }])
+          courts['teamA'].push([{"player": "*PLR"+j + "CRT" + courts['Num'], "replacement": false }])
           j++;
-          courts['teamB'].push([{"player": "*PLYR"+j + "CRT" + courts['Num'], "replacement": false }])
+          courts['teamB'].push([{"player": "*PLR"+j + "CRT" + courts['Num'], "replacement": false }])
         }
           this.state.Arena.push(courts)
           courts={}

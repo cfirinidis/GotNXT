@@ -656,17 +656,15 @@ winnersWinners(){
 <View>
 
       <TouchableHighlight onPress={()=>this.replacePlayer(item.key, "teamA", this.state.curPlayersA) } style={styles.teamStyleA}>  
-        <Text style={{color:"gray", fontSize:28}}>{item.valA}</Text>
+        <Text style={{color:"gray", fontSize:26}}>{item.valA}</Text>
       </TouchableHighlight>
 
     <TouchableHighlight onPress={()=>this.endGame(item.key, "teamB", "teamA", 'reg')} style={styles.teamAWonStyle}>
       <Text style={{color:"white", fontSize:26}}>Team A Won</Text>
     </TouchableHighlight>
 
-
-
     <TouchableHighlight onPress={()=>this.replacePlayer(item.key, "teamB", this.state.curPlayersB) } style={styles.teamStyleB}>
-      <Text style={{color:"red", fontSize:28}}>{item.valB}</Text>
+      <Text style={{color:"red", fontSize:26}}>{item.valB}</Text>
     </TouchableHighlight>
 
     <TouchableHighlight onPress={()=>this.endGame(item.key, "teamA", "teamB", 'reg') } style={styles.teamBWonStyle}>
@@ -698,12 +696,13 @@ winnersWinners(){
     </Modal>
 
     <Modal 
-    visible={this.state.modalPlayerVisible}>
-      <View  style={styles.modalStyle }>
+    visible={this.state.modalPlayerVisible} >
+      <View style={styles.modalStyle } >
         <Text style={{fontSize:30, backgroundColor:'red', color:'white'}} >{this.state.title} </Text>
         <SelectMultiple
           maxSelect= {1}
           items={this.state.tempCourt}
+          style={styles.modalStyle }
           selectedItems={ this.state.remPlayer }
           onSelectionsChange={this.onSelectionsChangePlayer} />
         <TouchableHighlight   onPress={() => 
@@ -721,6 +720,7 @@ winnersWinners(){
         <SelectMultiple
           maxSelect= {1}        
           items={ this.state.allAvailable }
+          style={styles.modalStyle}
           selectedItems={ this.state.move }
           onSelectionsChange={this.onSelectionsChangePlayerTop} />
           <TouchableHighlight   onPress={() => 
@@ -803,7 +803,15 @@ const styles = StyleSheet.create({
   modalStyle:{
     marginTop: 20,
     marginBottom:130,
+    backgroundColor:"yellow",
+    fontSize: 42,
+    alignItems: "center",
+    borderBottomColor: "purple",
   },
+
+
+
+
   modalButtons:{
     width: '40%',
     height: 60,
@@ -855,6 +863,9 @@ const styles = StyleSheet.create({
   modalStyle:{
     marginBottom: 120 ,
     marginTop: 20,
+    backgroundColor:'pink',
+    borderBottomWidth:6,
+
   },
   modalText:{
     fontSize: 22,
