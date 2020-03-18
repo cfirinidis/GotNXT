@@ -579,14 +579,14 @@ winnersWinners(){
   return t
 }); 
 
-  // let pending = Object.values(this.state.SampleArray).map(function(vals) {
-  //     var t= {} ;
-  //     for (val in vals){
-  //         if(vals[val] != false && vals[val] != true){
-  //             t["key"] = vals[val]; 
-  //       }}
-  //     return t
-  // });
+  let pending = Object.values(this.state.SampleArray).map(function(vals) {
+      var t= {} ;
+      for (val in vals){
+          if(vals[val] != false && vals[val] != true){
+              t["key"] = vals[val]; 
+        }}
+      return <ListButton key={t}/>
+  });
 
    return (
       <KeyboardAvoidingView style={styles.wrapper}>
@@ -656,6 +656,8 @@ winnersWinners(){
     AddMasterAfterShootoutMethod={()=>this.AddMasterAfterShootout()}
 
     />
+
+
 
     <Modal 
     visible={this.state.modalPlayerVisible} >

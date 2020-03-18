@@ -7,14 +7,22 @@ import{
   Button,
   TextInput,
   FlatList,
+  Platform,
   ScrollView,
   KeyboardAvoidingView,
+  TouchableHighlight,
   TouchableOpacity,
   AsyncStorage,
+  Modal,
   Image,
 } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator} from 'react-navigation-stack'; 
+import Setup from './Setup';
+import PopUp from './PopUp';
+import ModalShoot from './Modal';
+import StartFunction from './function';
+import SelectMultiple from 'react-native-select-multiple';
 
 export default class ListButton extends React.Component { 
     constructor(props) {
@@ -118,6 +126,7 @@ return (
 
 
 
+
 </View>
 
 );}}
@@ -149,7 +158,71 @@ const styles = StyleSheet.create({
     fontSize:20, 
     bottom:40
   },
+  modalButton:{
+    width: 120,
+    height: 60,
+    left: '50%',
+    backgroundColor: '#388fe7',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalStyle:{
+    marginBottom: 120 ,
+    marginTop: 20,
+    backgroundColor:'blue',
+  },
+  modalText:{
+    fontSize: 22,
+    color:'white', 
+  },
+  list:{
+        position:'absolute',
+    alignSelf: 'flex-end',
+    backgroundColor: 'white',
+  },
 
+  teamStyleA: {
+    // position:'relative',
+    backgroundColor: 'white',
+    borderWidth:3,
+    width: "45%",
+  },
+    teamStyleB: {
+    position:'absolute',
+    alignSelf: 'flex-end',
+    backgroundColor: 'white',
+    borderWidth:3,
+    width: "45%",
+  },
+
+  teamAWonStyle:{
+    // flexDirection: 'row',
+    // flex:1,
+    // position:'relative',
+    // alignSelf:'flex-end',
+    // marginTop: 5,
+    backgroundColor:'gray',
+    
+    width:'45%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 50,
+    borderWidth: 2,
+    borderColor: 'black',
+  },
+   teamBWonStyle:{
+    position:'relative',
+    flexDirection: 'row',
+    alignSelf: 'flex-end',
+    width:'45%',
+    bottom: 50,
+    backgroundColor:'red',
+    height: 50,
+    borderWidth: 2,
+    borderColor: 'black',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   textInput: {
     // alignSelf: '',
     fontSize:22,
@@ -167,19 +240,52 @@ const styles = StyleSheet.create({
     bottom:40, 
     width:150, 
   },
-
-  list: {
-    position: 'absolute',
-    backgroundColor: 'white',
-    width: '35%',
-    alignSelf: 'flex-end',
-    borderWidth: 2,
-    borderColor: '#ff8c1d',
+    addButtonText: {
+    color: 'white',
+    fontSize: 18,
+    justifyContent: 'center',
+     alignItems: 'center',
     flexDirection: 'row-reverse',
-    height: 45,
+
+  },
+
+   gameBottonText: {
+    fontSize:30,
+    color:'green',
+        alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
+
+
+  },
+   addButton: {
+    // zIndex: 1,
+     position: 'absolute',
+    backgroundColor: '#fcbf07',
+    flexDirection:'row',
+    width: '20%',
+    height: 65,
+    borderWidth: 2,
+    alignSelf:'flex-end',
+    borderColor: 'black',
     alignItems: 'center',
     justifyContent: 'center',
+     position: 'absolute',
   },
+  addStart: {
+    position: 'absolute',
+    backgroundColor: '#64e723',
+    marginTop: 80,
+    right: '10%',
+    width: 100,
+    height: 100,
+    flexDirection: 'row',
+    alignSelf: 'flex-end',
+    borderRadius: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
  
 }); 
+
  
