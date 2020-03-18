@@ -99,7 +99,11 @@ export default class Setup extends React.Component {
       Alert.alert("Enter # of available Courts")
     }
     else if(this.state.capacity.replace(/\s/g, '').length==0){
+<<<<<<< HEAD
      Alert.alert("Please enter Number of Players PER TEAM") 
+=======
+     Alert.alert("Please enter 'EVEN' Number Players") 
+>>>>>>> 4f3c4cd708120790e8e496bf37d16a32efbfbbf4
     }
     else if(this.state.Arena.length>0){
       Alert.alert("Already Setup, to erase press RESET")
@@ -165,7 +169,12 @@ export default class Setup extends React.Component {
             <TextInput 
               placeholderTextColor= "purple" 
               underlineColorAndroid="gray"
+<<<<<<< HEAD
               placeholder=" Total Players On Each TEAM "
+=======
+              type='numeric'
+              placeholder="Total Players On Each Team: "
+>>>>>>> 4f3c4cd708120790e8e496bf37d16a32efbfbbf4
               onChangeText={capacity => this.setState({ capacity: capacity}) }
 				      style={styles.textInput}  
               value = {this.state.capacity} 

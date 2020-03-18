@@ -320,7 +320,10 @@ updateMaster=()=>{
 =======
   async StartGame(){
       let teamcap = this.state.cap;
+<<<<<<< HEAD
 >>>>>>> Add signup and login pages.
+=======
+>>>>>>> 4f3c4cd708120790e8e496bf37d16a32efbfbbf4
       let delArray = [];
       let names = 0;
       AsyncAlert = (title, msg) => new Promise((resolve, reject) => {  
@@ -333,6 +336,7 @@ updateMaster=()=>{
                     );
       });
 <<<<<<< HEAD
+<<<<<<< HEAD
         for(let run = 0; run < this.state.masterList.length; run++){//add full contingency
                 while(this.state.current < this.state.Arena.length && this.state.Arena[this.state.current]["teamANum"]  + this.state.Arena[this.state.current]["teamBNum"] == 2*this.state.cap){
                   // console.log(this.state.current)
@@ -342,6 +346,8 @@ updateMaster=()=>{
                   if (this.state.current >= this.state.Arena.length){
                     this.setState({ current: this.state.current})
 =======
+=======
+>>>>>>> 4f3c4cd708120790e8e496bf37d16a32efbfbbf4
 
       // let start = await AsyncAlert("Pick teams from List", '')
       // if (start =="YES"){
@@ -433,9 +439,13 @@ updateMaster=()=>{
           }//end of while
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         // }//esle
 >>>>>>> Add signup and login pages.
+=======
+        // }//esle
+>>>>>>> 4f3c4cd708120790e8e496bf37d16a32efbfbbf4
         this.setState({masterList: this.state.masterList});
         this.setState({Arena:this.state.Arena});
         console.log("ARENA in startgame: ", this.state.Arena)

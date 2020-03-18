@@ -4,9 +4,13 @@
   "dev": true,
   "minify": false,
 <<<<<<< HEAD
+<<<<<<< HEAD
   "urlRandomness": "dr-gft",
 =======
   "urlRandomness": "97-cmy",
 >>>>>>> Add signup and login pages.
+=======
+  "urlRandomness": "97-cmy",
+>>>>>>> 4f3c4cd708120790e8e496bf37d16a32efbfbbf4
   "https": false
 }
