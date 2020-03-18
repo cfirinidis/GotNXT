@@ -8,15 +8,25 @@ import PopUp from './PopUp';
 import ModalExample from './Modal'
 import StartFunction from './function'
 import EditNames from './Edit'
+import Login from './Login';
+import SignUp from './SignUp'
 
 
 const MainNavigator = createStackNavigator({
+    Login:{
+        screen: Login
+    },
+    SignUp:{
+        screen: SignUp
+    },
+
     Main: { 
         screen: Setup,
     },
     EditNames:{
         screen: EditNames,
     },
+  
     List: {
     	screen: MainActivity,
         
