@@ -8,11 +8,14 @@ import{
 	TextInput,
 	KeyboardAvoidingView,
 	TouchableOpacity,
+  TouchableHighlight,
 	AsyncStorage,
 	Image,
+  Modal,
 } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator} from 'react-navigation-stack'; 
+import SelectMultiple from 'react-native-select-multiple';
 
 export default class Setup extends React.Component {
  
@@ -26,6 +29,10 @@ export default class Setup extends React.Component {
          courtArr:[],
          test:'',
          completeList: {},
+         numGamesModal: false,
+         title:'',
+         gamesStarted: [],
+         numGamesStarted: [],
        };
      }
 
@@ -48,6 +55,8 @@ export default class Setup extends React.Component {
       this.setState({masterList : [] });
       this.setState({courtArr : [] });
       this.setState({completeList: {} });
+      this.setState({numGamesStarted: [] });
+      this.setState({gamesStarted: [] });
     }
      else{return 0}
   }
@@ -84,8 +93,53 @@ export default class Setup extends React.Component {
     }
   }
 
+   onSelectionsChangeGamesStarted=(gamesStarted)=>{
+    this.setState({ gamesStarted })
+  }
+
+  setModalGamesVisible=(visible, p)=> new Promise((resolve)=> {
+    this.state.title = p
+    this.setState({numGamesModal: visible})
+  });
+
+
+  createPlaceholders=(answer)=>{
+    let courts = {};
+    let count = 0;
+    // console.log("OVERSIGHT", this.state.gamesStarted[0]["label"], answer)
+    for (var i=0; i<this.state.courtsNum; i++){
+        courts['teamA'] = new Array()
+        courts['teamB'] = new Array()
+        if(answer == "YES" && (count < this.state.gamesStarted[0]["label"] || this.state.gamesStarted[0]["label"] == "ALL")){
+            courts['Num'] = i+1
+            courts["teamANum"] = parseInt(this.state.capacity)
+            courts["teamBNum"] = parseInt(this.state.capacity)
+            for (let j =0; j<2 * this.state.capacity; j++){
+              courts['teamA'].push([{"player": "*PLYR"+j + "CRT" + courts['Num'], "replacement": false }])
+                j++;
+              courts['teamB'].push([{"player": "*PLYR"+j + "CRT" + courts['Num'], "replacement": false }])
+            }
+          count++;
+        }
+      else{
+              this.state.courtArr.push("NONE : "+ '0')
+              courts['Num'] = i+1
+              courts["teamANum"] = 0
+              courts["teamBNum"] = 0
+          }  
+          this.state.Arena.push(courts)
+          courts={}
+          this.state.courtArr.push("Court : "+ (i+1))
+      }//for loop
+      this.state.courtArr.push("Waiting : "+ 'W')
+      this.setState({Arena:this.state.Arena}); 
+      this.props.navigation.navigate("List", {arena: this.state.Arena, cap:this.state.capacity, 
+        courtsNum:this.state.courtsNum, courtArr: this.state.courtArr, masterList:this.state.masterList,
+        completeList:this.state.completeList });      
+  }//end of func
+
+
   async SetupCourt(){
-    var courts = {}
     AsyncAlert = (title, msg) => new Promise((resolve, reject) => {  
         Alert.alert(
                     title,
@@ -99,11 +153,7 @@ export default class Setup extends React.Component {
       Alert.alert("Enter # of available Courts")
     }
     else if(this.state.capacity.replace(/\s/g, '').length==0){
-<<<<<<< HEAD
      Alert.alert("Please enter Number of Players PER TEAM") 
-=======
-     Alert.alert("Please enter 'EVEN' Number Players") 
->>>>>>> 4f3c4cd708120790e8e496bf37d16a32efbfbbf4
     }
     else if(this.state.Arena.length>0){
       Alert.alert("Already Setup, to erase press RESET")
@@ -112,44 +162,20 @@ export default class Setup extends React.Component {
       completeList:this.state.completeList });
     }
     else{
-      let gameStart = await AsyncAlert("Have Games Started?", "")
-        if (gameStart == "YES"){
-          for (var i=0; i<this.state.courtsNum; i++){
-            courts['Num'] = i+1
-            courts["teamANum"] = parseInt(this.state.capacity)
-            courts["teamBNum"] = parseInt(this.state.capacity)
-            courts['teamA'] = new Array()
-            courts['teamB'] = new Array()
-            for (let j =0; j<2 * this.state.capacity; j++){
-          courts['teamA'].push([{"player": "*PLYR"+j + "CRT" + courts['Num'], "replacement": false }])
-          j++;
-          courts['teamB'].push([{"player": "*PLYR"+j + "CRT" + courts['Num'], "replacement": false }])
-        }
-          this.state.Arena.push(courts)
-          courts={}
-          this.state.courtArr.push("Court : "+ (i+1))
-        }
-        }
-  
+      let inProgress = await AsyncAlert("Have Games Started?", "")
+      if (inProgress == "NO"){
+        // this.state.gamesStarted[0]["label"] = 0;
+        this.createPlaceholders(inProgress)
+      }
       else{
-        this.state.courtArr.push("NONE : "+ '0')
-        for (var i=0; i<this.state.courtsNum; i++){
-        courts['Num'] = i+1
-        courts["teamANum"] = 0
-        courts["teamBNum"] = 0
-        courts['teamA'] = new Array()
-        courts['teamB'] = new Array()
-        this.state.Arena.push(courts)
-        courts={}
-        this.state.courtArr.push("Court : "+ (i+1))
-      }}
-      this.state.courtArr.push("Waiting : "+ 'W')
-      this.setState({Arena:this.state.Arena}); 
-      this.props.navigation.navigate("List", {arena: this.state.Arena, cap:this.state.capacity, 
-        courtsNum:this.state.courtsNum, courtArr: this.state.courtArr, masterList:this.state.masterList,
-        completeList:this.state.completeList });      
+        this.state.numGamesStarted.push('ALL')
+        for (let i=1; i<=this.state.courtsNum; ++i){
+           this.state.numGamesStarted.push((i).toString())
+          }
+        this.setModalGamesVisible(true, "Number Of Games Started" )
+      }  
+    }
   }
-}
 
  render() {
    return (    
@@ -169,12 +195,7 @@ export default class Setup extends React.Component {
             <TextInput 
               placeholderTextColor= "purple" 
               underlineColorAndroid="gray"
-<<<<<<< HEAD
               placeholder=" Total Players On Each TEAM "
-=======
-              type='numeric'
-              placeholder="Total Players On Each Team: "
->>>>>>> 4f3c4cd708120790e8e496bf37d16a32efbfbbf4
               onChangeText={capacity => this.setState({ capacity: capacity}) }
 				      style={styles.textInput}  
               value = {this.state.capacity} 
@@ -185,7 +206,6 @@ export default class Setup extends React.Component {
       <Text style={styles.text}> DONE </Text>
     </TouchableOpacity>
 
-
     <TouchableOpacity  onPress={this.resetAll.bind(this)} style={styles.button} >
       <Text style={styles.text}> RESET </Text>
     </TouchableOpacity>
@@ -193,6 +213,22 @@ export default class Setup extends React.Component {
     <TouchableOpacity  onPress={this.loadData.bind(this)} style={styles.loadButton} >
       <Text style={styles.text}> LOAD </Text>
     </TouchableOpacity>
+
+    <Modal visible={this.state.numGamesModal}>
+      <View  style={styles.modalStyle }>
+        <Text style={{fontSize:30, backgroundColor:'green', color:'black'}}>{this.state.title} </Text>
+        <SelectMultiple      
+          items={ this.state.numGamesStarted }
+          maxSelect={1}
+          selectedItems={ this.state.gamesStarted }
+          onSelectionsChange={this.onSelectionsChangeGamesStarted} />
+          <TouchableHighlight   onPress={() => 
+              this.setModalGamesVisible(!this.state.numGamesModal, "Replacements").then(this.createPlaceholders("YES"))} 
+              style={styles.modalButtons}>
+            <Text style={styles.modalText}>Done</Text>
+          </TouchableHighlight>
+           </View>
+    </Modal>
 
     <Text style={styles.footer}>ConzStructions</Text>
      </KeyboardAvoidingView>
@@ -280,5 +316,22 @@ const styles = StyleSheet.create({
     width: "45%",
     height: 60,
   },
+    modalStyle:{
+    marginTop: 20,
+    marginBottom:130,
+  },
+  modalButtons:{
+    width: '40%',
+    height: 60,
+    left: '50%',
+    backgroundColor: 'pink',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+   modalText: {
+    fontSize:30,
+    color: 'black',
+  },
+
 
 });	

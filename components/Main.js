@@ -54,35 +54,35 @@ export default class MainActivity extends React.Component {
           prefCourt: [],
           totalPlayers:0,
           SampleArray : [],
-        //  masterList : [
-        //  [{pref:0}, [{player: "Lebron", replacement: false}, {player:"AntDavis", replacement: false}]],
-        //  [{pref:0}, [{player:"Kyrie", replacement: true}, {player:"Durant", replacement: true}]],
-        // [{pref:0}, [{player:"Majerle", replacement: false}]],
-        // [{pref:0}, [{player:"Kawhi", replacement: false}, {player:"PG13", replacement: false}]],
-        //  [{pref:0}, [{player:'Larry', replacement: false}, {player:'Parish', replacement: false}]], 
-        //   [{pref:0}, [{player:'Kidd', replacement: false}]]
-        //   ,
-        //     [{pref:0}, [{player: "Lebron1", replacement: false}, {player:"Ant1Davis", replacement: false}]],
-        //  [{pref:0}, [{player:"Kyrie1", replacement: true}, {player:"Dur1ant", replacement: true}]],
-        // [{pref:0}, [{player:"Majerle1", replacement: false}]],
-        // [{pref:0}, [{player:"Kawhi1", replacement: false}, {player:"PG113", replacement: false}]],
-        //  [{pref:0}, [{player:'Larr1y', replacement: false}, {player:'Pa1rish', replacement: false}]], 
-        //   [{pref:0}, [{player:'Kidd1', replacement: false}]]
-        //   ,
-        //     [{pref:0}, [{player: "Le2bron", replacement: false}, {player:"Ant2Davis", replacement: false}]],
-        //  [{pref:0}, [{player:"Ky2rie", replacement: true}, {player:"Dura2nt", replacement: true}]],
-        // [{pref:0}, [{player:"Majer2le", replacement: false}]],
-        // [{pref:0}, [{player:"Kawh2i", replacement: false}, {player:"P2G13", replacement: false}]],
-        //  [{pref:0}, [{player:'Lar2ry', replacement: false}, {player:'Par2ish', replacement: false}]], 
-        //   [{pref:0}, [{player:'Ki2dd', replacement: false}]]
+         masterList : [
+         [{pref:0}, [{player: "Lebron", replacement: false}, {player:"AntDavis", replacement: false}]],
+         [{pref:0}, [{player:"Kyrie", replacement: true}, {player:"Durant", replacement: true}]],
+        [{pref:0}, [{player:"Majerle", replacement: false}]],
+        [{pref:0}, [{player:"Kawhi", replacement: false}, {player:"PG13", replacement: false}]],
+         [{pref:0}, [{player:'Larry', replacement: false}, {player:'Parish', replacement: false}]], 
+          [{pref:0}, [{player:'Kidd', replacement: false}]]
+          ,
+            [{pref:0}, [{player: "Lebron1", replacement: false}, {player:"Ant1Davis", replacement: false}]],
+         [{pref:0}, [{player:"Kyrie1", replacement: true}, {player:"Dur1ant", replacement: true}]],
+        [{pref:0}, [{player:"Majerle1", replacement: false}]],
+        [{pref:0}, [{player:"Kawhi1", replacement: false}, {player:"PG113", replacement: false}]],
+         [{pref:0}, [{player:'Larr1y', replacement: false}, {player:'Pa1rish', replacement: false}]], 
+          [{pref:0}, [{player:'Kidd1', replacement: false}]]
+          ,
+            [{pref:0}, [{player: "Le2bron", replacement: false}, {player:"Ant2Davis", replacement: false}]],
+         [{pref:0}, [{player:"Ky2rie", replacement: true}, {player:"Dura2nt", replacement: true}]],
+        [{pref:0}, [{player:"Majer2le", replacement: false}]],
+        [{pref:0}, [{player:"Kawh2i", replacement: false}, {player:"P2G13", replacement: false}]],
+         [{pref:0}, [{player:'Lar2ry', replacement: false}, {player:'Par2ish', replacement: false}]], 
+          [{pref:0}, [{player:'Ki2dd', replacement: false}]]
         
-        //   ],  
+          ],  
          cap: this.props.navigation.getParam("cap", "blank"),
          Arena: this.props.navigation.getParam("arena", "blank"),
          courtsNum: this.props.navigation.getParam("courtsNum", "blank"),
          courtArr: this.props.navigation.getParam("courtArr", "blank"),
          courtArrPref: [],
-         masterList: this.props.navigation.getParam("masterList", "blank"),
+         // masterList: this.props.navigation.getParam("masterList", "blank"),
          completeList: this.props.navigation.getParam("completeList", "blank"),
          current: 0,
          answer: 'none'
@@ -589,7 +589,10 @@ winnersWinners(){
      t["valB"] = B
   this.addToCurA(currentPlayerA, val.Num)
   this.addToCurB(currentPlayerB, val.Num)
-  return t
+  console.log(t['valA'].length, "A : ", A.length, val.Num)
+if (A.length > 0 ){
+  return t 
+}
 }); 
 
   let pending = Object.values(this.state.SampleArray).map(function(vals) {
@@ -600,6 +603,23 @@ winnersWinners(){
         }}
       return t
   });
+
+// console.log("GAME: ", Game)
+// for(i in Game){
+
+//   console.log(i, "i" , Game[i] )
+// }
+// var arr = ['a','b',1];
+// var results = arr.filter(function(item){
+//     return typeof item ==='string';  
+// });
+
+Game = Game.filter(function(item){
+    if (item != undefined){
+      return item
+    }
+});
+
 
    return (
       <KeyboardAvoidingView style={styles.wrapper}>
@@ -642,7 +662,11 @@ winnersWinners(){
         <Text style={{color:'grey', fontSize:32}}>  List  </Text>
     </TouchableOpacity>
 
- 
+     <TouchableOpacity onPress={()=>this.StartGame() } style={{ backgroundColor: '#e8ffdd',
+    borderColor: '#51ff00', width:"40%", borderWidth: 5, margin: "3%" }}>      
+      <Text style={styles.gameBottonText}>START</Text>
+    </TouchableOpacity>
+
     <Text style={{fontSize:40, backgroundColor:'black', color:'white', textAlign:'center',flexDirection:'row', justifyContent:'flex-end'}}>Current Games</Text>
     <FlatList
     data={Game} 
@@ -791,10 +815,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     backgroundColor: '#e6f0f7',
   },
-  modalText: {
-    fontSize:30,
-    color: 'white',
-  },
+ 
   buttons: {
     width: "40%",
     height: 45,
@@ -812,6 +833,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#388fe7',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+   modalText: {
+    fontSize:30,
+    color: 'white',
   },
 
   sampleArrayStyle: {
