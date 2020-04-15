@@ -332,7 +332,6 @@ updateMaster=()=>{
                 while(this.state.current < this.state.Arena.length && this.state.Arena[this.state.current]["teamANum"]  + this.state.Arena[this.state.current]["teamBNum"] == 2*this.state.cap){
                   // console.log(this.state.current)
                   this.state.current++;
-                   
                   }
                   if (this.state.current >= this.state.Arena.length){
                     this.setState({ current: this.state.current})
@@ -662,9 +661,9 @@ Game = Game.filter(function(item){
         <Text style={{color:'grey', fontSize:32}}>  List  </Text>
     </TouchableOpacity>
 
-     <TouchableOpacity onPress={()=>this.StartGame() } style={{ backgroundColor: '#e8ffdd',
-    borderColor: '#51ff00', width:"40%", borderWidth: 5, margin: "3%" }}>      
-      <Text style={styles.gameBottonText}>START</Text>
+     <TouchableOpacity onPress={()=>this.StartGame() } style={{ borderColor: '#51ff00', 
+          width:"40%" ,bottom:50, height:75, borderWidth: 5, margin: "3%"}}>      
+      <Text style={{color:'grey', fontSize:32}}>START</Text>
     </TouchableOpacity>
 
     <Text style={{fontSize:40, backgroundColor:'black', color:'white', textAlign:'center',flexDirection:'row', justifyContent:'flex-end'}}>Current Games</Text>
@@ -673,10 +672,8 @@ Game = Game.filter(function(item){
     renderItem={({ item }) => (
     <View>
 
-    <TouchableOpacity onPress={()=>this.StartGame() } style={{ backgroundColor: '#e8ffdd',
-    borderColor: '#51ff00', width:"40%", borderWidth: 5, margin: "3%" }}>      
       <Text style={styles.gameBottonText}>Game {item.key} </Text>
-    </TouchableOpacity>
+
 
 <View>
 
@@ -952,9 +949,9 @@ const styles = StyleSheet.create({
   },
 
    gameBottonText: {
-    fontSize:30,
+    fontSize:26,
     color:'green',
-        alignItems: 'center',
+    alignItems: 'center',
     justifyContent: 'center',
     textAlign: 'center',
 
@@ -972,7 +969,7 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     alignItems: 'center',
     justifyContent: 'center',
-     position: 'absolute',
+    position: 'absolute',
   },
   addStart: {
     position: 'absolute',

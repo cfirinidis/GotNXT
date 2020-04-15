@@ -122,7 +122,7 @@ export default class Setup extends React.Component {
           count++;
         }
       else{
-              this.state.courtArr.push("NONE : "+ '0')
+              
               courts['Num'] = i+1
               courts["teamANum"] = 0
               courts["teamBNum"] = 0

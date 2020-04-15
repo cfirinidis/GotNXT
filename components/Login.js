@@ -11,6 +11,7 @@ import{
 	AsyncStorage,
 	Image,
 } from 'react-native';
+import * as firebase from 'firebase'; 
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator} from 'react-navigation-stack'; 
 
@@ -22,7 +23,7 @@ export default class Logo extends React.Component {
   constructor(props) {
        super(props);
        this.state = {
-         login: '',
+         email: '',
          password: '',
        };
      }
@@ -31,6 +32,14 @@ export default class Logo extends React.Component {
     this.props.navigation.navigate("SignUp");  
   }
  
+  componentWillMount() {
+    const firebaseConfig = {
+      apiKey: ' AIzaSyDNKMFfGnHZ9jANyVN0QJyD93lb35Q7Awo',
+      authDomain: 'gotnxt.firebaseapp.com ',
+    }
+
+    firebase.intializeApp(firebaseConfig);
+  }
 
   render(){
     return(
@@ -40,10 +49,10 @@ export default class Logo extends React.Component {
           <Text style={styles.text}> LOGIN </Text>
 
           <TextInput style={styles.inputBox}
-              placeholder="Username"
+              placeholder="Email"
               placeholderTextColor = "black"
               selectionColor="#fff"
-              onSubmitEditing={()=> this.password.focus()}
+              onSubmitEditing={()=> this.email.focus()}
               />
 
           <TextInput style={styles.inputBox}
@@ -61,10 +70,6 @@ export default class Logo extends React.Component {
              <Text style={styles.login}>Don't Have an account?</Text>
              <Text style={styles.login}>SIGN UP!</Text>
            </TouchableOpacity>
-
-
-
-
 
       </View>
  

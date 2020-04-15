@@ -4,7 +4,7 @@ import {
   StyleSheet, 
   Text, 
   View } from 'react-native';
-import MainNaivigator from './components/ScreenContainer'
+import MainNaivigator from './components/ScreenContainer';
 
 export default class App extends Component {
   render() {
