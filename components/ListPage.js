@@ -90,14 +90,11 @@ removePlayers = () =>{
   this.setState({completeList: this.state.completeList})   
 }
 
-  setModalVisible=(visible, p)=> new Promise((resolve)=> {
-    this.state.title = p;
-    this.setState({modalVisible: visible})
-  });
-
-  setModalPrefVisible=(visible, p)=> new Promise((resolve)=> {
-    this.state.title = p;
-    this.setState({modalPrefVisible: visible})
+  setModalVisible=(prop, val, p)=> new Promise((resolve)=> {
+    this.state.title = p
+    const state = this.state;
+    state[prop] = val;
+    this.setState(state)
   });
 
   getNames=()=>{
@@ -115,7 +112,7 @@ removePlayers = () =>{
 
   async setPref(names){
     let temp =  names.split(':')
-    this.setModalPrefVisible(!this.state.modalPrefVisible, "Select Preferred Court: ")
+    this.setModalPrefVisible('modalPrefVisible',!this.state.modalPrefVisible, "Select Preferred Court: ")
     this.setState({prefPos: temp[0] - 1})
   }
 
@@ -168,7 +165,7 @@ return (
           onSelectionsChange={this.onSelectionsChange} />
 
         <TouchableHighlight   onPress={ () => {
-            this.setModalVisible(!this.state.modalVisible, "something").then( this.removePlayers() );}} 
+            this.setModalVisible('modalVisible',!this.state.modalVisible, "something").then( this.removePlayers() );}} 
         style={styles.modalButtons}>
             <Text style={styles.modalText}>DONE</Text>
         </TouchableHighlight>
@@ -179,7 +176,7 @@ return (
 
 
 <TouchableHighlight onPress={()=> {
-    this.setModalVisible(!this.state.modalVisible, "Choose Player(s) To Remove"); }}
+    this.setModalVisible('modalVisible',!this.state.modalVisible, "Choose Player(s) To Remove"); }}
      style={styles.buttons}>  
     <Text style={{fontSize:28, color:"white"}}> - Remove </Text>  
 </TouchableHighlight>
@@ -203,7 +200,7 @@ return (
           onSelectionsChange={this.onSelectionsChangePref} />
 
         <TouchableHighlight   onPress={ () => {
-            this.setModalPrefVisible(!this.state.modalPrefVisible, "something").then(this.setPrefMaster() ); 
+            this.setModalPrefVisible('modalPrefVisible',!this.state.modalPrefVisible, "something").then(this.setPrefMaster() ); 
           }} style={styles.modalButtons}>
             <Text style={styles.modalText} >DONE</Text>
         </TouchableHighlight>

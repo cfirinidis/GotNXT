@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "61744995226",
+    "firebase_url": "https://gotnxt.firebaseio.com",
+    "project_id": "gotnxt",
+    "storage_bucket": "gotnxt.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:61744995226:android:4f381e0a106d0f3c06f823",
+        "android_client_info": {
+          "package_name": "com.gotnext"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "61744995226-jmtqusgt712dji8qldilrr13fc3vs5hf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXy2mpLYw8PcPMOE9wpo_gaLob8t2uuv4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "61744995226-jmtqusgt712dji8qldilrr13fc3vs5hf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

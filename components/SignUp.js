@@ -6,11 +6,14 @@ import{
 	View,
 	Button,
 	TextInput,
+  ActivityIndicator,
 	KeyboardAvoidingView,
 	TouchableOpacity,
 	AsyncStorage,
 	Image,
 } from 'react-native';
+import Input from '../buttonsETC/Input';
+import firebase from '../buttonsETC/Firebase';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator} from 'react-navigation-stack'; 
 
@@ -19,8 +22,11 @@ export default class Logo extends React.Component {
   constructor(props) {
        super(props);
        this.state = {
-         login: '',
+         email: '',
          password: '',
+         username:'',
+         pw2:'',
+         laoding: false
        };
      }
  
@@ -29,69 +35,110 @@ export default class Logo extends React.Component {
     this.props.navigation.navigate("Main");  
   }
 
+  registerUser=()=>{
 
-  render(){
+    if(this.state.email === '' && this.state.password === ''){
+      Alert.alert("Enter Email And Password To Sign Up")
+    }else{
+      console.log("BITTON PRESSED", this.state.email, this.state.password)
+      this.setState({
+        loading: true,
+      })
+      firebase
+      .auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
+      .then((res)=>{
+        res.user.updateProfile({
+          username: this.state.username
+        })
+        console.log("User Registered")
+        this.setState({
+          loading: false,
+          username: '',
+          email: '',
+          password: ''
+        })
+        this.props.navigation.navigate('Main')
+      })
+      .catch(error=> this.setState({ errorMessage: error.message}))
+    }
+  }
+
+
+  renderCurrentState(){
+
+    if(this.state.loading){
+      return(
+        <View style={styles.waiting}>
+          <ActivityIndicator size='large' color='blue'/>
+        </View>
+        )
+    }
+
     return(
-  
-      <View style={styles.container}>
+      <KeyboardAvoidingView >
+      <View >
+
           <Text style={styles.text}> GotNXT </Text>
           <Text style={styles.text}> SIGN UP </Text>
 
-          <TextInput style={styles.inputBox}
-              placeholder="Email"
-              placeholderTextColor = "black"
-              selectionColor="#fff"
-              keyboardType="email-address"
-              onSubmitEditing={()=> this.password.focus()}
+          <Input
+            placeholder= " EMAIL "
+            onChangeText={(email) => this.setState({email}) }
+            value={this.state.email}
               />
 
+          <Input
+            placeholder= " PASSWORD "
+            onChangeText={(password) => this.setState({password}) }
+            value={this.state.password}
+            />
 
-
-          <TextInput style={styles.inputBox}
-              placeholder="Password"
-              secureTextEntry={true}
-              placeholderTextColor = "black"
-              ref={(input) => this.password = input}
+          <Input
+            placeholder= " RE-ENTER PWORD "
+            onChangeText={(pw2) => this.setState({pw2}) }
+            value={this.state.pw2}
               />
 
-          <TextInput style={styles.inputBox}
-              placeholder="Re-Enter Password"
-              secureTextEntry={true}
-              placeholderTextColor = "black"
-              ref={(input) => this.password = input}
+          <Input
+            placeholder= " USERNAME "
+            onChangeText={(username) => this.setState({username}) }
+            value={this.state.username}
               />
 
-          <TextInput style={styles.inputBox}
-              placeholder="Username"
-              placeholderTextColor = "black"
-              selectionColor="#fff"
-              onSubmitEditing={()=> this.password.focus()}
-              />
-           <TouchableOpacity style={styles.button} onPress={this.props.onAuthButtonPress}>
+           <TouchableOpacity style={styles.button} onPress={this.registerUser.bind(this)}>
              <Text style={styles.buttonText}>SIGN UP</Text>
            </TouchableOpacity>
 
 
           <TouchableOpacity style={styles.login} onPress={this.tempBridge.bind(this)}>
              <Text style={styles.login}> BRIDGE  </Text>
-             
            </TouchableOpacity>
 
       </View>
- 
+      </KeyboardAvoidingView>
       )
+    }
+
+render(){
+  return(
+    <View style={styles.container}>
+      {this.renderCurrentState()}
+    </View>
+    );
   }
+
+
 }
+  
+
  
-
-
 
 const styles = StyleSheet.create({
   container : {
     flex: 1,
     justifyContent:'center',
-    alignItems: 'center',
     backgroundColor:'gray',
+    width: "100%"
   },
   text:{
     fontSize:32,
@@ -103,24 +150,20 @@ const styles = StyleSheet.create({
     textAlign:"center",
     color:'white',
   },
-  inputBox: {
-    width:'75%',
-    backgroundColor:'yellow',
-    textAlign:'center',
-    justifyContent:'center',
-    alignItems:'center',
-    height: 50,
-    paddingHorizontal:16,
-    fontSize:16,
-    marginVertical: 20,
-  },
   button: {
-    width:'75%',
-    color:'white',
     backgroundColor:'#1c313a',
-     borderRadius: 50,
-      marginVertical: 10,
-      paddingVertical: 13
+    borderRadius: 50,
+    width: "75%",
+    marginVertical: 10,
+    paddingVertical: 13,
+    justifyContent: 'center',
+    alignItems: 'center',
+    left:"12%",
+
+  },
+  waiting : {
+    justifyContent:'center',
+    backgroundColor:'yellow',
   },
   buttonText: {
     fontSize:18,
@@ -130,3 +173,6 @@ const styles = StyleSheet.create({
   }
 
 });
+
+
+

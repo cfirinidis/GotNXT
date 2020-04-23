@@ -1,4 +1,5 @@
 apply plugin: "com.android.application"
+apply plugin: 'com.google.gms.google-services'
 
 import com.android.build.OutputFile
 
@@ -145,6 +146,7 @@ dependencies {
     implementation project(':react-native-gesture-handler')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
+    implementation 'com.google.firebase:firebase-analytics:17.2.2'
     implementation "com.facebook.react:react-native:0.59.8" { force = true } // From node_modules
     addUnimodulesDependencies()
 }

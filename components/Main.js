@@ -20,6 +20,8 @@ import { createAppContainer } from 'react-navigation';
 import { createStackNavigator} from 'react-navigation-stack'; 
 import Setup from './Setup';
 import PopUp from './PopUp';
+import StartButton from '../buttonsETC/StartButton';
+import ListButton from '../buttonsETC/ListButton';
 import CustomPromptComponent from './Modal';
 import StartFunction from './function';
 import SelectMultiple from 'react-native-select-multiple';
@@ -91,7 +93,7 @@ export default class MainActivity extends React.Component {
   
  checkDuplicate=(name)=>{
     // let  x = name.toLowerCase() 
-    console.log("completet list ",this.state.completeList)
+    // console.log("completet list ",this.state.completeList)
     if (name in this.state.completeList){
       Alert.alert("Name Already Exists ")
       return false
@@ -218,10 +220,10 @@ export default class MainActivity extends React.Component {
     this.setState({ current:this.state.tempNum-1 })
 
     if(this.state.repFlag == false){
-    this.setModalRepPlayerVisible(!this.state.modalRepPlayerVisible, "Enter Correction");
+    this.setModalVisible('modalRepPlayerVisible',!this.state.modalRepPlayerVisible, "Enter Correction");
     }
     else{
-      this.setModalRepPlayerVisible(!this.state.modalRepPlayerVisible, "Enter Substitute");
+      this.setModalVisible('modalRepPlayerVisible', !this.state.modalRepPlayerVisible, "Enter Substitute");
     }
   }
 
@@ -269,19 +271,11 @@ updateMaster=()=>{
     this.setState({ remPlayer })
   }
 
-  setModalVisible=(visible, p)=> new Promise((resolve)=> {
+  setModalVisible=(prop, val, p)=> new Promise((resolve)=> {
     this.state.title = p
-    this.setState({modalVisible: visible})
-  });
-
-  setModalPlayerVisible=(visible, p)=> new Promise((resolve)=> {
-    this.state.title = p
-    this.setState({modalPlayerVisible: visible})
-  });
-
-  setModalRepPlayerVisible=(visible, p)=> new Promise((resolve)=> {
-    this.state.title = p
-    this.setState({ modalRepPlayerVisible: visible})
+    const state = this.state;
+    state[prop] = val;
+    this.setState(state)
   });
 
   removeFromList=(delArray)=>{
@@ -377,7 +371,7 @@ updateMaster=()=>{
                     delArray += [names]
                     this.state.restNum = names - (delArray.length - 1)
                     delArray = this.removeFromList(delArray)
-                    this.setModalVisible(true,  "Select Player(s) That Hit");
+                    this.setModalVisible( 'modalVisible',true,  "Select Player(s) That Hit");
                     break
                 } 
                   else{this.setState({shooters: []});
@@ -398,7 +392,7 @@ updateMaster=()=>{
 
         this.setState({masterList: this.state.masterList});
         this.setState({Arena:this.state.Arena});
-        console.log("ARENA in startgame: ", this.state.Arena)
+        // console.log("ARENA in startgame: ", this.state.Arena)
         this.saveData();
   }
 
@@ -445,11 +439,6 @@ updateMaster=()=>{
     this.setState({ prefCourt })
   }
 
-  setModalPrefVisible=(visible, p)=> new Promise((resolve)=> {
-    this.state.title = p;
-    this.setState({modalPrefVisible: visible})
-  });
-
   async replacePlayer(num, team, players){
       replaceAlert = (title, msg) => new Promise((resolve) => {  
         Alert.alert(
@@ -479,7 +468,7 @@ updateMaster=()=>{
         for(i in players[num]){
           this.state.tempCourt.push( players[num][i] )
         }
-        this.setModalPlayerVisible(!this.state.modalPlayerVisible, "Remove Player");    
+        this.setModalVisible('modalPlayerVisible',!this.state.modalPlayerVisible, "Remove Player");    
       }
 };
 
@@ -503,7 +492,7 @@ updateMaster=()=>{
     if (winnerConfirmation== "NO"){
       return
     }
-  console.log('cn ', courtNum,'loser ', loser,'winner ', winner,'status ', status, this.state.Arena)
+  // console.log('cn ', courtNum,'loser ', loser,'winner ', winner,'status ', status, this.state.Arena)
       let temp = [];
       let titleP = '';
       this.state.current = courtNum-1
@@ -531,7 +520,7 @@ updateMaster=()=>{
         }
         //winnerWinner
         else{
-            this.setModalPrefVisible(!this.state.modalPrefVisible, "Select Preferred Court: ")     
+            this.setModalVisible('modalPrefVisible', !this.state.modalPrefVisible, "Select Preferred Court: ")     
             this.setState({masterList: this.state.masterList});
             this.setState({current: 0});
             this.setState({winnersW: temp})
@@ -588,7 +577,7 @@ winnersWinners(){
      t["valB"] = B
   this.addToCurA(currentPlayerA, val.Num)
   this.addToCurB(currentPlayerB, val.Num)
-  console.log(t['valA'].length, "A : ", A.length, val.Num)
+  // console.log(t['valA'].length, "A : ", A.length, val.Num)
 if (A.length > 0 ){
   return t 
 }
@@ -624,6 +613,7 @@ Game = Game.filter(function(item){
       <KeyboardAvoidingView style={styles.wrapper}>
       <ScrollView>
       <View>
+      
         <View>
           <TextInput
               placeholder="Enter 1 NAME at a Time : "
@@ -656,24 +646,21 @@ Game = Game.filter(function(item){
 
   </View>
 
+  
+    <ListButton onPress={this.GoToLists.bind(this)}> List </ListButton>
+    <StartButton onPress={this.StartGame.bind(this)}> START </StartButton>
+    
 
-    <TouchableOpacity  onPress={this.GoToLists.bind(this)} style={styles.list} >
-        <Text style={{color:'grey', fontSize:32}}>  List  </Text>
-    </TouchableOpacity>
 
-     <TouchableOpacity onPress={()=>this.StartGame() } style={{ borderColor: '#51ff00', 
-          width:"40%" ,bottom:50, height:75, borderWidth: 5, margin: "3%"}}>      
-      <Text style={{color:'grey', fontSize:32}}>START</Text>
-    </TouchableOpacity>
 
     <Text style={{fontSize:40, backgroundColor:'black', color:'white', textAlign:'center',flexDirection:'row', justifyContent:'flex-end'}}>Current Games</Text>
+    
     <FlatList
     data={Game} 
     renderItem={({ item }) => (
     <View>
 
-      <Text style={styles.gameBottonText}>Game {item.key} </Text>
-
+      <Text style={styles.gameBottonText}> Game {item.key} </Text>
 
 <View>
 
@@ -684,8 +671,6 @@ Game = Game.filter(function(item){
     <TouchableHighlight onPress={()=>this.endGame(item.key, "teamB", "teamA", 'reg')} style={styles.teamAWonStyle}>
       <Text style={{color:"white", fontSize:26}}>Team A Won</Text>
     </TouchableHighlight>
-
-
 
     <TouchableHighlight onPress={()=>this.replacePlayer(item.key, "teamB", this.state.curPlayersB) } style={styles.teamStyleB}>
       <Text style={{color:"red", fontSize:28}}>{item.valB}</Text>
@@ -712,7 +697,7 @@ Game = Game.filter(function(item){
           selectedItems={ this.state.hitShot }
           onSelectionsChange={this.onSelectionsChange} />
         <TouchableHighlight   onPress={() => 
-            this.setModalVisible(!this.state.modalVisible, "something").then(this.AddMaster2())}
+            this.setModalVisible( 'modalVisible', !this.state.modalVisible, "something").then(this.AddMaster2())}
              style={styles.modalButton}>
             <Text style={styles.modalText}>Done</Text>
         </TouchableHighlight>
@@ -729,7 +714,7 @@ Game = Game.filter(function(item){
           selectedItems={ this.state.remPlayer }
           onSelectionsChange={this.onSelectionsChangePlayer} />
         <TouchableHighlight   onPress={() => 
-            this.setModalPlayerVisible(!this.state.modalPlayerVisible, "something").then(this.CorrectionOrSub())}
+            this.setModalVisible('modalPlayerVisible',!this.state.modalPlayerVisible, "something").then(this.CorrectionOrSub())}
              style={styles.modalButton}>
             <Text style={styles.modalText}>Done</Text>
         </TouchableHighlight>
@@ -746,7 +731,7 @@ Game = Game.filter(function(item){
           selectedItems={ this.state.move }
           onSelectionsChange={this.onSelectionsChangePlayerTop} />
           <TouchableHighlight   onPress={() => 
-              this.setModalRepPlayerVisible(!this.state.modalRepPlayerVisible, "Replacements").then(this.updateMaster())} 
+              this.setModalVisible('modalRepPlayerVisible', !this.state.modalRepPlayerVisible, "Replacements").then(this.updateMaster())} 
               style={styles.modalButton}>
             <Text style={styles.modalText}>Done</Text>
           </TouchableHighlight>
@@ -766,7 +751,7 @@ Game = Game.filter(function(item){
           onSelectionsChange={this.onSelectionsChangePref} />
 
         <TouchableHighlight   onPress={ () => {
-            this.setModalPrefVisible(!this.state.modalPrefVisible, "something").then(this.winnersWinners()); 
+            this.setModalVisible('modalPrefVisible',!this.state.modalPrefVisible, "something").then(this.winnersWinners()); 
           }} style={styles.modalButton}>
             <Text style={styles.modalText} >DONE</Text>
         </TouchableHighlight>
@@ -788,19 +773,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#e8eae7',
     padding: "2%",
   },
-  list: {
-    backgroundColor: 'white',
-    width: '35%',
-    alignSelf: 'flex-end',
-    borderWidth: 2,
-    borderColor: '#ff8c1d',
-    flexDirection: 'row-reverse',
-    borderRadius: 50,
-    height: 50,
-    bottom: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+
    header: {
     fontSize:38,
     backgroundColor:'gray',
@@ -950,12 +923,17 @@ const styles = StyleSheet.create({
 
    gameBottonText: {
     fontSize:26,
-    color:'green',
+    width: '40%',
+    borderWidth: 2,
+    margin: 5,
+    backgroundColor:'white',
+    color:'black',
+    flexDirection: 'row',
+    alignSelf: 'center',
+    borderRadius: 50,
     alignItems: 'center',
     justifyContent: 'center',
     textAlign: 'center',
-
-
   },
    addButton: {
     // zIndex: 1,

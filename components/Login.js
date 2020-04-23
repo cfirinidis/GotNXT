@@ -8,23 +8,24 @@ import{
 	TextInput,
 	KeyboardAvoidingView,
 	TouchableOpacity,
+  ActivityIndicator,
 	AsyncStorage,
 	Image,
 } from 'react-native';
-import * as firebase from 'firebase'; 
+import Input from '../buttonsETC/Input';
+import firebase from '../buttonsETC/Firebase';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator} from 'react-navigation-stack'; 
 
 
-
 export default class Logo extends React.Component {
-
- 
   constructor(props) {
        super(props);
        this.state = {
          email: '',
          password: '',
+         authenticating:false,
+         displayName: 'TESTING NAME'
        };
      }
 
@@ -32,37 +33,72 @@ export default class Logo extends React.Component {
     this.props.navigation.navigate("SignUp");  
   }
  
-  componentWillMount() {
-    const firebaseConfig = {
-      apiKey: ' AIzaSyDNKMFfGnHZ9jANyVN0QJyD93lb35Q7Awo',
-      authDomain: 'gotnxt.firebaseapp.com ',
-    }
+  // componentWillMount() {
+  //   const firebaseConfig = {
+  //     apiKey: ' AIzaSyDNKMFfGnHZ9jANyVN0QJyD93lb35Q7Awo',
+  //     authDomain: 'gotnxt.firebaseapp.com ',
+  //   }
+  //   firebase.initializeApp(firebaseConfig); 
+  // }
 
-    firebase.intializeApp(firebaseConfig);
+  onPressSignIn(){
+    console.log("Button Pressed")
+    if(this.state.email === '' && this.state.password === ''){
+      Alert.alert("Enter Email And Password")
+    }else{
+      console.log(this.state.email)
+    this.setState({
+      authenticating: true,
+    });
+    firebase
+    .auth().signInWithEmailAndPassword(this.state.email, this.state.password)
+    .then((res)=>{
+      console.log(res)
+      console.log("USER LOGGED IN")
+      this.setState({
+        isLoading: false,
+        email: '',
+        password: ''
+      })
+      this.props.navigation.navigate("Main")
+    })
+    .catch(error=> this.setState({ errorMessage: error.message}))
+    this.setState({isLoading: false});
+  }
+}
+
+  onAuthButtonPress=()=>{
+    console.log("A button was pressed", this.state.email, this.state.password)
   }
 
-  render(){
+renderCurrentState(){
+  if(this.state.authenticating){
     return(
-  
-      <View style={styles.container}>
+      <View style={styles.waiting}>
+        <ActivityIndicator size='large' color='blue'/>
+      </View>
+      )
+    }
+
+    return(
+      <KeyboardAvoidingView>
+      <View>
           <Text style={styles.text}> GotNXT </Text>
           <Text style={styles.text}> LOGIN </Text>
 
-          <TextInput style={styles.inputBox}
-              placeholder="Email"
-              placeholderTextColor = "black"
-              selectionColor="#fff"
-              onSubmitEditing={()=> this.email.focus()}
+          <Input
+            placeholder= " EMAIL "
+            onChangeText={(email) => this.setState({email}) }
+            value={this.state.email}
+              />
+ 
+           <Input
+            placeholder= " PASSWORD "
+            onChangeText={password => this.setState({password}) }
+            value={this.state.password}
               />
 
-          <TextInput style={styles.inputBox}
-              placeholder="Password"
-              secureTextEntry={true}
-              placeholderTextColor = "black"
-              ref={(input) => this.password = input}
-              />
-
-           <TouchableOpacity style={styles.button} onPress={this.props.onAuthButtonPress}>
+           <TouchableOpacity style={styles.button} onPress={this.onPressSignIn.bind(this)}>
              <Text style={styles.buttonText}>LOGIN</Text>
            </TouchableOpacity>
 
@@ -72,17 +108,29 @@ export default class Logo extends React.Component {
            </TouchableOpacity>
 
       </View>
- 
+      </KeyboardAvoidingView>
       )
+    }
+  
+
+render(){
+  return(
+    <View style={styles.container}>
+      {this.renderCurrentState()}
+    </View>
+    );
   }
 }
  
 const styles = StyleSheet.create({
   container : {
-    flex: 1,
     justifyContent:'center',
-    alignItems: 'center',
+    height: '100%',
     backgroundColor:'gray',
+  },
+  waiting : {
+    justifyContent:'center',
+    backgroundColor:'yellow',
   },
   text:{
     fontSize:32,
@@ -94,24 +142,16 @@ const styles = StyleSheet.create({
     textAlign:"center",
     color:'white',
   },
-  inputBox: {
-    width:'75%',
-    backgroundColor:'yellow',
-    textAlign:'center',
-    justifyContent:'center',
-    alignItems:'center',
-    height: 50,
-    paddingHorizontal:16,
-    fontSize:16,
-    marginVertical: 20,
-  },
   button: {
-    width:'75%',
-    color:'white',
     backgroundColor:'#1c313a',
-     borderRadius: 50,
-      marginVertical: 10,
-      paddingVertical: 13
+    borderRadius: 50,
+    width: "75%",
+    marginVertical: 10,
+    paddingVertical: 13,
+    justifyContent: 'center',
+    alignItems: 'center',
+    left:"12%",
+
   },
   buttonText: {
     fontSize:18,

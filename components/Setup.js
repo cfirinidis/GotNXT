@@ -70,7 +70,6 @@ export default class Setup extends React.Component {
       let cNum = await AsyncStorage.getItem('courtN');
       let cArray = await AsyncStorage.getItem('courtA');
       let cList = await AsyncStorage.getItem('completeList')
-
       this.state.masterList = JSON.parse(mas);
       this.state.Arena = JSON.parse(are);
       this.state.capacity = JSON.parse(cap);
@@ -89,6 +88,7 @@ export default class Setup extends React.Component {
       completeList:this.state.completeList });
     }
     catch(error){
+      console.log("ERROR")
       alert(error);
     }
   }
