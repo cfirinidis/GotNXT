@@ -40,7 +40,7 @@ export default class Logo extends React.Component {
     if(this.state.email === '' && this.state.password === ''){
       Alert.alert("Enter Email And Password To Sign Up")
     }else{
-      console.log("BITTON PRESSED", this.state.email, this.state.password)
+      console.log("BUTTON PRESSED", this.state.email, this.state.password)
       this.setState({
         loading: true,
       })
@@ -55,11 +55,21 @@ export default class Logo extends React.Component {
           loading: false,
           username: '',
           email: '',
-          password: ''
+          password: '',
+          pw2: ''
         })
         this.props.navigation.navigate('Main')
       })
-      .catch(error=> this.setState({ errorMessage: error.message}))
+      .catch(error=> {
+        this.setState({ 
+          errorMessage: error.message,
+          loading: false,
+          username: '',
+          password: '',
+          pw2: ''
+        })
+        Alert.alert(this.state.errorMessage)
+      })
     }
   }
 

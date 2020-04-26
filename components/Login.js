@@ -25,7 +25,7 @@ export default class Logo extends React.Component {
          email: '',
          password: '',
          authenticating:false,
-         displayName: 'TESTING NAME'
+         errorMessage: ''
        };
      }
 
@@ -53,17 +53,22 @@ export default class Logo extends React.Component {
     firebase
     .auth().signInWithEmailAndPassword(this.state.email, this.state.password)
     .then((res)=>{
-      console.log(res)
       console.log("USER LOGGED IN")
       this.setState({
-        isLoading: false,
+        authenticating: false,
         email: '',
         password: ''
       })
       this.props.navigation.navigate("Main")
     })
-    .catch(error=> this.setState({ errorMessage: error.message}))
-    this.setState({isLoading: false});
+    .catch((error)=> {this.setState({ 
+      errorMessage: error.message,
+      email:'',
+      password:'',
+      authenticating: false
+      })
+        Alert.alert(this.state.errorMessage)
+      })
   }
 }
 
