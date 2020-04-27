@@ -12,13 +12,12 @@ import{
 	AsyncStorage,
 	Image,
 } from 'react-native';
-import Input from '../buttonsETC/Input';
-import firebase from '../buttonsETC/Firebase';
+import Input from '../elements/Input';
+import firebase from '../elements/Firebase';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator} from 'react-navigation-stack'; 
 
 export default class Logo extends React.Component {
- 
   constructor(props) {
        super(props);
        this.state = {
@@ -30,7 +29,6 @@ export default class Logo extends React.Component {
        };
      }
  
-
   tempBridge=()=>{
     this.props.navigation.navigate("Main");  
   }
@@ -73,9 +71,7 @@ export default class Logo extends React.Component {
     }
   }
 
-
   renderCurrentState(){
-
     if(this.state.loading){
       return(
         <View style={styles.waiting}>
@@ -136,12 +132,8 @@ render(){
     </View>
     );
   }
-
-
 }
   
-
- 
 
 const styles = StyleSheet.create({
   container : {

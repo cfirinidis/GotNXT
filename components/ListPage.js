@@ -63,7 +63,6 @@ removePlayers = () =>{
   let removePlayer = [];
   let removeComp = [];
 
-
   for ( i in this.state.toRemove){
     removePlayer.push(this.state.toRemove[i]['label'])
     removeComp.push(this.state.toRemove[i]['label'].toLowerCase())
@@ -85,7 +84,6 @@ removePlayers = () =>{
       i--;
     }
   } 
-
   this.setState({masterList: this.state.masterList})
   this.setState({completeList: this.state.completeList})   
 }
@@ -112,7 +110,7 @@ removePlayers = () =>{
 
   async setPref(names){
     let temp =  names.split(':')
-    this.setModalPrefVisible('modalPrefVisible',!this.state.modalPrefVisible, "Select Preferred Court: ")
+    this.setModalVisible('modalPrefVisible',!this.state.modalPrefVisible, "Select Preferred Court: ")
     this.setState({prefPos: temp[0] - 1})
   }
 
@@ -200,7 +198,7 @@ return (
           onSelectionsChange={this.onSelectionsChangePref} />
 
         <TouchableHighlight   onPress={ () => {
-            this.setModalPrefVisible('modalPrefVisible',!this.state.modalPrefVisible, "something").then(this.setPrefMaster() ); 
+            this.setModalVisible('modalPrefVisible',!this.state.modalPrefVisible, "something").then(this.setPrefMaster() ); 
           }} style={styles.modalButtons}>
             <Text style={styles.modalText} >DONE</Text>
         </TouchableHighlight>

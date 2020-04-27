@@ -19,7 +19,6 @@ const MainNavigator = createStackNavigator({
     SignUp:{
         screen: SignUp
     },
-
     Main: { 
         screen: Setup,
     },
@@ -48,3 +47,5 @@ const MainNavigator = createStackNavigator({
 
 const App = createAppContainer(MainNavigator);
 export default App;
+
+

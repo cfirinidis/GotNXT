@@ -121,8 +121,7 @@ export default class Setup extends React.Component {
             }
           count++;
         }
-      else{
-              
+      else{     
               courts['Num'] = i+1
               courts["teamANum"] = 0
               courts["teamBNum"] = 0

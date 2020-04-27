@@ -12,8 +12,8 @@ import{
 	AsyncStorage,
 	Image,
 } from 'react-native';
-import Input from '../buttonsETC/Input';
-import firebase from '../buttonsETC/Firebase';
+import Input from '../elements/Input';
+import firebase from '../elements/Firebase';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator} from 'react-navigation-stack'; 
 

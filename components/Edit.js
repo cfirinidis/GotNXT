@@ -48,6 +48,7 @@ export default class EditNames extends React.Component {
   }
 
   GoToList=()=>{
+    console.log("GO TO LIST")
       this.setState({masterList: this.state.masterList})
       this.setState({completeList: this.state.completeList})
       this.props.navigation.navigate("List", {arena: this.state.Arena,
@@ -55,7 +56,7 @@ export default class EditNames extends React.Component {
   }
 
 
-print=()=>{
+editName=()=>{
   if (this.state.name.length == 0 || this.state.name in this.state.completeList){
     setTimeout(()=>{
       Alert.alert("No Name Was Entered")
@@ -117,7 +118,7 @@ return (
           style={styles.textInput} 
           placeholderTextColor='red' />
       <TouchableHighlight onPress={ () =>{
-          this.setModalInputVisible(!this.state.modalInputVisible, "something").then(this.print())}} 
+          this.setModalInputVisible(!this.state.modalInputVisible, "something").then(this.editName())}} 
         style={styles.modalButtons}>
             <Text style={styles.modalText}>DONE</Text>
       </TouchableHighlight>
@@ -131,17 +132,15 @@ return (
 
 
 const styles = StyleSheet.create({
-  header: {
-    fontSize:33,
-    height: 75,
+   header: {
+    fontSize:30,
+    height: 60,
     padding: 8,
     backgroundColor:'gray',
     color: 'white',
     width:"100%",
     alignItems: 'center',
-    textAlign: "center", 
     justifyContent: 'center',
-
  },
    textInput: {
     fontSize: 28,

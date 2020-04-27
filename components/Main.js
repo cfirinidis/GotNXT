@@ -20,8 +20,9 @@ import { createAppContainer } from 'react-navigation';
 import { createStackNavigator} from 'react-navigation-stack'; 
 import Setup from './Setup';
 import PopUp from './PopUp';
-import StartButton from '../buttonsETC/StartButton';
-import ListButton from '../buttonsETC/ListButton';
+import ListAndStartButton from '../elements/ListAndStartButton';
+import EnterName from '../elements/EnterName';
+import NameBox from '../elements/NameBox';
 import CustomPromptComponent from './Modal';
 import StartFunction from './function';
 import SelectMultiple from 'react-native-select-multiple';
@@ -118,12 +119,6 @@ export default class MainActivity extends React.Component {
   }//good
 }
 
-  clearList=()=>{
-    for (k in this.state.SampleArray){
-      delete this.state.completeList[this.state.SampleArray[k]['player'].toLowerCase()]
-    }
-    this.setState({SampleArray:[]})
-  }
 
   addToCurA=(list, n)=>{
     this.state.curPlayersA[n] = list;
@@ -132,6 +127,15 @@ export default class MainActivity extends React.Component {
   addToCurB=(list, n)=>{
     this.state.curPlayersB[n] = list;
   }
+
+
+   clearList=()=>{
+      for (k in this.props.SampleArray){
+        delete this.props.completeList[this.props.SampleArray[k]['player'].toLowerCase()]
+      }
+      this.setState({SampleArray:[]})
+    }
+
 
   AddMaster=()=>{
     if (this.state.SampleArray.length === 0 ){
@@ -268,6 +272,7 @@ updateMaster=()=>{
   }
 
   onSelectionsChangePlayer =(remPlayer)=>{
+    console.log("hit shot remPLayer: ", remPlayer)
     this.setState({ remPlayer })
   }
 
@@ -613,150 +618,118 @@ Game = Game.filter(function(item){
       <KeyboardAvoidingView style={styles.wrapper}>
       <ScrollView>
       <View>
-      
-        <View>
-          <TextInput
-              placeholder="Enter 1 NAME at a Time : "
-              onChangeText={(Name) => this.setState({ Name}) }
-              value={this.state.Name}
-              style={styles.textInput} 
-              placeholderTextColor='gray' />
+
+          <EnterName onPress={this.AddItemsToArray.bind(this)} 
+              onChangeText={(Name) => this.setState({ Name})} value={this.state.Name}>ADD +</EnterName>
+          
+          <View>
+              <ListAndStartButton GoToListMethod={this.GoToLists.bind(this)} StartMethod={this.StartGame.bind(this)} /> 
+             <NameBox  data={pending} clearListMethod={this.clearList.bind(this)} AddMasterMethod={this.AddMaster.bind(this)} />  
+
           </View>
 
-    <TouchableOpacity  onPress={this.AddItemsToArray.bind(this)} style={styles.addButton} >
-        <Text style={{color:'black', fontSize: 21, textAlign: 'center'}}>+ ADD</Text>
-    </TouchableOpacity>     
-
+          <Text style={styles.curGameStyle}>Current Games</Text>
     
-    <View style={{top: 30}}>
-      <TouchableOpacity onPress={this.clearList.bind(this)} style={styles.clearList} >
-        <Text style={{color:'gray', fontSize:20}}> CLEAR NAMES </Text>
-      </TouchableOpacity>
+           <FlatList
+              data={Game} 
+              renderItem={({ item }) => (
+              <View>
+                <Text style={styles.gameBottonText}> Game {item.key} </Text>
+              <View>
 
-      <View>
-        <FlatList
-          data={pending}
-          style={styles.sampleArrayStyle}
-          renderItem={({item}) => <Text style={{color:'#e1a8ff', fontSize:24, alignItems:'center'}}>{item.key}</Text>}/>
-      </View>  
+            <TouchableHighlight onPress={()=>this.replacePlayer(item.key, "teamA", this.state.curPlayersA) } style={styles.teamStyleA}>  
+              <Text style={{color:"gray", fontSize:28}}>{item.valA}</Text>
+            </TouchableHighlight>
 
-      <TouchableOpacity  onPress={this.AddMaster.bind(this)} style={styles.doneAdding} >
-        < Text style={{color:'white', fontSize:20}}> DONE ADDING </Text>
-      </TouchableOpacity>
-
-  </View>
-
-  
-    <ListButton onPress={this.GoToLists.bind(this)}> List </ListButton>
-    <StartButton onPress={this.StartGame.bind(this)}> START </StartButton>
-    
-
-
-
-    <Text style={{fontSize:40, backgroundColor:'black', color:'white', textAlign:'center',flexDirection:'row', justifyContent:'flex-end'}}>Current Games</Text>
-    
-    <FlatList
-    data={Game} 
-    renderItem={({ item }) => (
-    <View>
-
-      <Text style={styles.gameBottonText}> Game {item.key} </Text>
-
-<View>
-
-      <TouchableHighlight onPress={()=>this.replacePlayer(item.key, "teamA", this.state.curPlayersA) } style={styles.teamStyleA}>  
-        <Text style={{color:"gray", fontSize:28}}>{item.valA}</Text>
-      </TouchableHighlight>
-
-    <TouchableHighlight onPress={()=>this.endGame(item.key, "teamB", "teamA", 'reg')} style={styles.teamAWonStyle}>
-      <Text style={{color:"white", fontSize:26}}>Team A Won</Text>
-    </TouchableHighlight>
-
-    <TouchableHighlight onPress={()=>this.replacePlayer(item.key, "teamB", this.state.curPlayersB) } style={styles.teamStyleB}>
-      <Text style={{color:"red", fontSize:28}}>{item.valB}</Text>
-    </TouchableHighlight>
-
-    <TouchableHighlight onPress={()=>this.endGame(item.key, "teamA", "teamB", 'reg') } style={styles.teamBWonStyle}>
-      <Text style={{color:"white", fontSize:26}}>Team B Won</Text>
-    </TouchableHighlight>
-
-</View>
-    
-    </View>)}/>
-    
-</View>
-<View>
-    <Modal 
-    visible={this.state.modalVisible}>
-      <View style={styles.modalStyle}>
-        <Text style={{fontSize:30, backgroundColor:'gray', color:'white'}}>{this.state.title} </Text>
-        <SelectMultiple
-          maxSelect= {this.state.diff}
-          items={this.state.shooters}
-          style={styles.modalStyle}
-          selectedItems={ this.state.hitShot }
-          onSelectionsChange={this.onSelectionsChange} />
-        <TouchableHighlight   onPress={() => 
-            this.setModalVisible( 'modalVisible', !this.state.modalVisible, "something").then(this.AddMaster2())}
-             style={styles.modalButton}>
-            <Text style={styles.modalText}>Done</Text>
-        </TouchableHighlight>
-      </View>
-    </Modal>
-
-    <Modal 
-    visible={this.state.modalPlayerVisible}>
-      <View  style={styles.modalStyle }>
-        <Text style={{fontSize:30, backgroundColor:'red', color:'white'}} >{this.state.title} </Text>
-        <SelectMultiple
-          maxSelect= {1}
-          items={this.state.tempCourt}
-          selectedItems={ this.state.remPlayer }
-          onSelectionsChange={this.onSelectionsChangePlayer} />
-        <TouchableHighlight   onPress={() => 
-            this.setModalVisible('modalPlayerVisible',!this.state.modalPlayerVisible, "something").then(this.CorrectionOrSub())}
-             style={styles.modalButton}>
-            <Text style={styles.modalText}>Done</Text>
-        </TouchableHighlight>
-      </View>
-    </Modal>
-
-    <Modal 
-      visible={this.state.modalRepPlayerVisible}>
-      <View  style={styles.modalStyle }>
-        <Text style={{fontSize:30, backgroundColor:'yellow', color:'black'}}>{this.state.title} </Text>
-        <SelectMultiple
-          maxSelect= {1}        
-          items={ this.state.allAvailable }
-          selectedItems={ this.state.move }
-          onSelectionsChange={this.onSelectionsChangePlayerTop} />
-          <TouchableHighlight   onPress={() => 
-              this.setModalVisible('modalRepPlayerVisible', !this.state.modalRepPlayerVisible, "Replacements").then(this.updateMaster())} 
-              style={styles.modalButton}>
-            <Text style={styles.modalText}>Done</Text>
+          <TouchableHighlight onPress={()=>this.endGame(item.key, "teamB", "teamA", 'reg')} style={styles.teamAWonStyle}>
+            <Text style={{color:"white", fontSize:26}}>Team A Won</Text>
           </TouchableHighlight>
-           </View>
-     
-    </Modal>
 
-<Modal 
-    visible={this.state.modalPrefVisible}>
-      <View style={styles.modalStyle}>
-        <Text style={{fontSize:30, backgroundColor:'orange', color:'white'}}>{this.state.title} </Text>
-        <SelectMultiple
+          <TouchableHighlight onPress={()=>this.replacePlayer(item.key, "teamB", this.state.curPlayersB) } style={styles.teamStyleB}>
+            <Text style={{color:"red", fontSize:28}}>{item.valB}</Text>
+          </TouchableHighlight>
 
-          items={this.state.courtArr}
-          maxSelect = {1}
-          selectedItems={ this.state.prefCourt }
-          onSelectionsChange={this.onSelectionsChangePref} />
+          <TouchableHighlight onPress={()=>this.endGame(item.key, "teamA", "teamB", 'reg') } style={styles.teamBWonStyle}>
+            <Text style={{color:"white", fontSize:26}}>Team B Won</Text>
+          </TouchableHighlight>
 
-        <TouchableHighlight   onPress={ () => {
-            this.setModalVisible('modalPrefVisible',!this.state.modalPrefVisible, "something").then(this.winnersWinners()); 
-          }} style={styles.modalButton}>
-            <Text style={styles.modalText} >DONE</Text>
-        </TouchableHighlight>
       </View>
-</Modal>
+          
+          </View>)}/>
+          
+      </View>
+      <View>
+          <Modal 
+          visible={this.state.modalVisible}>
+            <View style={styles.modalStyle}>
+              <Text style={{fontSize:30, backgroundColor:'gray', color:'white'}}>{this.state.title} </Text>
+              <SelectMultiple
+                maxSelect= {this.state.diff}
+                items={this.state.shooters}
+                style={styles.modalStyle}
+                selectedItems={ this.state.hitShot }
+                onSelectionsChange={this.onSelectionsChange} />
+              <TouchableHighlight   onPress={() => 
+                  this.setModalVisible( 'modalVisible', !this.state.modalVisible, "something").then(this.AddMaster2())}
+                   style={styles.modalButton}>
+                  <Text style={styles.modalText}>Done</Text>
+              </TouchableHighlight>
+            </View>
+          </Modal>
+
+          <Modal 
+          visible={this.state.modalPlayerVisible}>
+            <View  style={styles.modalStyle }>
+              <Text style={{fontSize:30, backgroundColor:'red', color:'white'}} >{this.state.title} </Text>
+              <SelectMultiple
+                maxSelect= {1}
+                items={this.state.tempCourt}
+                selectedItems={ this.state.remPlayer }
+                onSelectionsChange={this.onSelectionsChangePlayer} />
+              <TouchableHighlight   onPress={() => 
+                  this.setModalVisible('modalPlayerVisible',!this.state.modalPlayerVisible, "something").then(this.CorrectionOrSub())}
+                   style={styles.modalButton}>
+                  <Text style={styles.modalText}>Done</Text>
+              </TouchableHighlight>
+            </View>
+          </Modal>
+
+          <Modal 
+            visible={this.state.modalRepPlayerVisible}>
+            <View  style={styles.modalStyle }>
+              <Text style={{fontSize:30, backgroundColor:'yellow', color:'black'}}>{this.state.title} </Text>
+              <SelectMultiple
+                maxSelect= {1}        
+                items={ this.state.allAvailable }
+                selectedItems={ this.state.move }
+                onSelectionsChange={this.onSelectionsChangePlayerTop} />
+                <TouchableHighlight   onPress={() => 
+                    this.setModalVisible('modalRepPlayerVisible', !this.state.modalRepPlayerVisible, "Replacements").then(this.updateMaster())} 
+                    style={styles.modalButton}>
+                  <Text style={styles.modalText}>Done</Text>
+                </TouchableHighlight>
+                 </View>
+           
+          </Modal>
+
+      <Modal 
+          visible={this.state.modalPrefVisible}>
+            <View style={styles.modalStyle}>
+              <Text style={{fontSize:30, backgroundColor:'orange', color:'white'}}>{this.state.title} </Text>
+              <SelectMultiple
+
+                items={this.state.courtArr}
+                maxSelect = {1}
+                selectedItems={ this.state.prefCourt }
+                onSelectionsChange={this.onSelectionsChangePref} />
+
+              <TouchableHighlight   onPress={ () => {
+                  this.setModalVisible('modalPrefVisible',!this.state.modalPrefVisible, "something").then(this.winnersWinners()); 
+                }} style={styles.modalButton}>
+                  <Text style={styles.modalText} >DONE</Text>
+              </TouchableHighlight>
+            </View>
+      </Modal>
 
       </View>
        </ScrollView>
@@ -773,25 +746,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#e8eae7',
     padding: "2%",
   },
-
    header: {
     fontSize:38,
     backgroundColor:'gray',
     color: 'white',
     width:"100%",
-
  },
-  textList: {
-    marginBottom: 10,
-    backgroundColor: '#e6f0f7',
-  },
- 
-  buttons: {
-    width: "40%",
-    height: 45,
-    backgroundColor:'black',
-    marginBottom: 10,
-  },
   modalStyle:{
     marginTop: 20,
     marginBottom:130,
@@ -804,41 +764,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  curGameStyle:{
+    fontSize:40, 
+    backgroundColor:'black', 
+    color:'white', 
+    textAlign:'center',
+    flexDirection:'row', 
+    justifyContent:'flex-end'
+  },
    modalText: {
     fontSize:30,
     color: 'white',
-  },
-
-  sampleArrayStyle: {
-    width:"50%",
-    alignSelf: 'stretch',
-    backgroundColor: '#fffaf4',
-    fontSize: 30,
-    borderColor: 'red',
-    borderWidth: 1,
-    textAlign:'right',
-    bottom: 30,
-    flex: 1,
-    flexDirection: 'row',
-  },
-  clearList: {
-    position:'relative',
-    backgroundColor:'white', 
-    color:'black', 
-    width:"50%",
-    height:32, 
-    fontSize:20, 
-    bottom:30,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  doneAdding: {
-    backgroundColor:'grey',  
-    bottom:30,
-    height: 32, 
-    width: "50%",
-    justifyContent: 'center',
-    alignItems: 'center', 
   },
   modalButton:{
     width: 120,
@@ -900,26 +836,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  textInput: {
-    // alignSelf: '',
-    fontSize:22,
-    color: "red",
-    marginBottom: 25,
-    width: '80%',
-    borderWidth: 2,
-    borderColor: 'black',
-    height: 65,
-    backgroundColor: 'white',
-    textAlign: "center", 
-  },
-
-    addButtonText: {
-    color: 'white',
-    fontSize: 18,
-    justifyContent: 'center',
-     alignItems: 'center',
-    flexDirection: 'row-reverse',
-  },
 
    gameBottonText: {
     fontSize:26,
@@ -934,35 +850,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     textAlign: 'center',
-  },
-   addButton: {
-    // zIndex: 1,
-     position: 'absolute',
-    backgroundColor: '#fcbf07',
-    flexDirection:'row',
-    width: '20%',
-    height: 65,
-    borderWidth: 2,
-    alignSelf:'flex-end',
-    borderColor: 'black',
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'absolute',
-  },
-  addStart: {
-    position: 'absolute',
-    backgroundColor: '#64e723',
-    marginTop: 80,
-    right: '10%',
-    width: 100,
-    height: 100,
-    flexDirection: 'row',
-    alignSelf: 'flex-end',
-    borderRadius: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
   }
- 
 }); 
-
 
