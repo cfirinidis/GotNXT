@@ -32,6 +32,46 @@ import SelectMultiple from 'react-native-select-multiple'
 //   );}
 // }
 
+  // AddMasterAfterShootout=()=>{
+  //     let hit= [];
+  //     let rest = [];
+  //     let hitList = [];
+  //     for  (i in this.state.hitShot){
+  //           hit.push({player: this.state.hitShot[i]["label"], replacement: false});
+  //           hitList.push(this.state.hitShot[i]["label"]);
+  //   }
+
+
+
+
+  //   for (i in this.state.shooters){
+  //     if (!hitList.includes(this.state.shooters[i]) ){
+  //     rest.push({player: this.state.shooters[i], replacement: false});
+  //     }
+  //   }
+  //   this.state.masterList.splice(this.state.restNum, 0, [{pref:0}, rest])
+  //   if (hit.length != 0){
+  //     this.state.masterList.unshift([{pref:0}, hit])
+  //   }
+  //   this.setState({hitShot: [] });
+  //   this.setState({restNum: 0 });
+  //   this.state.shooters = [];
+  //   // this.state.modalVisible = false;
+  //   this.setState({shooters: this.state.shooters });  
+  //   this.setState({masterList: this.state.masterList});
+
+  //   if (Platform.OS == 'android'){
+  //   this.StartGame();
+  //     }
+  //   else{
+  //      setTimeout(()=>{
+  //       this.StartGame();
+  //   }, 100);
+
+  //   }
+    
+  // }//good
+
 
 
 

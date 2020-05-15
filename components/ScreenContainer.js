@@ -6,7 +6,6 @@ import Setup from './Setup';
 import ShowList from './ListPage';
 import PopUp from './PopUp';
 import ModalExample from './Modal'
-import StartFunction from './function'
 import EditNames from './Edit'
 import Login from './Login';
 import SignUp from './SignUp'
@@ -19,17 +18,16 @@ const MainNavigator = createStackNavigator({
     SignUp:{
         screen: SignUp
     },
-    Main: { 
+    Setup: { 
         screen: Setup,
     },
     EditNames:{
         screen: EditNames,
     },
-  
-    List: {
+    MainActivity: {
     	screen: MainActivity,
     },
-    Show: {
+    List: {
     	screen: ShowList,
     },
     Test: {
@@ -38,10 +36,6 @@ const MainNavigator = createStackNavigator({
     Modal: {
         screen: ModalExample,
     },
-    Functions: {
-        screen: StartFunction,
-    }
-
 });
 
 

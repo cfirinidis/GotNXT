@@ -10,7 +10,7 @@ import{
   TouchableOpacity,
 } from 'react-native';
 
-const NameBox=({onPress, AddMasterMethod, clearListMethod, value, data, child})=>{ 
+const NameBox=({ AddMasterMethod, clearListMethod, value, data, child})=>{ 
   return(
     <View style={{bottom:65}}>
 

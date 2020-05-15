@@ -12,13 +12,20 @@ import{
 	AsyncStorage,
 	Image,
 } from 'react-native';
+import configureStore from './store';
+
+import { connect } from 'react-redux';
+import { loginUser } from '../store/actions';
+import { createStore, combineReducers } from 'redux';
+
+
 import Input from '../elements/Input';
 import firebase from '../elements/Firebase';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator} from 'react-navigation-stack'; 
 
 
-export default class Logo extends React.Component {
+class Logo extends React.Component {
   constructor(props) {
        super(props);
        this.state = {
@@ -33,6 +40,11 @@ export default class Logo extends React.Component {
     this.props.navigation.navigate("SignUp");  
   }
  
+
+   dumbness=()=>{
+    console.log("MORE TALKING")  
+    
+  }
   // componentWillMount() {
   //   const firebaseConfig = {
   //     apiKey: ' AIzaSyDNKMFfGnHZ9jANyVN0QJyD93lb35Q7Awo',
@@ -42,24 +54,28 @@ export default class Logo extends React.Component {
   // }
 
   onPressSignIn(){
-    console.log("Button Pressed")
+    // console.log("Button Pressed")
     if(this.state.email === '' && this.state.password === ''){
       Alert.alert("Enter Email And Password")
     }else{
-      console.log(this.state.email)
+      // console.log(this.state.email)
     this.setState({
       authenticating: true,
     });
     firebase
     .auth().signInWithEmailAndPassword(this.state.email, this.state.password)
     .then((res)=>{
-      console.log("USER LOGGED IN")
+      // console.log("USER LOGGED IN")
       this.setState({
         authenticating: false,
         email: '',
         password: ''
       })
-      this.props.navigation.navigate("Main")
+      
+      console.log("ANYTHING", this.state.email)
+      this.dumbness()
+      this.props.loginUser(this.state.email, this.state.password)
+      this.props.navigation.navigate("Setup")
     })
     .catch((error)=> {this.setState({ 
       errorMessage: error.message,
@@ -72,9 +88,6 @@ export default class Logo extends React.Component {
   }
 }
 
-  onAuthButtonPress=()=>{
-    console.log("A button was pressed", this.state.email, this.state.password)
-  }
 
 renderCurrentState(){
   if(this.state.authenticating){
@@ -166,3 +179,24 @@ const styles = StyleSheet.create({
   }
 
 });
+
+const mapStateToProps = (state) => {
+  // console.log("STATE MAIN: ", state);
+  return{
+    playerlists: state.compListReducer.origCompList,
+    shooterRedux: state.shooterReducer.shooter,
+    reduxMasterList: state.masterListReducer.reduxMasterList,
+    arenaRedux: state.arenaReducer.arenaRedux,
+    // loginUser: state.userReducer.user
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return{
+        loginUser:(username, email)=>dispatch(loginUser(username, email))
+
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Logo);
+

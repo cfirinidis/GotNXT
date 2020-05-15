@@ -13,19 +13,22 @@ import{
 	Image,
   Modal,
 } from 'react-native';
+import configureStore from './store';
+import { connect } from 'react-redux';
+import { setupArena } from '../store/actions';
+import { createStore, combineReducers } from 'redux';
+
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator} from 'react-navigation-stack'; 
 import SelectMultiple from 'react-native-select-multiple';
 
-export default class Setup extends React.Component {
- 
+class Setup extends React.Component {
   constructor(props) {
        super(props);
        this.state = {
          Arena: [],
          courtsNum: '',
          capacity: '',
-         masterList: [],
          courtArr:[],
          test:'',
          completeList: {},
@@ -49,43 +52,39 @@ export default class Setup extends React.Component {
     var answer =  await AsyncAlert ('RESET ALL', "Are you sure?")
   
     if (answer == "YES"){
-      this.setState({Arena: []});
       this.setState({courtsNum : '' });
       this.setState({capacity : '' });
-      this.setState({masterList : [] });
       this.setState({courtArr : [] });
-      this.setState({completeList: {} });
       this.setState({numGamesStarted: [] });
       this.setState({gamesStarted: [] });
+      configureStore.getState().compListReducer = []
+      configureStore.getState().masterListReducer = []
+      configureStore.getState().arenaReducer = []
     }
      else{return 0}
   }
 
-
   loadData = async() =>{
     try{
-      let mas = await AsyncStorage.getItem('master');
+      // let mas = await AsyncStorage.getItem('master');
       let are = await AsyncStorage.getItem('arena');
       let cap = await AsyncStorage.getItem('capacity');
       let cNum = await AsyncStorage.getItem('courtN');
       let cArray = await AsyncStorage.getItem('courtA');
-      let cList = await AsyncStorage.getItem('completeList')
-      this.state.masterList = JSON.parse(mas);
-      this.state.Arena = JSON.parse(are);
+      let mlr = await AsyncStorage.getItem('masterList');
+      let cl = await AsyncStorage.getItem('compList')
+      configureStore.getState().compListReducer = JSON.parse(cl)
+      configureStore.getState().masterListReducer = JSON.parse(mlr);
+      configureStore.getState().arenaReducer = JSON.parse(are);
       this.state.capacity = JSON.parse(cap);
       this.state.courtsNum = JSON.parse(cNum);
       this.state.courtArr = JSON.parse(cArray);
-      this.state.completeList = JSON.parse(cList)
-      this.setState({masterList:this.state.masterList})
-      this.setState({Arena:this.state.Arena})
       this.setState({capacity:this.state.capacity});
       this.setState({courtsNum:this.state.courtsNum});
       this.setState({courtArr:this.state.courtArr});
-      this.setState({completeList: this.state.completeList})
 
-      this.props.navigation.navigate("List", {arena: this.state.Arena, cap:this.state.capacity, 
-      courtsNum:this.state.courtsNum, courtArr: this.state.courtArr, masterList:this.state.masterList, 
-      completeList:this.state.completeList });
+      this.props.navigation.navigate("MainActivity", { cap:this.state.capacity, 
+      courtsNum:this.state.courtsNum, courtArr: this.state.courtArr});
     }
     catch(error){
       console.log("ERROR")
@@ -102,41 +101,17 @@ export default class Setup extends React.Component {
     this.setState({numGamesModal: visible})
   });
 
-
   createPlaceholders=(answer)=>{
     let courts = {};
     let count = 0;
-    // console.log("OVERSIGHT", this.state.gamesStarted[0]["label"], answer)
     for (var i=0; i<this.state.courtsNum; i++){
-        courts['teamA'] = new Array()
-        courts['teamB'] = new Array()
-        if(answer == "YES" && (count < this.state.gamesStarted[0]["label"] || this.state.gamesStarted[0]["label"] == "ALL")){
-            courts['Num'] = i+1
-            courts["teamANum"] = parseInt(this.state.capacity)
-            courts["teamBNum"] = parseInt(this.state.capacity)
-            for (let j =0; j<2 * this.state.capacity; j++){
-              courts['teamA'].push([{"player": "*PLYR"+j + "CRT" + courts['Num'], "replacement": false }])
-                j++;
-              courts['teamB'].push([{"player": "*PLYR"+j + "CRT" + courts['Num'], "replacement": false }])
-            }
-          count++;
-        }
-      else{     
-              courts['Num'] = i+1
-              courts["teamANum"] = 0
-              courts["teamBNum"] = 0
-          }  
-          this.state.Arena.push(courts)
-          courts={}
           this.state.courtArr.push("Court : "+ (i+1))
       }//for loop
       this.state.courtArr.push("Waiting : "+ 'W')
-      this.setState({Arena:this.state.Arena}); 
-      this.props.navigation.navigate("List", {arena: this.state.Arena, cap:this.state.capacity, 
-        courtsNum:this.state.courtsNum, courtArr: this.state.courtArr, masterList:this.state.masterList,
-        completeList:this.state.completeList });      
+      this.props.setupArena(this.state.courtsNum, this.state.capacity, this.state.gamesStarted, answer)
+      this.props.navigation.navigate("MainActivity", { cap:this.state.capacity, 
+        courtsNum:this.state.courtsNum, courtArr: this.state.courtArr});      
   }//end of func
-
 
   async SetupCourt(){
     AsyncAlert = (title, msg) => new Promise((resolve, reject) => {  
@@ -154,16 +129,14 @@ export default class Setup extends React.Component {
     else if(this.state.capacity.replace(/\s/g, '').length==0){
      Alert.alert("Please enter Number of Players PER TEAM") 
     }
-    else if(this.state.Arena.length>0){
+    else if(configureStore.getState().arenaReducer.length>0){
       Alert.alert("Already Setup, to erase press RESET")
-      this.props.navigation.navigate("List", {arena: this.state.Arena, cap:this.state.capacity, 
-      courtsNum:this.state.courtsNum, masterList:this.state.masterList, courtArr: this.state.courtArr,
-      completeList:this.state.completeList });
+      this.props.navigation.navigate("MainActivity", { cap:this.state.capacity, 
+      courtsNum:this.state.courtsNum, courtArr: this.state.courtArr });
     }
     else{
       let inProgress = await AsyncAlert("Have Games Started?", "")
       if (inProgress == "NO"){
-        // this.state.gamesStarted[0]["label"] = 0;
         this.createPlaceholders(inProgress)
       }
       else{
@@ -232,11 +205,11 @@ export default class Setup extends React.Component {
     <Text style={styles.footer}>ConzStructions</Text>
      </KeyboardAvoidingView>
       </View>
-      
    );
  }
 }
- 
+
+
 const styles = StyleSheet.create({
 	wrapper: {
     flex: 1,
@@ -269,7 +242,6 @@ const styles = StyleSheet.create({
 		color: "red",
 		backgroundColor: '#e8eae7',
     textAlign:"center"
-
 	},
   text: {
     alignSelf: 'stretch',
@@ -277,7 +249,6 @@ const styles = StyleSheet.create({
     color: "black",
     fontWeight:'bold',
     textAlign:"center"
-
   },
     button: {
     fontSize: 26,
@@ -331,6 +302,24 @@ const styles = StyleSheet.create({
     fontSize:30,
     color: 'black',
   },
-
-
 });	
+
+
+const mapStateToProps = (state) => {
+  // console.log("STATE : ", state);
+  return{
+    playerlists: state.compListReducer.origCompList,
+    shooterRedux: state.shooterReducer.shooter,
+    reduxMasterList: state.masterListReducer.reduxMasterList,
+    arenaRedux: state.arenaReducer.arenaRedux
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return{
+    setupArena:(courtsNum, capacity, gameStarted, answer)=>dispatch(setupArena(courtsNum, capacity, gameStarted, answer)),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Setup);
+

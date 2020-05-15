@@ -1,4 +1,3 @@
-
 import React, { Component }  from 'react';
 import{
   StyleSheet,
@@ -16,18 +15,25 @@ import{
   AsyncStorage,
   Modal,
 } from 'react-native';
+import configureStore from './store';
+import { connect } from 'react-redux';
+import { addToCompList, delFromCompList , addToShooters, resetShooters, addToReduxMaster,
+shootML, correctOrSub, reduxUpdateMaster, removeFromMLRedux, extractFromMLRedux,
+endGameMLRedux, arenaCorOrSub, updatePlayerNums, addSet, winWinRedux} from '../store/actions';
+import { createStore, combineReducers } from 'redux';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator} from 'react-navigation-stack'; 
 import Setup from './Setup';
 import PopUp from './PopUp';
+import styles from './mainStyleFile'
 import ListAndStartButton from '../elements/ListAndStartButton';
 import EnterName from '../elements/EnterName';
 import NameBox from '../elements/NameBox';
 import CustomPromptComponent from './Modal';
-import StartFunction from './function';
 import SelectMultiple from 'react-native-select-multiple';
 
-export default class MainActivity extends React.Component { 
+
+class MainActivity extends React.Component { 
   constructor(props) {
        super(props);
        this.state = {
@@ -53,72 +59,33 @@ export default class MainActivity extends React.Component {
           modalPrefVisible: false,
           restNum: 0,
           Name: '',
-          shooters: [],
           prefCourt: [],
           totalPlayers:0,
-          SampleArray : [],
-         masterList : [
-         [{pref:0}, [{player: "Lebron", replacement: false}, {player:"AntDavis", replacement: false}]],
-         [{pref:0}, [{player:"Kyrie", replacement: true}, {player:"Durant", replacement: true}]],
-        [{pref:0}, [{player:"Majerle", replacement: false}]],
-        [{pref:0}, [{player:"Kawhi", replacement: false}, {player:"PG13", replacement: false}]],
-         [{pref:0}, [{player:'Larry', replacement: false}, {player:'Parish', replacement: false}]], 
-          [{pref:0}, [{player:'Kidd', replacement: false}]]
-          ,
-            [{pref:0}, [{player: "Lebron1", replacement: false}, {player:"Ant1Davis", replacement: false}]],
-         [{pref:0}, [{player:"Kyrie1", replacement: true}, {player:"Dur1ant", replacement: true}]],
-        [{pref:0}, [{player:"Majerle1", replacement: false}]],
-        [{pref:0}, [{player:"Kawhi1", replacement: false}, {player:"PG113", replacement: false}]],
-         [{pref:0}, [{player:'Larr1y', replacement: false}, {player:'Pa1rish', replacement: false}]], 
-          [{pref:0}, [{player:'Kidd1', replacement: false}]]
-          ,
-            [{pref:0}, [{player: "Le2bron", replacement: false}, {player:"Ant2Davis", replacement: false}]],
-         [{pref:0}, [{player:"Ky2rie", replacement: true}, {player:"Dura2nt", replacement: true}]],
-        [{pref:0}, [{player:"Majer2le", replacement: false}]],
-        [{pref:0}, [{player:"Kawh2i", replacement: false}, {player:"P2G13", replacement: false}]],
-         [{pref:0}, [{player:'Lar2ry', replacement: false}, {player:'Par2ish', replacement: false}]], 
-          [{pref:0}, [{player:'Ki2dd', replacement: false}]]
-        
-          ],  
+          tempNameArray : [], 
          cap: this.props.navigation.getParam("cap", "blank"),
-         Arena: this.props.navigation.getParam("arena", "blank"),
          courtsNum: this.props.navigation.getParam("courtsNum", "blank"),
          courtArr: this.props.navigation.getParam("courtArr", "blank"),
          courtArrPref: [],
-         // masterList: this.props.navigation.getParam("masterList", "blank"),
-         completeList: this.props.navigation.getParam("completeList", "blank"),
          current: 0,
-         answer: 'none'
        };
      }
-  
- checkDuplicate=(name)=>{
-    // let  x = name.toLowerCase() 
-    // console.log("completet list ",this.state.completeList)
-    if (name in this.state.completeList){
-      Alert.alert("Name Already Exists ")
-      return false
-    }
-    return true
-}
 
   AddItemsToArray=()=>{
     let san = this.state.Name.replace(/\s/g, '').toLowerCase()
-    if (this.checkDuplicate(san)){
-      if (this.state.Name.length != 0 && this.state.Name.replace(/\s/g, '').length != 0 ){
-        this.state.SampleArray.push({player: this.state.Name, replacement: false});
+    if (!(configureStore.getState().compListReducer.includes(san))){
+      if (san.length != 0 && san.length != 0 ){
+        this.state.tempNameArray.push({player: this.state.Name, replacement: false});
       }
       else{
         Alert.alert("Please Enter A Name")
       }
-      this.state.completeList[this.state.Name.replace(/\s/g, '').toLowerCase()]= 1
-      
+      this.props.add(san) 
       this.setState({Name:''})
-      this.setState({SampleArray: this.state.SampleArray})
+      this.setState({tempNameArray: this.state.tempNameArray})
       this.setState({totalPlayers: this.state.totalPlayers + 1})
   }//good
+  else{  Alert.alert("Name Already Exists " )}
 }
-
 
   addToCurA=(list, n)=>{
     this.state.curPlayersA[n] = list;
@@ -128,65 +95,40 @@ export default class MainActivity extends React.Component {
     this.state.curPlayersB[n] = list;
   }
 
-
    clearList=()=>{
-      for (k in this.props.SampleArray){
-        delete this.props.completeList[this.props.SampleArray[k]['player'].toLowerCase()]
-      }
-      this.setState({SampleArray:[]})
+      this.props.del(this.state.tempNameArray)
+      this.setState({tempNameArray:[]})
     }
 
-
-  AddMaster=()=>{
-    if (this.state.SampleArray.length === 0 ){
+  doneAddingFunc=()=>{
+    if (this.state.tempNameArray.length === 0 ){
       Alert.alert("Please Enter a Name " )
     }
     else{
-    this.state.masterList.push([{pref:0},this.state.SampleArray])
-    this.setState({SampleArray : []})  
+    this.props.addToReduxMaster(this.state.tempNameArray)
+    this.setState({tempNameArray : []})  
     this.saveData();
     }
   }//good
 
   AddMaster2=()=>{
-      let hit= [];
-      let rest = [];
-      let hitList = [];
-      for  (i in this.state.hitShot){
-            hit.push({player: this.state.hitShot[i]["label"], replacement: false});
-            hitList.push(this.state.hitShot[i]["label"]);
-    }
-    for (i in this.state.shooters){
-      if (!hitList.includes(this.state.shooters[i]) ){
-      rest.push({player: this.state.shooters[i], replacement: false});
-      }
-    }
-    this.state.masterList.splice(this.state.restNum, 0, [{pref:0}, rest])
-    if (hit.length != 0){
-      this.state.masterList.unshift([{pref:0}, hit])
-    }
-    this.setState({hitShot: [] });
-    this.setState({restNum: 0 });
-    this.state.shooters = [];
-    this.setState({shooters: this.state.shooters });  
-    this.setState({masterList: this.state.masterList});
-    this.setState({completeList: this.state.completeList})
-
-    if (Platform.OS == 'android'){
-    this.StartGame();
-      }
-    else{
-       setTimeout(()=>{
-        this.StartGame();
-    }, 100);
-   }
-
-  }//good
+      let reduxShooter = configureStore.getState().shooterReducer
+      this.props.shootML(this.state.restNum, this.state.hitShot, reduxShooter)
+      this.setState({hitShot: [] });
+      this.setState({restNum: 0 });
+      this.props.resetShooters()
+      if (Platform.OS == 'android'){
+      this.StartGame();
+        }
+      else{
+         setTimeout(()=>{
+          this.StartGame();
+      }, 100);
+     }
+    }//good
 
   GoToLists=()=>{
-    this.props.navigation.navigate("Show", {arena: this.state.Arena,
-     list: this.state.masterList, courtArr: this.state.courtArr, compList: this.state.completeList});  
-  }
+    this.props.navigation.navigate("List", {list: this.state.masterList, courtArr: this.state.courtArr}); }
    
   GoToModal=()=>{
     this.props.navigation.navigate("Modal");
@@ -198,33 +140,23 @@ export default class MainActivity extends React.Component {
       this.setState({ remPlayer:[] });
       return 0
     }
-      
-    for (i=0; i<this.state.remPlayer.length; i++){      
-      for (k=0;  k<this.state.Arena[this.state.tempNum-1][this.state.team].length; k++){
-        if (this.state.remPlayer[i]['label'] == this.state.Arena[this.state.tempNum-1][this.state.team][k][0]["player"]){
-          this.state.Arena[this.state.tempNum-1][this.state.team].splice(k,1)
-          this.state.Arena[this.state.tempNum-1][this.state.team+"Num"] -= 1
-          k--;
-        }
-      }}
+      this.props.arenaCorOrSub(this.state.remPlayer, this.state.tempNum, this.state.team);
       let repP = [];
-      Object.values(this.state.masterList).map(function(val) {
+      Object.values(configureStore.getState().masterListReducer).map(function(val) {
         for (j in val[1]){
           repP.push(val[1][j]['player']);
         }
       });
 
-    if(this.state.remPlayer[0]['label'][0] != '*'){
-      this.state.masterList.unshift([{pref:"W"}, [{player: this.state.remPlayer['label'], replacement: false}]] )  
+    if(this.state.remPlayer[0]['label'][0] != '*'){ 
+      this.props.correctOrSub(this.state.remPlayer[0]['label'])
     }
-    this.setState({ tempCourt: [] });
-    this.setState({ allAvailable: repP });   
-    this.setState({ remPlayer:[] });
-    this.setState({ Arena: this.state.Arena });
-    this.setState({ current:this.state.tempNum-1 })
-
+    this.state.tempCourt = [];
+    this.state.remPlayer = [];
+    this.state.current = this.state.tempNum-1;
+    this.state.allAvailable = repP
     if(this.state.repFlag == false){
-    this.setModalVisible('modalRepPlayerVisible',!this.state.modalRepPlayerVisible, "Enter Correction");
+      this.setModalVisible('modalRepPlayerVisible',!this.state.modalRepPlayerVisible, "Enter Correction");
     }
     else{
       this.setModalVisible('modalRepPlayerVisible', !this.state.modalRepPlayerVisible, "Enter Substitute");
@@ -233,31 +165,13 @@ export default class MainActivity extends React.Component {
 
 updateMaster=()=>{
     if (this.state.move.length == 0){
-      // Alert.alert("No one selected as replacement.")
+      Alert.alert("No one selected as replacement.")
       this.setState( { move: [] } );
       this.setState( { repFlag: false } );
        return 0
     }
-    let movePlayers = [] 
-    for (i in this.state.move){
-      movePlayers.push(this.state.move[i]['value'])
-    }
 
-    for(i=0; i<this.state.masterList.length; i++){
-      for (j = 0; j < this.state.masterList[i][1].length ; j++){
-        if (movePlayers.includes(this.state.masterList[i][1][j]['player'])){
-          this.state.masterList[i][1].splice(j,1);
-          j--;  
-        if (this.state.masterList[i][1].length == 0){
-            this.state.masterList.splice(i,1);
-            i--;
-          }
-    }}}
-
-    for(i in movePlayers){
-       this.state.masterList.unshift([{pref: 0},[{player:movePlayers[i], replacement: this.state.repFlag}]])
-    }
-    
+    this.props.reduxUpdateMaster(this.state.move, this.state.repFlag)
     this.setState( { move: [] } );
     this.setState( { repFlag: false } );
     this.StartGame();
@@ -272,7 +186,7 @@ updateMaster=()=>{
   }
 
   onSelectionsChangePlayer =(remPlayer)=>{
-    console.log("hit shot remPLayer: ", remPlayer)
+    // console.log("hit shot remPLayer: ", remPlayer)
     this.setState({ remPlayer })
   }
 
@@ -284,36 +198,33 @@ updateMaster=()=>{
   });
 
   removeFromList=(delArray)=>{
-    for (i in delArray){
-      this.state.masterList.splice(delArray[i]-i, 1)
-    }
+    this.props.removeFromMLRedux(delArray)
     return [];
   }
 
   extractFromList=(names)=>{
     let set = [];
-    for (name in this.state.masterList[names][1]){ 
-        set.push(this.state.masterList[names][1][name])
+    for (name in configureStore.getState().masterListReducer[names][1]){ 
+        set.push(configureStore.getState().masterListReducer[names][1][name])
         }
     return set
   }
 
   saveData(){
-    let MS = JSON.stringify(this.state.masterList);
-    let AR  = JSON.stringify(this.state.Arena);
+    let ML = JSON.stringify(configureStore.getState().masterListReducer);
+    let CL = JSON.stringify(configureStore.getState().compListReducer);
+    let AR  = JSON.stringify(configureStore.getState().arenaReducer);
     let CAP = JSON.stringify(this.state.cap);
     let CN = JSON.stringify(this.state.courtsNum);
     let CARRAY = JSON.stringify(this.state.courtArr);
-    let CL = JSON.stringify(this.state.completeList);
-    // console.log("MS: ", this.state.masterList)
+    AsyncStorage.setItem('compList', CL)
+    AsyncStorage.setItem('masterList', ML);
     AsyncStorage.setItem('arena', AR);
-    AsyncStorage.setItem('master', MS);
     AsyncStorage.setItem('capacity', CAP);
     AsyncStorage.setItem('courtN', CN);
     AsyncStorage.setItem('courtA', CARRAY);
-    AsyncStorage.setItem('completeList', CL)
-
   }
+
 
    async StartGame(){
       let delArray = [];
@@ -327,46 +238,46 @@ updateMaster=()=>{
                     { cancelable: false},
                     );
       });
-        for(let run = 0; run < this.state.masterList.length; run++){//add full contingency
-                while(this.state.current < this.state.Arena.length && this.state.Arena[this.state.current]["teamANum"]  + this.state.Arena[this.state.current]["teamBNum"] == 2*this.state.cap){
-                  // console.log(this.state.current)
+        let reduxML = configureStore.getState().masterListReducer
+        for(let run = 0; run < reduxML.length; run++){//add full contingency
+          while(this.state.current < configureStore.getState().arenaReducer.length && 
+                  configureStore.getState().arenaReducer[this.state.current]["teamANum"]  +
+                   configureStore.getState().arenaReducer[this.state.current]["teamBNum"] == 2*this.state.cap){
                   this.state.current++;
                   }
-                  if (this.state.current >= this.state.Arena.length){
+                  if (this.state.current >= configureStore.getState().arenaReducer.length){
                     this.setState({ current: this.state.current})
                    Alert.alert("GAMES FULL!")
                    break
                 }
-              if(this.state.current + 1 != this.state.masterList[names][0]['pref'] && this.state.masterList[names][0]['pref'] != 0 ){
+              if(this.state.current + 1 != reduxML[names][0]['pref'] && reduxML[names][0]['pref'] != 0 ){
                   names++;
                 }
-              else if(this.state.masterList[names][1].length + this.state.Arena[this.state.current]["teamANum"]  <= this.state.cap
-                || this.state.masterList[names][1].length + this.state.Arena[this.state.current]["teamBNum"]  <= this.state.cap){
-                // if(this.state.masterList[names][1].length + this.state.Arena[this.state.current]["teamANum"]  <= this.state.cap)
-                let team = (this.state.masterList[names][1].length + this.state.Arena[this.state.current]["teamANum"]  <= this.state.cap)? "teamA":"teamB"
-                let set = this.extractFromList(names);
-                this.state.Arena[this.state.current][team+"Num"] += this.state.masterList[names][1].length;
+              else if(reduxML[names][1].length + configureStore.getState().arenaReducer[this.state.current]["teamANum"]  <= this.state.cap
+                || reduxML[names][1].length + configureStore.getState().arenaReducer[this.state.current]["teamBNum"]  <= this.state.cap){
+                let team = (reduxML[names][1].length + configureStore.getState().arenaReducer[this.state.current]["teamANum"]  <= this.state.cap)? "teamA":"teamB"
+                let sets = this.extractFromList(names);
+                this.props.updatePlayerNums(this.state.current, team, reduxML[names][1].length)
                 delArray += [names];
-                for (i in set){
-                  this.state.Arena[this.state.current][team].push([set[i]]);}
+                this.props.addSet(this.state.current, team, sets);
                 names++;
-                if (names == this.state.masterList.length){
+                if (names == reduxML.length){
                     names = 0
                     delArray = this.removeFromList(delArray)
                 }}
-                else  if( this.state.Arena[this.state.current]["teamANum"] + this.state.Arena[this.state.current]["teamBNum"] != 2*this.state.cap){
-                  // console.log(this.state.Arena[this.state.current]["teamANum"] , this.state.Arena[this.state.current]["teamBNum"],  this.state.cap)
+                else  if( configureStore.getState().arenaReducer[this.state.current]["teamANum"] + 
+                  configureStore.getState().arenaReducer[this.state.current]["teamBNum"] != 2*this.state.cap){
                   let s = '';
-                  for (i in this.state.masterList[names][1]){
-                    s += this.state.masterList[names][1][i]['player'] + '  '  
-                    this.state.shooters.push(this.state.masterList[names][1][i]['player'])
-                  } 
-                  this.state.diff = (this.state.cap*2) - ( this.state.Arena[this.state.current]["teamANum"]  + 
-                                    this.state.Arena[this.state.current]["teamBNum"] );
-                  if ( this.state.diff >= this.state.shooters.length ){
-                    this.state.command = " Shoot for " + ( this.state.cap - this.state.Arena[this.state.current]["teamANum"] + 
+                  for (i in reduxML[names][1]){
+                    s += reduxML[names][1][i]['player'] + '  '  
+                    this.props.addShooter(reduxML[names][1][i]['player'])
+                  }
+                  this.state.diff = (this.state.cap*2) - ( configureStore.getState().arenaReducer[this.state.current]["teamANum"]  + 
+                                  configureStore.getState().arenaReducer[this.state.current]["teamBNum"] );
+                  if ( this.state.diff >= configureStore.getState().shooterReducer.length ){
+                    this.state.command = " Shoot for " + ( this.state.cap - configureStore.getState().arenaReducer[this.state.current]["teamANum"] + 
                       " To Play On TEAM-A")
-                    this.state.diff = ( this.state.cap - this.state.Arena[this.state.current]["teamANum"])
+                    this.state.diff = ( this.state.cap - configureStore.getState().arenaReducer[this.state.current]["teamANum"])
                   }
                   else{
                   this.state.command = "Shoot for " + this.state.diff
@@ -383,64 +294,20 @@ updateMaster=()=>{
                 delArray = this.removeFromList(delArray)
               }
                names++;
-               // console.log("names vs run: ",names, run)
-
                 }
             // GAME READY
-        if( this.state.Arena[this.state.current]["teamANum"] + this.state.Arena[this.state.current]["teamBNum"] == 2*this.state.cap){
+        if( configureStore.getState().arenaReducer[this.state.current]["teamANum"] + 
+          configureStore.getState().arenaReducer[this.state.current]["teamBNum"] == 2*this.state.cap){
           this.setState({ current: this.state.current+1 })
           this.removeFromList( delArray )
           break;
- 
          }//if full        
-          }//end of while
-
-        this.setState({masterList: this.state.masterList});
-        this.setState({Arena:this.state.Arena});
-        // console.log("ARENA in startgame: ", this.state.Arena)
+        }//end of while
         this.saveData();
   }
 
 
-  AddMasterAfterShootout=()=>{
-      let hit= [];
-      let rest = [];
-      let hitList = [];
-      for  (i in this.state.hitShot){
-            hit.push({player: this.state.hitShot[i]["label"], replacement: false});
-            hitList.push(this.state.hitShot[i]["label"]);
-    }
-    for (i in this.state.shooters){
-      if (!hitList.includes(this.state.shooters[i]) ){
-      rest.push({player: this.state.shooters[i], replacement: false});
-      }
-    }
-    this.state.masterList.splice(this.state.restNum, 0, [{pref:0}, rest])
-    if (hit.length != 0){
-      this.state.masterList.unshift([{pref:0}, hit])
-    }
-    this.setState({hitShot: [] });
-    this.setState({restNum: 0 });
-    this.state.shooters = [];
-    // this.state.modalVisible = false;
-    this.setState({shooters: this.state.shooters });  
-    this.setState({masterList: this.state.masterList});
-    this.setState({completeList: this.state.completeList})
-
-    if (Platform.OS == 'android'){
-    this.StartGame();
-      }
-    else{
-       setTimeout(()=>{
-        this.StartGame();
-    }, 100);
-
-    }
-    
-  }//good
-
   onSelectionsChangePref = (prefCourt) => {
-    // selectedFruits is array of { label, value }
     this.setState({ prefCourt })
   }
 
@@ -479,7 +346,8 @@ updateMaster=()=>{
 
 
   async endGame(courtNum, loser, winner, status){
-    if ( (this.state.Arena[courtNum-1]["teamBNum"] + this.state.Arena[courtNum-1]["teamANum"]) < (this.state.cap*2)) {
+    if ( (configureStore.getState().arenaReducer[courtNum-1]["teamBNum"] +
+         configureStore.getState().arenaReducer[courtNum-1]["teamANum"]) < (this.state.cap*2)) {
       alert("Game has not started");
       return
     }
@@ -497,58 +365,53 @@ updateMaster=()=>{
     if (winnerConfirmation== "NO"){
       return
     }
-  // console.log('cn ', courtNum,'loser ', loser,'winner ', winner,'status ', status, this.state.Arena)
       let temp = [];
       let titleP = '';
       this.state.current = courtNum-1
       let tempC = 0;
-      for (i in this.state.Arena[courtNum-1][winner]){
-        this.state.Arena[courtNum-1][winner][i][0]['replacement'] = false 
+      
+      let arenaRedx = configureStore.getState().arenaReducer
+      for (i in arenaRedx[courtNum-1][winner]){
+        // configureStore.getState().arenaReducer[courtNum-1][winner][i][0]['replacement'] = false 
+        arenaRedx[courtNum-1][winner][i][0]['replacement'] = false
       }
-      for (i=0; i< this.state.Arena[courtNum-1][loser].length; i++){
-        if (this.state.Arena[courtNum-1][loser][i][0]['replacement'] == false){
-            temp.push(this.state.Arena[courtNum-1][loser][i][0])
-            titleP += " " + (this.state.Arena[courtNum-1][loser][i][0]['player'])
-            this.state.Arena[courtNum-1][loser].splice(i, 1);
+
+      for (i=0; i< arenaRedx[courtNum-1][loser].length; i++){
+        if (arenaRedx[courtNum-1][loser][i][0]['replacement'] == false){
+            temp.push(arenaRedx[courtNum-1][loser][i][0])
+            titleP += " " + (arenaRedx[courtNum-1][loser][i][0]['player'])
+            arenaRedx[courtNum-1][loser].splice(i, 1);
             i--;
             tempC += 1            
         }
         else{
-          this.state.Arena[courtNum-1][loser][i][0]['replacement'] = false  
+          arenaRedx[courtNum-1][loser][i][0]['replacement'] = false  
         }
-      } 
+      } //end
 
-      this.state.Arena[courtNum-1][loser+"Num"] -= tempC;
+      arenaRedx[courtNum-1][loser+"Num"] -= tempC;
       if (temp.length>0){ 
         if (status == 'reg'){
-          this.state.masterList.push([{pref:0}, temp])
+          this.props.endGameMLRedux(temp)
         }
         //winnerWinner
         else{
             this.setModalVisible('modalPrefVisible', !this.state.modalPrefVisible, "Select Preferred Court: ")     
-            this.setState({masterList: this.state.masterList});
             this.setState({current: 0});
             this.setState({winnersW: temp})
             this.saveData();
         }}
-      this.setState({Arena:this.state.Arena});
       this.StartGame();  
 }
 
 winnersWinners(){
-  if (this.state.prefCourt.length == 0){
-    this.state.masterList.unshift([{pref:"W"}, this.state.winnersW])
-    return 0
-  } 
-  let t = this.state.prefCourt[0]['value']  
-  this.state.masterList.unshift([{pref: t[t.length - 1]}, this.state.winnersW])
-  this.setState({masterList: this.state.masterList});
+  this.props.winWinRedux(this.state.prefCourt, this.state.winnersW);
   this.setState({prefCourt:[] })
   this.saveData();
 }
 
  render() {
-  let Game = this.state.Arena.map((val, key)=> {
+  let Game = configureStore.getState().arenaReducer.map((val, key)=> {
     let A = []
     let B = []
     let t = {}
@@ -582,13 +445,12 @@ winnersWinners(){
      t["valB"] = B
   this.addToCurA(currentPlayerA, val.Num)
   this.addToCurB(currentPlayerB, val.Num)
-  // console.log(t['valA'].length, "A : ", A.length, val.Num)
 if (A.length > 0 ){
   return t 
 }
 }); 
 
-  let pending = Object.values(this.state.SampleArray).map(function(vals) {
+  let pending = Object.values(this.state.tempNameArray).map(function(vals) {
       let t= {} ;
       for (val in vals){
           if(vals[val] != false && vals[val] != true){
@@ -597,35 +459,21 @@ if (A.length > 0 ){
       return t
   });
 
-// console.log("GAME: ", Game)
-// for(i in Game){
-
-//   console.log(i, "i" , Game[i] )
-// }
-// var arr = ['a','b',1];
-// var results = arr.filter(function(item){
-//     return typeof item ==='string';  
-// });
-
 Game = Game.filter(function(item){
     if (item != undefined){
       return item
     }
 });
 
-
    return (
       <KeyboardAvoidingView style={styles.wrapper}>
       <ScrollView>
       <View>
-
           <EnterName onPress={this.AddItemsToArray.bind(this)} 
               onChangeText={(Name) => this.setState({ Name})} value={this.state.Name}>ADD +</EnterName>
-          
           <View>
               <ListAndStartButton GoToListMethod={this.GoToLists.bind(this)} StartMethod={this.StartGame.bind(this)} /> 
-             <NameBox  data={pending} clearListMethod={this.clearList.bind(this)} AddMasterMethod={this.AddMaster.bind(this)} />  
-
+             <NameBox  data={pending} clearListMethod={this.clearList.bind(this)} AddMasterMethod={this.doneAddingFunc.bind(this)} />  
           </View>
 
           <Text style={styles.curGameStyle}>Current Games</Text>
@@ -665,7 +513,7 @@ Game = Game.filter(function(item){
               <Text style={{fontSize:30, backgroundColor:'gray', color:'white'}}>{this.state.title} </Text>
               <SelectMultiple
                 maxSelect= {this.state.diff}
-                items={this.state.shooters}
+                items={configureStore.getState().shooterReducer}
                 style={styles.modalStyle}
                 selectedItems={ this.state.hitShot }
                 onSelectionsChange={this.onSelectionsChange} />
@@ -717,12 +565,10 @@ Game = Game.filter(function(item){
             <View style={styles.modalStyle}>
               <Text style={{fontSize:30, backgroundColor:'orange', color:'white'}}>{this.state.title} </Text>
               <SelectMultiple
-
                 items={this.state.courtArr}
                 maxSelect = {1}
                 selectedItems={ this.state.prefCourt }
                 onSelectionsChange={this.onSelectionsChangePref} />
-
               <TouchableHighlight   onPress={ () => {
                   this.setModalVisible('modalPrefVisible',!this.state.modalPrefVisible, "something").then(this.winnersWinners()); 
                 }} style={styles.modalButton}>
@@ -734,122 +580,39 @@ Game = Game.filter(function(item){
       </View>
        </ScrollView>
       </KeyboardAvoidingView>
-
    );
  }
 }
 
 
-const styles = StyleSheet.create({
-  wrapper: {
-    flex: 1,
-    backgroundColor: '#e8eae7',
-    padding: "2%",
-  },
-   header: {
-    fontSize:38,
-    backgroundColor:'gray',
-    color: 'white',
-    width:"100%",
- },
-  modalStyle:{
-    marginTop: 20,
-    marginBottom:130,
-  },
-  modalButtons:{
-    width: '40%',
-    height: 60,
-    left: '50%',
-    backgroundColor: '#388fe7',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  curGameStyle:{
-    fontSize:40, 
-    backgroundColor:'black', 
-    color:'white', 
-    textAlign:'center',
-    flexDirection:'row', 
-    justifyContent:'flex-end'
-  },
-   modalText: {
-    fontSize:30,
-    color: 'white',
-  },
-  modalButton:{
-    width: 120,
-    height: 60,
-    left: '50%',
-    backgroundColor: '#388fe7',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalStyle:{
-    marginBottom: 120 ,
-    marginTop: 20,
-  },
-  modalText:{
-    fontSize: 22,
-    color:'white', 
-  },
-
-  teamStyleA: {
-    // position:'absolute',
-    backgroundColor: 'white',
-    borderWidth:3,
-    width: "45%",
-  },
-
-    teamStyleB: {
-    position:'absolute',
-    alignSelf: 'flex-end',
-    backgroundColor: 'white',
-    borderWidth:3,
-    width: "45%",
-  },
-
-  teamAWonStyle:{
-    // flexDirection: 'row',
-    // flex:1,
-    // position:'relative',
-    // alignSelf:'flex-end',
-    // marginTop: 5,
-    backgroundColor:'gray',
-    
-    width:'45%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 50,
-    borderWidth: 2,
-    borderColor: 'black',
-  },
-   teamBWonStyle:{
-    position:'relative',
-    flexDirection: 'row',
-    alignSelf: 'flex-end',
-    width:'45%',
-    bottom: 50,
-    backgroundColor:'red',
-    height: 50,
-    borderWidth: 2,
-    borderColor: 'black',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-   gameBottonText: {
-    fontSize:26,
-    width: '40%',
-    borderWidth: 2,
-    margin: 5,
-    backgroundColor:'white',
-    color:'black',
-    flexDirection: 'row',
-    alignSelf: 'center',
-    borderRadius: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-    textAlign: 'center',
+const mapStateToProps = (state) => {
+  // console.log("STATE MAIN: ", state);
+  return{
+    playerlists: state.compListReducer.origCompList,
+    shooterRedux: state.shooterReducer.shooter,
+    reduxMasterList: state.masterListReducer.reduxMasterList,
+    arenaRedux: state.arenaReducer.arenaRedux
   }
-}); 
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return{
+    add:(data)=>dispatch(addToCompList(data)),
+    del:(data)=>dispatch(delFromCompList(data)),
+    addShooter:(data)=>dispatch(addToShooters(data)),
+    resetShooters:()=>dispatch(resetShooters()),
+    addToReduxMaster:(data)=>dispatch(addToReduxMaster(data)),
+    shootML:(restNum, hitShot, shooters)=>dispatch(shootML(restNum, hitShot, shooters)),
+    correctOrSub:(name)=>dispatch(correctOrSub(name)),
+    reduxUpdateMaster:(move, flag)=>dispatch(reduxUpdateMaster(move, flag)),
+    removeFromMLRedux:(delArray)=>dispatch(removeFromMLRedux(delArray)),
+    endGameMLRedux:(temp)=>dispatch(endGameMLRedux(temp)),
+    winWinRedux:(prefCourt, winWin)=>dispatch(winWinRedux(prefCourt, winWin)),
+    arenaCorOrSub:(remplayer, tempNum, team)=>dispatch(arenaCorOrSub(remplayer, tempNum, team)),
+    updatePlayerNums:(current, team, mlSize)=>dispatch(updatePlayerNums(current, team, mlSize)),
+    addSet:(current, team, sets)=>dispatch(addSet(current, team, sets))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MainActivity);
 

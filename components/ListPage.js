@@ -11,18 +11,20 @@ import{
   ScrollView,
 	KeyboardAvoidingView,
 } from 'react-native';
+import configureStore from './store';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator} from 'react-navigation-stack'; 
 import Setup from './Setup'
 import SelectMultiple from 'react-native-select-multiple';
+import { connect } from 'react-redux';
+import { addToCompList, delFromCompList, setPrefRedux, removeRedux } from '../store/actions';
+import { createStore, combineReducers } from 'redux';
 
-export default class ShowList extends React.Component {
+class ShowList extends React.Component {
   constructor(props) {
        super(props);
        this.state = {
-         masterList : this.props.navigation.getParam("list", "blank"),
          courtArr: this.props.navigation.getParam("courtArr", "blank"),
-         completeList : this.props.navigation.getParam("compList", "blank"),
            modalVisible: false,
            modalPrefVisible: false,
            toRemove: [],
@@ -35,12 +37,12 @@ export default class ShowList extends React.Component {
        };
      }
 
-onSelectionsChange = (toRemove) => {
+onSelectionsChange=(toRemove)=> {
     // selectedFruits is array of { label, value }
     this.setState({ toRemove })
   }
 
-onSelectionsChangePref = (prefCourt) => {
+onSelectionsChangePref=(prefCourt)=> {
     this.setState({ prefCourt })
   }
 
@@ -48,44 +50,22 @@ temp =()=>{
   this.state.modalVisible = false;
 }
 
-AddPlayer=()=>{
+GoToEdits=()=>{
+    this.props.navigation.navigate("EditNames", { courtArr: this.state.courtArr});  }
 
-}
-
-  GoToEdits=()=>{
-    // console.log("GoToEdits")
-    this.props.navigation.navigate("EditNames", {arena: this.state.Arena,
-     list: this.state.masterList, courtArr: this.state.courtArr, compList: this.state.completeList});  
-  }
-
-
-removePlayers = () =>{
+removePlayers=()=>{
   let removePlayer = [];
   let removeComp = [];
-
   for ( i in this.state.toRemove){
     removePlayer.push(this.state.toRemove[i]['label'])
     removeComp.push(this.state.toRemove[i]['label'].toLowerCase())
   }
+  this.props.del(removeComp)
+  this.props.removeRedux(removePlayer)
 
-  for (k in removeComp){
-    if (removeComp[k] in this.state.completeList){
-      delete this.state.completeList[removeComp[k]]
-    }}
+  this.setState({completeList: this.state.completeList})  
 
-  for(i=0; i<this.state.masterList.length ; i++){
-    for (j=0; j<this.state.masterList[i][1].length; j++){
-      if (removePlayer.includes(this.state.masterList[i][1][j]['player'])){
-        this.state.masterList[i][1].splice(j,1)
-        j--;
-    }}
-    if (this.state.masterList[i][1].length == 0){
-      this.state.masterList.splice(i,1);
-      i--;
-    }
-  } 
-  this.setState({masterList: this.state.masterList})
-  this.setState({completeList: this.state.completeList})   
+   // console.log("CLIST",this.state.completeList)
 }
 
   setModalVisible=(prop, val, p)=> new Promise((resolve)=> {
@@ -98,7 +78,7 @@ removePlayers = () =>{
   getNames=()=>{
     r = [];
     c = 0;
-     Object.values(this.state.masterList).map(function(val) {
+     Object.values(configureStore.getState().masterListReducer).map(function(val) {
         for (j in val[1]){
           r.push(val[1][j]['player']);
           c += 1;
@@ -115,17 +95,13 @@ removePlayers = () =>{
   }
 
 setPrefMaster=()=>{
-  if (this.state.prefCourt.length == 0){
-    return 0
-  } 
-  var t = this.state.prefCourt[0]['value'] 
-  this.state.masterList[this.state.prefPos][0]['pref'] = t[t.length - 1]
+  this.props.setPrefRedux(this.state.prefCourt, this.state.prefPos)
   this.setState({prefPos: '' })  
   this.setState({prefCourt:[] })
 }
 
 render() {
-let currentList = Object.values(this.state.masterList).map(function(vals, i) {
+let currentList = Object.values(configureStore.getState().masterListReducer).map(function(vals, i) {
       var t= {} ;
       for (val in vals[1]){
         if (t["key"] === undefined){
@@ -171,8 +147,6 @@ return (
       </View>
 </Modal>
 
-
-
 <TouchableHighlight onPress={()=> {
     this.setModalVisible('modalVisible',!this.state.modalVisible, "Choose Player(s) To Remove"); }}
      style={styles.buttons}>  
@@ -185,18 +159,15 @@ return (
     <Text style={{fontSize:33, color:"white"}}>Edit</Text>  
 </TouchableHighlight>
 
-
 <Modal 
     visible={this.state.modalPrefVisible}>
       <View style={styles.modalStyle}>
         <Text style={{fontSize:30, backgroundColor:'orange', color:'white'}}>{this.state.title} </Text>
         <SelectMultiple
-
           items={this.state.courtArr}
           maxSelect = {1}
           selectedItems={ this.state.prefCourt }
           onSelectionsChange={this.onSelectionsChangePref} />
-
         <TouchableHighlight   onPress={ () => {
             this.setModalVisible('modalPrefVisible',!this.state.modalPrefVisible, "something").then(this.setPrefMaster() ); 
           }} style={styles.modalButtons}>
@@ -209,7 +180,6 @@ return (
     );
   }
 }
-
 
 const styles = StyleSheet.create({
   header: {
@@ -263,3 +233,24 @@ const styles = StyleSheet.create({
   },
 
 });	
+
+
+const mapStateToProps = (state) => {
+  // console.log("STATE : ", state);
+  return{
+    playerlists: state.compListReducer.origCompList,
+    reduxMasterList: state.masterListReducer.reduxMasterList
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return{
+    add:(data)=>dispatch(addToCompList(data)),
+    del:(data)=>dispatch(delFromCompList(data)),
+    removeRedux:(removePlayer)=>dispatch(removeRedux(removePlayer)),
+    setPrefRedux:(prefCourt, prefPos)=>dispatch(setPrefRedux(prefCourt, prefPos))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ShowList);
+

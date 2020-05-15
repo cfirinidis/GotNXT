@@ -30,7 +30,7 @@ export default class Logo extends React.Component {
      }
  
   tempBridge=()=>{
-    this.props.navigation.navigate("Main");  
+    this.props.navigation.navigate("Setup");  
   }
 
   registerUser=()=>{
@@ -38,7 +38,7 @@ export default class Logo extends React.Component {
     if(this.state.email === '' && this.state.password === ''){
       Alert.alert("Enter Email And Password To Sign Up")
     }else{
-      console.log("BUTTON PRESSED", this.state.email, this.state.password)
+      // console.log("BUTTON PRESSED", this.state.email, this.state.password)
       this.setState({
         loading: true,
       })
