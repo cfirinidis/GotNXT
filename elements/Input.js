@@ -1,12 +1,8 @@
 import React from 'react';
 import{
 	StyleSheet,
-	Text,
-	Alert,
 	View,
-	Button,
 	TextInput,
-	TouchableOpacity,
 } from 'react-native';
 
 const Input = ({onChangeText, placeholder,secureTextEntry, value})=>{

@@ -2,29 +2,23 @@ import React from 'react';
 import{
 	StyleSheet,
 	Text,
-	Alert,
 	View,
-	Button,
   Modal,
 	FlatList,
   TouchableHighlight,
   ScrollView,
-	KeyboardAvoidingView,
 } from 'react-native';
 import configureStore from './store';
-import { createAppContainer } from 'react-navigation';
-import { createStackNavigator} from 'react-navigation-stack'; 
-import Setup from './Setup'
 import SelectMultiple from 'react-native-select-multiple';
 import { connect } from 'react-redux';
 import { addToCompList, delFromCompList, setPrefRedux, removeRedux } from '../store/actions';
-import { createStore, combineReducers } from 'redux';
 
 class ShowList extends React.Component {
   constructor(props) {
        super(props);
        this.state = {
          courtArr: this.props.navigation.getParam("courtArr", "blank"),
+         courtName: this.props.navigation.getParam("courtName", "blank"),
            modalVisible: false,
            modalPrefVisible: false,
            toRemove: [],
@@ -51,7 +45,7 @@ temp =()=>{
 }
 
 GoToEdits=()=>{
-    this.props.navigation.navigate("EditNames", { courtArr: this.state.courtArr});  }
+    this.props.navigation.navigate("EditNames", { courtArr: this.state.courtArr, courtName: this.state.courtName});  }
 
 removePlayers=()=>{
   let removePlayer = [];

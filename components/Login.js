@@ -4,35 +4,27 @@ import{
 	Text,
 	Alert,
 	View,
-	Button,
-	TextInput,
 	KeyboardAvoidingView,
 	TouchableOpacity,
   ActivityIndicator,
-	AsyncStorage,
-	Image,
 } from 'react-native';
-import configureStore from './store';
-
 import { connect } from 'react-redux';
 import { loginUser } from '../store/actions';
-import { createStore, combineReducers } from 'redux';
-
-
+import { readCourts } from '../store/actions';
 import Input from '../elements/Input';
 import firebase from '../elements/Firebase';
-import { createAppContainer } from 'react-navigation';
-import { createStackNavigator} from 'react-navigation-stack'; 
 
 
-class Logo extends React.Component {
+
+class Login extends React.Component {
   constructor(props) {
        super(props);
        this.state = {
-         email: '',
-         password: '',
+         email: 'a@aa.com',
+         password: 'testing',
          authenticating:false,
-         errorMessage: ''
+         errorMessage: '',
+         courts:[]
        };
      }
 
@@ -40,18 +32,38 @@ class Logo extends React.Component {
     this.props.navigation.navigate("SignUp");  
   }
  
+  GoToUser=()=>{
+    this.props.navigation.navigate("User");  
+  }
+
 
    dumbness=()=>{
     console.log("MORE TALKING")  
     
   }
-  // componentWillMount() {
-  //   const firebaseConfig = {
-  //     apiKey: ' AIzaSyDNKMFfGnHZ9jANyVN0QJyD93lb35Q7Awo',
-  //     authDomain: 'gotnxt.firebaseapp.com ',
-  //   }
-  //   firebase.initializeApp(firebaseConfig); 
-  // }
+
+  database=()=>{
+      let x = this.state.email
+       firebase.database().ref('users/'+ this.state.password.toString()).update({email: this.state.email})
+       firebase.database().ref('new/'+ "emailz").update({handle:this.state.password})
+
+    
+  }
+
+ 
+      // console.log("TEfffff ",DUMB)
+
+
+      // db.ref('/todos').on('value', querySnapShot => {
+      //   let data = querySnapShot.val() ? querySnapShot.val() : {};
+      //   let todoItems = {...data};
+      //   this.setState({
+      //     todos: todoItems,
+      //   });
+      // });
+   
+  
+
 
   onPressSignIn(){
     // console.log("Button Pressed")
@@ -65,21 +77,23 @@ class Logo extends React.Component {
     firebase
     .auth().signInWithEmailAndPassword(this.state.email, this.state.password)
     .then((res)=>{
-      // console.log("USER LOGGED IN")
+    // console.log("USER LOGGED IN", res)
       this.setState({
         authenticating: false,
         email: '',
         password: ''
       })
-      
-      console.log("ANYTHING", this.state.email)
-      this.dumbness()
-      this.props.loginUser(this.state.email, this.state.password)
-      this.props.navigation.navigate("Setup")
-    })
+      Promise.all([
+        firebase.database().ref('users/').set({email: this.state.email}),
+      this.props.loginUser(res['user']['email'], res['user']['appName'])
+       ])
+    }).then(()=>{this.props.navigation.navigate("User")})
+    // console.log("TEST")
+    
+
     .catch((error)=> {this.setState({ 
       errorMessage: error.message,
-      email:'',
+      email: '',
       password:'',
       authenticating: false
       })
@@ -91,12 +105,22 @@ class Logo extends React.Component {
 
 renderCurrentState(){
   if(this.state.authenticating){
+    console.log("Thinking")
     return(
       <View style={styles.waiting}>
         <ActivityIndicator size='large' color='blue'/>
       </View>
       )
     }
+    let test = {}    
+    var courts = firebase.database().ref('/courts');
+    // console.log( firebase.database().ref('courts/').once('value', snapshot) )
+    courts.once('value', function (snapshot) {
+      // console.log(snapshot.key, "*****", snapshot.val(), Object.keys(snapshot.val()))
+      test = snapshot.val()
+      // console.log("TEST", test)
+  });
+    // console.log("TEST", test)
 
     return(
       <KeyboardAvoidingView>
@@ -120,9 +144,17 @@ renderCurrentState(){
              <Text style={styles.buttonText}>LOGIN</Text>
            </TouchableOpacity>
 
+                     <TouchableOpacity style={styles.button} onPress={this.database.bind(this)}>
+             <Text style={styles.buttonText}>DATABASE</Text>
+           </TouchableOpacity> 
+
            <TouchableOpacity style={styles.login} onPress={this.GoToSignUp.bind(this)}>
              <Text style={styles.login}>Don't Have an account?</Text>
              <Text style={styles.login}>SIGN UP!</Text>
+           </TouchableOpacity>
+
+            <TouchableOpacity style={styles.login} onPress={this.GoToUser.bind(this)}>
+             <Text style={styles.login}>User Page</Text>
            </TouchableOpacity>
 
       </View>
@@ -134,7 +166,7 @@ renderCurrentState(){
 render(){
   return(
     <View style={styles.container}>
-      {this.renderCurrentState()}
+       {this.renderCurrentState()}
     </View>
     );
   }
@@ -186,17 +218,21 @@ const mapStateToProps = (state) => {
     playerlists: state.compListReducer.origCompList,
     shooterRedux: state.shooterReducer.shooter,
     reduxMasterList: state.masterListReducer.reduxMasterList,
-    arenaRedux: state.arenaReducer.arenaRedux,
+    arenaRedux: state.arenaReducer.arenaReduxx,
+    dbcourts: state.readCourtReducer.dbcourts,
     // loginUser: state.userReducer.user
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return{
-        loginUser:(username, email)=>dispatch(loginUser(username, email))
+        loginUser:(username, email)=>dispatch(loginUser(username, email)),
+        readCourts:(courtName)=>dispatch(readCourts(courtName))
 
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Logo);
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
+
+
 

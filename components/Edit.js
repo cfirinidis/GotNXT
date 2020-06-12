@@ -4,21 +4,14 @@ import{
 	Text,
 	Alert,
 	View,
-	Button,
 	TextInput,
   Modal,
   TouchableHighlight,
   ScrollView,
-	KeyboardAvoidingView,
 } from 'react-native';
-import { createAppContainer } from 'react-navigation';
-import { createStackNavigator} from 'react-navigation-stack'; 
-import Setup from './Setup'
-import SelectMultiple from 'react-native-select-multiple';
 import configureStore from './store';
 import { connect } from 'react-redux';
 import { editCompList, editMSRedux } from '../store/actions';
-import { createStore, combineReducers } from 'redux';
 
 
 class EditNames extends React.Component {
@@ -26,6 +19,7 @@ class EditNames extends React.Component {
        super(props);
        this.state = {
          courtArr: this.props.navigation.getParam("courtArr", "blank"),
+         courtName: this.props.navigation.getParam("courtName", "blank"),
            modalInputVisible: false,
            title: '',
            name: '',
@@ -66,7 +60,7 @@ editName=()=>{
   }
 
   // console.log("WRONGSAN", wrongSan)
-  this.props.edit(san, wrongSan)
+  this.props.edit(san, wrongSan, this.state.courtName)
   this.props.editMSRedux(this.state.name, this.state.wrongName)
   let alertName = this.state.name
     setTimeout( ()=>{
@@ -78,6 +72,7 @@ editName=()=>{
 
 render() {
 let playerList = this.getNames()
+console.log(playerList)
 
 return (
   <ScrollView>
@@ -174,7 +169,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return{
-    edit:(right, wrong)=>dispatch(editCompList(right, wrong)),
+    edit:(right, wrong, courtName)=>dispatch(editCompList(right, wrong, courtName)),
     editMSRedux:(right, wrong)=>dispatch(editMSRedux(right, wrong))
   }
 }

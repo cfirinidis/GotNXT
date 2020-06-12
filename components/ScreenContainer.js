@@ -1,4 +1,3 @@
-import React, { Component } from 'react';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator} from 'react-navigation-stack'; 
 import MainActivity from './Main'; 
@@ -8,7 +7,9 @@ import PopUp from './PopUp';
 import ModalExample from './Modal'
 import EditNames from './Edit'
 import Login from './Login';
-import SignUp from './SignUp'
+import SignUp from './SignUp';
+import UserPage from './UserPage';
+import UserList from './UserList';
 
 
 const MainNavigator = createStackNavigator({
@@ -35,6 +36,12 @@ const MainNavigator = createStackNavigator({
     },
     Modal: {
         screen: ModalExample,
+    },
+    User: {
+        screen: UserPage,
+    },
+    UserList: {
+        screen: UserList,
     },
 });
 

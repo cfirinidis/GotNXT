@@ -19,30 +19,34 @@ import {CORRECT_ARENA} from './types';
 import {ADDNUMS_ARENA} from './types';
 import {ADDSET_ARENA} from './types';
 import {LOGIN_USER} from './types';
+import {READ_COURT} from './types';
 
 
-export const addToCompList = (name) =>{
+export const addToCompList = (name, courtName) =>{
 	return{
 		type: CREATE_PLAYER,
 		payload:{
 			data:name,
+			court: courtName
 		}}
 };
 
-export const delFromCompList = (names) =>{
+export const delFromCompList = (names, courtName) =>{
 	return{
 		type: DELETE_PLAYER,
 		payload:{
-			data:names
+			data:names,
+			court: courtName
 		}}
 };
 
-export const editCompList = (right, wrong) =>{
+export const editCompList = (right, wrong, courtName) =>{
 	return{
 		type: EDIT_PLAYER,
 		payload:{
 			right:right,
-			wrong:wrong
+			wrong:wrong,
+			court: courtName
 		}}
 };
 
@@ -129,11 +133,12 @@ export const setPrefRedux=(prefCourt, prefPos)=>{
 	}
 }
 
-export const editMSRedux=(right, wrong)=>{
+export const editMSRedux=(right, wrong, courtName)=>{
 	return{
 		type: EDIT_MASTER,
 		right:right,
-		wrong: wrong
+		wrong: wrong,
+		court: courtName
 	}
 }
 
@@ -170,5 +175,21 @@ export const loginUser=(username, email)=>{
 		type: LOGIN_USER,
 		username: username,
 		email, email
+	}
+}
+
+export const addSet=(current, team, sets)=>{
+	return{
+		type: ADDSET_ARENA,
+		current: current,
+		team, team,
+		sets, sets
+	}
+}
+
+export const readCourts=(courtName)=>{
+	return{
+		type: READ_COURT,
+		courtName: courtName
 	}
 }

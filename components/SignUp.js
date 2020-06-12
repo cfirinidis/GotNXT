@@ -4,28 +4,22 @@ import{
 	Text,
 	Alert,
 	View,
-	Button,
-	TextInput,
   ActivityIndicator,
 	KeyboardAvoidingView,
 	TouchableOpacity,
-	AsyncStorage,
-	Image,
 } from 'react-native';
 import Input from '../elements/Input';
 import firebase from '../elements/Firebase';
-import { createAppContainer } from 'react-navigation';
-import { createStackNavigator} from 'react-navigation-stack'; 
 
-export default class Logo extends React.Component {
+export default class SignUp extends React.Component {
   constructor(props) {
        super(props);
        this.state = {
          email: '',
-         password: '',
+         password: 'testing',
          username:'',
-         pw2:'',
-         laoding: false
+         pw2:'testing',
+         loading: false
        };
      }
  
@@ -33,22 +27,50 @@ export default class Logo extends React.Component {
     this.props.navigation.navigate("Setup");  
   }
 
-  registerUser=()=>{
 
+// var ref = new Firebase("https://<YOUR-FIREBASE-APP>.firebaseio.com");
+// ref.createUser({
+//   email    : emailAddress,
+//   password : password
+// }, function(error, authData) {
+//   if (error) {
+//     console.log("Error creating user:", error);
+//   } else {
+//     // save the user's profile into the database so we can list users,
+//     // use them in Security and Firebase Rules, and show profiles
+//     ref.child("users").child(authData.uid).set({
+//       provider: authData.provider,
+//       name: userName
+//     });
+//   }
+// });
+
+
+
+  registerUser=()=>{
+    console.log("Top", this.state.email, this.state.username)
     if(this.state.email === '' && this.state.password === ''){
       Alert.alert("Enter Email And Password To Sign Up")
-    }else{
+    }
+    else if(this.state.password != this.state.pw2){
+      Alert.alert("Passwords do not match")
+    }
+    else{
       // console.log("BUTTON PRESSED", this.state.email, this.state.password)
       this.setState({
         loading: true,
       })
+      
       firebase
       .auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
       .then((res)=>{
         res.user.updateProfile({
-          username: this.state.username
+          displayName: this.state.username
         })
         console.log("User Registered")
+        Promise.all([
+        firebase.database().ref('users/'+ this.state.username.toString()).update({email: this.state.email}), 
+        firebase.database().ref('users/'+ this.state.username).update({handle:this.state.username}) ]).then( ()=>{
         this.setState({
           loading: false,
           username: '',
@@ -56,8 +78,10 @@ export default class Logo extends React.Component {
           password: '',
           pw2: ''
         })
-        this.props.navigation.navigate('Main')
+      
+         this.props.navigation.navigate('User') 
       })
+    })
       .catch(error=> {
         this.setState({ 
           errorMessage: error.message,

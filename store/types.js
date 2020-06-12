@@ -19,4 +19,5 @@ export const CORRECT_ARENA = "CORRECT_ARENA";
 export const ADDNUMS_ARENA = "ADDNUMS_ARENA";
 export const ADDSET_ARENA = "ADDSET_ARENA";
 export const LOGIN_USER = "LOGIN_USER";
+export const READ_COURT = "READ_COURT";
 

@@ -1,35 +1,25 @@
 import React, { Component }  from 'react';
 import{
-  StyleSheet,
   Text,
   Alert,
   View,
-  Button,
-  TextInput,
   FlatList,
   ScrollView,
   Platform,
   KeyboardAvoidingView,
   TouchableHighlight,
-  TouchableOpacity,
   AsyncStorage,
   Modal,
 } from 'react-native';
 import configureStore from './store';
 import { connect } from 'react-redux';
 import { addToCompList, delFromCompList , addToShooters, resetShooters, addToReduxMaster,
-shootML, correctOrSub, reduxUpdateMaster, removeFromMLRedux, extractFromMLRedux,
+shootML, correctOrSub, reduxUpdateMaster, removeFromMLRedux,
 endGameMLRedux, arenaCorOrSub, updatePlayerNums, addSet, winWinRedux} from '../store/actions';
-import { createStore, combineReducers } from 'redux';
-import { createAppContainer } from 'react-navigation';
-import { createStackNavigator} from 'react-navigation-stack'; 
-import Setup from './Setup';
-import PopUp from './PopUp';
 import styles from './mainStyleFile'
 import ListAndStartButton from '../elements/ListAndStartButton';
 import EnterName from '../elements/EnterName';
 import NameBox from '../elements/NameBox';
-import CustomPromptComponent from './Modal';
 import SelectMultiple from 'react-native-select-multiple';
 
 
@@ -65,6 +55,7 @@ class MainActivity extends React.Component {
          cap: this.props.navigation.getParam("cap", "blank"),
          courtsNum: this.props.navigation.getParam("courtsNum", "blank"),
          courtArr: this.props.navigation.getParam("courtArr", "blank"),
+         courtName: this.props.navigation.getParam("courtName", "blank"),
          courtArrPref: [],
          current: 0,
        };
@@ -79,7 +70,7 @@ class MainActivity extends React.Component {
       else{
         Alert.alert("Please Enter A Name")
       }
-      this.props.add(san) 
+      this.props.add(san, this.state.courtName) 
       this.setState({Name:''})
       this.setState({tempNameArray: this.state.tempNameArray})
       this.setState({totalPlayers: this.state.totalPlayers + 1})
@@ -96,7 +87,7 @@ class MainActivity extends React.Component {
   }
 
    clearList=()=>{
-      this.props.del(this.state.tempNameArray)
+      this.props.del(this.state.tempNameArray, this.state.courtName)
       this.setState({tempNameArray:[]})
     }
 
@@ -128,7 +119,8 @@ class MainActivity extends React.Component {
     }//good
 
   GoToLists=()=>{
-    this.props.navigation.navigate("List", {list: this.state.masterList, courtArr: this.state.courtArr}); }
+    this.props.navigation.navigate("List", {list: this.state.masterList, courtArr: this.state.courtArr,
+          courtName: this.state.courtName}); }
    
   GoToModal=()=>{
     this.props.navigation.navigate("Modal");
@@ -208,6 +200,10 @@ updateMaster=()=>{
         set.push(configureStore.getState().masterListReducer[names][1][name])
         }
     return set
+  }
+
+  print=()=>{
+    console.log("PRINT SOMETHING ***********************")
   }
 
   saveData(){
@@ -597,8 +593,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return{
-    add:(data)=>dispatch(addToCompList(data)),
-    del:(data)=>dispatch(delFromCompList(data)),
+    add:(data, courtName)=>dispatch(addToCompList(data, courtName)),
+    del:(data, courtName)=>dispatch(delFromCompList(data, courtName)),
     addShooter:(data)=>dispatch(addToShooters(data)),
     resetShooters:()=>dispatch(resetShooters()),
     addToReduxMaster:(data)=>dispatch(addToReduxMaster(data)),

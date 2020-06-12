@@ -8,10 +8,7 @@ let user = [{
 
 const loginUser=(user=[], action)=>{
 	if (action.type === "LOGIN_USER"){
-
-		console.log("LOGIN_USER", action)
 		user['email'] = action.email
-		console.log(user)
 		return user
 	}
 return user

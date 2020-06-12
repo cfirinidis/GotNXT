@@ -4,22 +4,16 @@ import{
 	Text,
 	Alert,
 	View,
-	Button,
 	TextInput,
 	KeyboardAvoidingView,
 	TouchableOpacity,
   TouchableHighlight,
 	AsyncStorage,
-	Image,
   Modal,
 } from 'react-native';
 import configureStore from './store';
 import { connect } from 'react-redux';
 import { setupArena } from '../store/actions';
-import { createStore, combineReducers } from 'redux';
-
-import { createAppContainer } from 'react-navigation';
-import { createStackNavigator} from 'react-navigation-stack'; 
 import SelectMultiple from 'react-native-select-multiple';
 
 class Setup extends React.Component {
@@ -36,6 +30,7 @@ class Setup extends React.Component {
          title:'',
          gamesStarted: [],
          numGamesStarted: [],
+         courtName: this.props.navigation.getParam("courtName", "blank"),
        };
      }
 
@@ -84,7 +79,7 @@ class Setup extends React.Component {
       this.setState({courtArr:this.state.courtArr});
 
       this.props.navigation.navigate("MainActivity", { cap:this.state.capacity, 
-      courtsNum:this.state.courtsNum, courtArr: this.state.courtArr});
+      courtsNum:this.state.courtsNum, courtArr: this.state.courtArr, courtName: this.state.courtName});
     }
     catch(error){
       console.log("ERROR")
@@ -110,7 +105,7 @@ class Setup extends React.Component {
       this.state.courtArr.push("Waiting : "+ 'W')
       this.props.setupArena(this.state.courtsNum, this.state.capacity, this.state.gamesStarted, answer)
       this.props.navigation.navigate("MainActivity", { cap:this.state.capacity, 
-        courtsNum:this.state.courtsNum, courtArr: this.state.courtArr});      
+        courtsNum:this.state.courtsNum, courtArr: this.state.courtArr, courtName: this.state.courtName});      
   }//end of func
 
   async SetupCourt(){
@@ -132,7 +127,7 @@ class Setup extends React.Component {
     else if(configureStore.getState().arenaReducer.length>0){
       Alert.alert("Already Setup, to erase press RESET")
       this.props.navigation.navigate("MainActivity", { cap:this.state.capacity, 
-      courtsNum:this.state.courtsNum, courtArr: this.state.courtArr });
+      courtsNum:this.state.courtsNum, courtArr: this.state.courtArr, courtName: this.state.courtName });
     }
     else{
       let inProgress = await AsyncAlert("Have Games Started?", "")
@@ -154,6 +149,7 @@ class Setup extends React.Component {
    		<View style={styles.wrapper}>
       <KeyboardAvoidingView>    
       <Text style={styles.title}> GotNXT </Text>
+      <Text style={styles.title}> {this.state.courtName} </Text>
             <TextInput
               placeholderTextColor= "purple" 
               underlineColorAndroid="gray" 

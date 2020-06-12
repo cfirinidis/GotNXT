@@ -2,11 +2,8 @@ import React from 'react';
 import{
   StyleSheet,
   Text,
-  Alert,
   View,
-  Button,
   FlatList,
-  TextInput,
   TouchableOpacity,
 } from 'react-native';
 

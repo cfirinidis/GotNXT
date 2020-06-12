@@ -1,4 +1,4 @@
-## GotNXT solves the issues associated with pick-up basketball queuing, primarily in situations where there is more than one game going on at a time.
+expo start## GotNXT solves the issues associated with pick-up basketball queuing, primarily in situations where there is more than one game going on at a time.
 
 
 <p float='left'>

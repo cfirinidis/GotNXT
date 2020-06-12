@@ -4,6 +4,7 @@ import shooterReducer from '../store/shooterReducer';
 import masterListReducer from '../store/masterListReducer';
 import arenaReducer from '../store/arenaReducer';
 import loginUser from '../store/userReducer';
+import readCourtReducer from "../store/readCourtReducer";
 
 
 
@@ -14,7 +15,8 @@ const ourDepartment = combineReducers({
 	shooterReducer: shooterReducer,
 	masterListReducer: masterListReducer,
 	arenaReducer: arenaReducer,
-	loginUser: loginUser
+	loginUser: loginUser,
+	readCourtReducer: readCourtReducer
 });
 
 const configureStore=createStore(ourDepartment);
