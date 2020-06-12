@@ -37,34 +37,6 @@ class Login extends React.Component {
   }
 
 
-   dumbness=()=>{
-    console.log("MORE TALKING")  
-    
-  }
-
-  database=()=>{
-      let x = this.state.email
-       firebase.database().ref('users/'+ this.state.password.toString()).update({email: this.state.email})
-       firebase.database().ref('new/'+ "emailz").update({handle:this.state.password})
-
-    
-  }
-
- 
-      // console.log("TEfffff ",DUMB)
-
-
-      // db.ref('/todos').on('value', querySnapShot => {
-      //   let data = querySnapShot.val() ? querySnapShot.val() : {};
-      //   let todoItems = {...data};
-      //   this.setState({
-      //     todos: todoItems,
-      //   });
-      // });
-   
-  
-
-
   onPressSignIn(){
     // console.log("Button Pressed")
     if(this.state.email === '' && this.state.password === ''){
@@ -144,17 +116,8 @@ renderCurrentState(){
              <Text style={styles.buttonText}>LOGIN</Text>
            </TouchableOpacity>
 
-                     <TouchableOpacity style={styles.button} onPress={this.database.bind(this)}>
-             <Text style={styles.buttonText}>DATABASE</Text>
-           </TouchableOpacity> 
-
-           <TouchableOpacity style={styles.login} onPress={this.GoToSignUp.bind(this)}>
-             <Text style={styles.login}>Don't Have an account?</Text>
-             <Text style={styles.login}>SIGN UP!</Text>
-           </TouchableOpacity>
-
-            <TouchableOpacity style={styles.login} onPress={this.GoToUser.bind(this)}>
-             <Text style={styles.login}>User Page</Text>
+           <TouchableOpacity style={styles.signUp} onPress={this.GoToSignUp.bind(this)}>
+             <Text style={{fontSize:26, color:'#1c313a'}}>SIGN UP!</Text>
            </TouchableOpacity>
 
       </View>
@@ -184,13 +147,22 @@ const styles = StyleSheet.create({
   },
   text:{
     fontSize:32,
+    fontWeight: 'bold',
     textAlign:"center",
     color:'white',
   },
-  login:{
-    fontSize:20,
+  signUp:{
     textAlign:"center",
-    color:'white',
+    backgroundColor:'orange',
+    width:"40%",
+    height: 45,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 6,
+    borderColor:'#1c313a',
+    borderRadius: 50,
+    left: '30%',
+    top: 25,
   },
   button: {
     backgroundColor:'#1c313a',
@@ -228,7 +200,6 @@ const mapDispatchToProps = (dispatch) => {
   return{
         loginUser:(username, email)=>dispatch(loginUser(username, email)),
         readCourts:(courtName)=>dispatch(readCourts(courtName))
-
   }
 }
 

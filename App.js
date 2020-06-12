@@ -1,10 +1,4 @@
 import React, { Component } from 'react';
-import { 
-  Platform, 
-  StyleSheet, 
-  AsyncStorage,
-  Text, 
-  View } from 'react-native';
 import MainNaivigator from './components/ScreenContainer';
 import {Provider} from 'react-redux';
 import configureStore from './components/store';

@@ -18,12 +18,12 @@ class EditNames extends React.Component {
   constructor(props) {
        super(props);
        this.state = {
-         courtArr: this.props.navigation.getParam("courtArr", "blank"),
-         courtName: this.props.navigation.getParam("courtName", "blank"),
-           modalInputVisible: false,
-           title: '',
-           name: '',
-           wrongName: ''
+          courtArr: this.props.navigation.getParam("courtArr", "blank"),
+          courtName: this.props.navigation.getParam("courtName", "blank"),
+          modalInputVisible: false,
+          title: '',
+          name: '',
+          wrongName: ''
        };
      }
 
@@ -53,7 +53,7 @@ editName=()=>{
   let wrongSan = this.state.wrongName.replace(/\s/g, '').toLowerCase()
   if (san.length == 0 || configureStore.getState().compListReducer.includes(san)){
     setTimeout(()=>{
-      Alert.alert("No Name Was Entered")
+      Alert.alert("Name Already Exists or No Name Entered")
     }, 1);
     this.setState({name:''})
     return 0

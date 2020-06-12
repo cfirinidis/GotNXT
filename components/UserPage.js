@@ -88,10 +88,6 @@ class UserPage extends React.Component {
    
   }
 
-// PRINTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
-                print=()=>{
-                  console.log("PRINT")
-                }
 
 courtSelected=(item)=>{
 console.log("coiurt selected ",item)
@@ -148,7 +144,7 @@ this.props.navigation.navigate("UserList", {courtName: this.state.courtName} )
              <Text style={styles.buttonText}>ADD NAMES</Text>
            </TouchableOpacity>
 
-        <Text style={{fontSize:24, textAlign:'center'}}>OPEN COURTS</Text>
+        <Text style={{fontSize:24, textAlign:'center', backgroundColor:'white'}}>ACTIVE COURTS</Text>
            <View>
              {this.state.courts.map((item, key)=>(
                 <Text  key={key} style={{fontSize:22, marginBottom: 10, color: 'pink', marginLeft:'15%'}}
