@@ -27,37 +27,37 @@ class MainActivity extends React.Component {
   constructor(props) {
        super(props);
        this.state = {
-          hitShot: [],
-          diff: 0,
-          title: '',
-          command: '',
-          remPlayer: [],
-          allAvailable: [],
-          curPlayersA: {},
-          curPlayersB: {},
-          tempCourt: [],
-          winnersW: [],
-          move: [], 
-          team: '',
-          tempNum: 0,
-          repFlag: false,
-          anotherCourt: [],
-          selectedItems: [],
-          modalVisible: false,
-          modalPlayerVisible: false,
-          modalRepPlayerVisible: false, 
-          modalPrefVisible: false,
-          restNum: 0,
-          Name: '',
-          prefCourt: [],
-          totalPlayers:0,
-          tempNameArray : [], 
-         cap: this.props.navigation.getParam("cap", "blank"),
-         courtsNum: this.props.navigation.getParam("courtsNum", "blank"),
-         courtArr: this.props.navigation.getParam("courtArr", "blank"),
-         courtName: this.props.navigation.getParam("courtName", "blank"),
-         courtArrPref: [],
-         current: 0,
+        hitShot: [],
+        diff: 0,
+        title: '',
+        command: '',
+        remPlayer: [],
+        allAvailable: [],
+        curPlayersA: {},
+        curPlayersB: {},
+        tempCourt: [],
+        winnersW: [],
+        move: [], 
+        team: '',
+        tempNum: 0,
+        repFlag: false,
+        anotherCourt: [],
+        selectedItems: [],
+        modalVisible: false,
+        modalPlayerVisible: false,
+        modalRepPlayerVisible: false, 
+        modalPrefVisible: false,
+        restNum: 0,
+        Name: '',
+        prefCourt: [],
+        totalPlayers:0,
+        tempNameArray : [], 
+        cap: this.props.navigation.getParam("cap", "blank"),
+        courtsNum: this.props.navigation.getParam("courtsNum", "blank"),
+        courtArr: this.props.navigation.getParam("courtArr", "blank"),
+        courtName: this.props.navigation.getParam("courtName", "blank"),
+        courtArrPref: [],
+        current: 0,
        };
      }
 
@@ -464,6 +464,11 @@ Game = Game.filter(function(item){
    return (
       <KeyboardAvoidingView style={styles.wrapper}>
       <ScrollView>
+      <View >
+          <Text style={styles.topInfo}> Court Name: 
+          <Text style={{color: "black", fontSize:20}}> { this.state.courtName}</Text>
+        </Text>
+      </View>
       <View>
           <EnterName onPress={this.AddItemsToArray.bind(this)} 
               onChangeText={(Name) => this.setState({ Name})} value={this.state.Name}>ADD +</EnterName>

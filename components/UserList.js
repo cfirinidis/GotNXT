@@ -69,9 +69,19 @@ export default class UserList extends React.Component {
       <KeyboardAvoidingView >
       <View >
 
-          <Text style={styles.text}> LIST PAGE </Text>
-          <Text style={styles.text}> HANDLE: {user.providerData[0]['displayName']}   </Text>
-          <Text style={styles.text}> COURT NAME: {this.state.courtName} </Text>
+          <View style={styles.info}>
+          <Text style={styles.text}>
+             EMAIL: 
+              <Text style={{color:'black'}}> { user.providerData[0]['email'] }
+              </Text>
+          </Text>
+          <Text style={styles.text}>
+             HANDLE:
+              <Text style={{color:'white'}}> { user.providerData[0]['displayName']} 
+              </Text>
+            </Text>
+
+          </View>
 
           <TouchableOpacity style={styles.button} onPress={this.tempBridge.bind(this)}>
              <Text style={styles.login}> BRIDGE  </Text>
@@ -115,14 +125,17 @@ render(){
 const styles = StyleSheet.create({
   container : {
     flex: 1,
-    justifyContent:'center',
     backgroundColor:'gray',
     width: "100%"
   },
+  info:{
+    backgroundColor: 'lightgray',
+    width: '50%',
+  },
   text:{
-    fontSize:32,
-    textAlign:"center",
-    color:'white',
+    fontSize:24,
+    textAlign:"left",
+    color:'orange',
   },
   listStyle:{
     width:'100%',

@@ -56,8 +56,7 @@ class Login extends React.Component {
         password: ''
       })
       Promise.all([
-        firebase.database().ref('users/').set({email: this.state.email}),
-      this.props.loginUser(res['user']['email'], res['user']['appName'])
+      this.props.loginUser( res['user']['displayName'], res['user']['email'])
        ])
     }).then(()=>{this.props.navigation.navigate("User")})
     // console.log("TEST")
@@ -76,6 +75,7 @@ class Login extends React.Component {
 
 
 renderCurrentState(){
+  
   if(this.state.authenticating){
     console.log("Thinking")
     return(
@@ -152,7 +152,6 @@ const styles = StyleSheet.create({
     color:'white',
   },
   signUp:{
-    textAlign:"center",
     backgroundColor:'orange',
     width:"40%",
     height: 45,
@@ -162,7 +161,7 @@ const styles = StyleSheet.create({
     borderColor:'#1c313a',
     borderRadius: 50,
     left: '30%',
-    top: 25,
+    marginVertical: 25,
   },
   button: {
     backgroundColor:'#1c313a',

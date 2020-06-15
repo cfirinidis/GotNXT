@@ -14,6 +14,7 @@ import{
 import configureStore from './store';
 import { connect } from 'react-redux';
 import { setupArena } from '../store/actions';
+import firebase from '../elements/Firebase';
 import SelectMultiple from 'react-native-select-multiple';
 
 class Setup extends React.Component {
@@ -145,11 +146,26 @@ class Setup extends React.Component {
   }
 
  render() {
+  let user = firebase.auth().currentUser;
    return (    
    		<View style={styles.wrapper}>
-      <KeyboardAvoidingView>    
+      <KeyboardAvoidingView> 
+      
+      <View style={styles.info}>
+      <Text style={styles.textBox}>
+         COURT: 
+          <Text style={{color:'black'}}> { this.state.courtName }
+          </Text>
+      </Text>
+      <Text style={styles.textBox}>
+         HANDLE:
+          <Text style={{color:'white'}}> { user.providerData[0]['displayName']} 
+          </Text>
+        </Text>
+
+      </View>
       <Text style={styles.title}> GotNXT </Text>
-      <Text style={styles.title}> {this.state.courtName} </Text>
+    
             <TextInput
               placeholderTextColor= "purple" 
               underlineColorAndroid="gray" 
@@ -174,7 +190,7 @@ class Setup extends React.Component {
       <Text style={styles.text}> DONE </Text>
     </TouchableOpacity>
 
-    <TouchableOpacity  onPress={this.resetAll.bind(this)} style={styles.button} >
+    <TouchableOpacity  onPress={this.resetAll.bind(this)} style={styles.resetButton} >
       <Text style={styles.text}> RESET </Text>
     </TouchableOpacity>
 
@@ -213,6 +229,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingLeft: 5,
     paddingRight: 5,
+    width: '100%',
     height: '100%',
 	},
   title: {
@@ -222,7 +239,6 @@ const styles = StyleSheet.create({
     color: 'gray',
     fontWeight: 'bold',
     textAlign:'center',
-    fontWeight: 'bold',
   },
   footer:{
     fontSize:14,
@@ -240,13 +256,23 @@ const styles = StyleSheet.create({
     textAlign:"center"
 	},
   text: {
-    alignSelf: 'stretch',
     fontSize:28,
     color: "black",
     fontWeight:'bold',
-    textAlign:"center"
+    textAlign:"center",
+    // justifyContent: 'center',
+    // alignItems:'center',
   },
-    button: {
+  info:{
+    backgroundColor: 'lightgray',
+    width: '50%',
+  },
+  textBox:{
+    fontSize:24,
+    textAlign:"left",
+    color:'orange',
+  },
+  resetButton: {
     fontSize: 26,
     justifyContent: 'center',
     backgroundColor: '#ffe6e4',
@@ -254,19 +280,19 @@ const styles = StyleSheet.create({
     borderColor: 'red',
     borderWidth: 4,
     borderRadius: 50,
-    marginBottom: "8%",
+    marginVertical: 12,
     width: "45%",
     height: 60,
   },
    doneButton: {
     fontSize: 26,
-     justifyContent: 'center',
+    justifyContent: 'center',
     backgroundColor: '#e8ffdd',
     borderColor: '#51ff00',
     borderWidth: 4,
     alignItems: 'center',
-     borderRadius: 50,
-    marginBottom: "8%",
+    borderRadius: 50,
+    marginVertical: 12,
     width: "45%",
     height: 60,
   },
@@ -278,7 +304,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff2d3',
     borderColor: '#ffd800',
     borderWidth: 4,
-    marginBottom: "8%",
+    marginVertical: 12,
     width: "45%",
     height: 60,
   },

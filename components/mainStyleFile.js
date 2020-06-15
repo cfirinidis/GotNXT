@@ -6,6 +6,11 @@ export default StyleSheet.create({
     backgroundColor: '#e8eae7',
     padding: "2%",
   },
+  topInfo:{
+    fontSize: 20,
+    color: 'orange',
+    fontWeight: 'bold',
+  },
    header: {
     fontSize:38,
     backgroundColor:'gray',
@@ -53,7 +58,6 @@ export default StyleSheet.create({
     color:'white', 
   },
   teamStyleA: {
-    // position:'absolute',
     backgroundColor: 'white',
     borderWidth:3,
     width: "45%",
@@ -66,13 +70,7 @@ export default StyleSheet.create({
     width: "45%",
   },
   teamAWonStyle:{
-    // flexDirection: 'row',
-    // flex:1,
-    // position:'relative',
-    // alignSelf:'flex-end',
-    // marginTop: 5,
     backgroundColor:'gray',
-    
     width:'45%',
     alignItems: 'center',
     justifyContent: 'center',
@@ -80,7 +78,7 @@ export default StyleSheet.create({
     borderWidth: 2,
     borderColor: 'black',
   },
-   teamBWonStyle:{
+  teamBWonStyle:{
     position:'relative',
     flexDirection: 'row',
     alignSelf: 'flex-end',

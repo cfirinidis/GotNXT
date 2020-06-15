@@ -15,18 +15,20 @@ export default class SignUp extends React.Component {
   constructor(props) {
        super(props);
        this.state = {
-         email: '',
+         email: 'c@conz.com',
          password: 'testing',
-         username:'',
+         handle:'',
          pw2:'testing',
-         loading: false
+         loading: false,
+         date: '06-13-2020',
+         loc: "SOME GYM",
+         currentHandles: [],
        };
-     }
- 
+  }
+
   tempBridge=()=>{
     this.props.navigation.navigate("Setup");  
   }
-
 
 // var ref = new Firebase("https://<YOUR-FIREBASE-APP>.firebaseio.com");
 // ref.createUser({
@@ -46,14 +48,62 @@ export default class SignUp extends React.Component {
 // });
 
 
+// component did mount bring in all usernames
+
+componentDidMount(){
+
+  let c = firebase.database().ref('users')
+  return c.once('value', snapshot => {
+    // console.log(snapshot.val(), snapshot.key)
+    for (i in snapshot.val()){
+      console.log("for", i)
+      this.state.currentHandles.push(i)
+    }
+      
+      
+  // this.props.readCourts(y)
+   this.setState({currentHandles: this.state.currentHandles});
+  // this.setState({loading: false})
+ 
+  });  
+
+
+}
+
+database=()=>{
+
+  if ( this.state.currentHandles.includes(this.state.handle ) ){
+    console.log("taken")
+    return 0
+  }
+  let x = this.state.email
+  firebase.database().ref('users/'+ this.state.handle.toString()).set({
+    email: this.state.email, handle:this.state.handle
+  })
+  firebase.database().ref('users/'+ this.state.handle.toString()+"/overall-record").set({
+    win:0, loss:0
+  })
+  firebase.database().ref('users/'+ this.state.handle+"/historical record/"+ this.state.date+'/'+
+  this.state.loc).set({
+    win:0, loss:0
+  })
+  
+
+  // firebase.database().ref('new/'+ "emailz").update({handle:this.state.password}) 
+}
+
+
 
   registerUser=()=>{
-    console.log("Top", this.state.email, this.state.username)
+    
     if(this.state.email === '' && this.state.password === ''){
       Alert.alert("Enter Email And Password To Sign Up")
     }
     else if(this.state.password != this.state.pw2){
       Alert.alert("Passwords do not match")
+    }
+    else if(this.state.currentHandles.contains(this.state.handle)){
+      Alert.alert("HANDLE ALREADY TAKEN")
     }
     else{
       // console.log("BUTTON PRESSED", this.state.email, this.state.password)
@@ -65,20 +115,23 @@ export default class SignUp extends React.Component {
       .auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
       .then((res)=>{
         res.user.updateProfile({
-          displayName: this.state.username
+          displayName: this.state.handle
         })
         console.log("User Registered")
         Promise.all([
-        firebase.database().ref('users/'+ this.state.username.toString()).update({email: this.state.email}), 
-        firebase.database().ref('users/'+ this.state.username).update({handle:this.state.username}) ]).then( ()=>{
+          firebase.database().ref('users/'+ this.state.handle).set({email: this.state.email}),
+          firebase.database().ref('users/'+ this.state.handle+"/overall-record").set({
+            win:0, loss:0
+          })
+      
+      ]).then( ()=>{
         this.setState({
           loading: false,
-          username: '',
+          handle: '',
           email: '',
           password: '',
           pw2: ''
         })
-      
          this.props.navigation.navigate('User') 
       })
     })
@@ -86,7 +139,7 @@ export default class SignUp extends React.Component {
         this.setState({ 
           errorMessage: error.message,
           loading: false,
-          username: '',
+          handle: '',
           password: '',
           pw2: ''
         })
@@ -96,6 +149,7 @@ export default class SignUp extends React.Component {
   }
 
   renderCurrentState(){
+    console.log("Top", this.state.email, this.state.handle, "CURRENT HNDLES",this.state.currentHandles)
     if(this.state.loading){
       return(
         <View style={styles.waiting}>
@@ -130,13 +184,17 @@ export default class SignUp extends React.Component {
               />
 
           <Input
-            placeholder= " USERNAME "
-            onChangeText={(username) => this.setState({username}) }
-            value={this.state.username}
+            placeholder= " HANDLE "
+            onChangeText={(handle) => this.setState({handle}) }
+            value={this.state.handle}
               />
 
            <TouchableOpacity style={styles.button} onPress={this.registerUser.bind(this)}>
              <Text style={styles.buttonText}>SIGN UP</Text>
+           </TouchableOpacity>
+
+           <TouchableOpacity style={styles.button} onPress={this.database.bind(this)}>
+             <Text style={styles.buttonText}>DATABASE TEST</Text>
            </TouchableOpacity>
 
 

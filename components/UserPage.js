@@ -8,6 +8,7 @@ import{
   ActivityIndicator,
 	KeyboardAvoidingView,
 	TouchableOpacity,
+  Alert,
 } from 'react-native';
 import { connect } from 'react-redux';
 import {readCourts } from '../store/actions';
@@ -25,9 +26,10 @@ class UserPage extends React.Component {
          newCourtName:'',
          loading: 'true',
           courts: [],
+          date: new Date(),
           DUMB: [],
           wrong: ["blue", "pink", 'orange'],
-          courtName: ''
+          courtName: '',
        };
      }
 
@@ -44,30 +46,13 @@ class UserPage extends React.Component {
     this.props.navigation.navigate("Setup");  
   }
 
-  onPressCreateCourt=()=>{
-    console.log("HERE PRESS", configureStore.getState().compListReducer)
-    firebase.database().ref('courts/'+ this.state.newCourtName).set({list:configureStore.getState().compListReducer})
-  }
 
   onPressAdd=()=>{
-    console.log("ADD", this.state.newCourtName)
-    firebase.database().ref('courts/' + "black" + '/list/').set([this.state.newName]) 
+    console.log("ADD", this.state.newCourtName.replace(/\s/g, '').length)
+    // firebase.database().ref('courts/' + "black" + '/list/').set([this.state.newName]) 
   }
 
   componentDidMount(){
-
-  //   downloadBikeObj() {
-  //     return Fb.staticBikes
-  //       .child(String(this.bookedBikeNo))
-  //       .once('value')
-  //       .then(bikeObj => {
-  //         this.bikeObj = bikeObj.val;
-  //         console.log("Save object is: ");
-  //         console.log(this.bikeObj);
-  //       }); // return promise
-  // }
-    // this.state.loading = true;
-    // x = configureStore.getState().readCourtReducer
       console.log("COMPONENT DID MOUNT", this.state.loading)
       let c = firebase.database().ref('courts')
       return c.once('value', snapshot => {
@@ -82,12 +67,19 @@ class UserPage extends React.Component {
       this.setState({loading: false})
      
       });
-      this.state.loading = true;
-   
-    console.log("LODING BOTTOM",this.state.loading)
-   
   }
 
+  onPressCreateCourt=(handle)=>{
+    console.log("CREATE COURT PRESS", this.state.newCourtName, handle)
+    if(this.state.newCourtName.replace(/\s/g, '').length==0){
+      Alert.alert('Please Enter Court Name')
+      return 
+    }
+    firebase.database().ref('courts/'+ this.state.newCourtName).set({
+      owner:handle, updated:this.state.date.toLocaleString('en-US'), list:[]
+    })
+    this.componentDidMount();
+  }
 
 courtSelected=(item)=>{
 console.log("coiurt selected ",item)
@@ -101,6 +93,7 @@ this.props.navigation.navigate("UserList", {courtName: this.state.courtName} )
     console.log("RENDER CURRENT STATE")
     console.log(this.state.loading)
     let user = firebase.auth().currentUser;
+    let handle = user.providerData[0]['displayName']
  
     if(this.state.loading){
       console.log("LOADING RENDER")
@@ -114,23 +107,38 @@ this.props.navigation.navigate("UserList", {courtName: this.state.courtName} )
 
     else if(user){
       this.state.email = user.providerData[0]['email']
-      console.log("USER PROVIDED", this.state.courts)
+      
+      console.log("USER PROVIDED ",handle, this.state.date.toLocaleString('en-US'), 
+       
+      this.state.courts, this.state.date.toLocaleDateString())
+      console.log(this.state.date.toLocaleTimeString()  )
       // this.something();
       return(
 
       <KeyboardAvoidingView >
       <View >
 
-          <Text style={styles.text}> EMAIL: {user.providerData[0]['email']}</Text>
-          <Text style={styles.text}> HANDLE: {user.providerData[0]['displayName']} </Text>
+          <View style={styles.info}>
+          <Text style={styles.text}>
+             EMAIL: 
+              <Text style={{color:'black'}}> { user.providerData[0]['email'] }
+              </Text>
+          </Text>
+          <Text style={styles.text}>
+             HANDLE:
+              <Text style={{color:'white'}}> { handle} 
+              </Text>
+            </Text>
 
+          </View>
           <Input
             placeholder= " NEW COURT NAME "
             onChangeText={newCourtName => this.setState({newCourtName}) }
             value={this.state.newCourtName}
           />
 
-          <TouchableOpacity style={styles.button} onPress={this.onPressCreateCourt.bind(this)}>
+
+          <TouchableOpacity style={styles.button} onPress={()=>this.onPressCreateCourt(handle)}>
              <Text style={styles.buttonText}>ADD COURT</Text>
            </TouchableOpacity>
 
@@ -174,7 +182,7 @@ render(){
   return(
     <View style={styles.container}>
        <ScrollView>
-      {this.renderCurrentState()}
+          {this.renderCurrentState()}
       </ScrollView>
     </View>
     );
@@ -189,10 +197,14 @@ const styles = StyleSheet.create({
     backgroundColor:'gray',
     width: "100%"
   },
+  info:{
+    backgroundColor: 'lightgray',
+    width: '50%',
+  },
   text:{
-    fontSize:32,
-    textAlign:"center",
-    color:'white',
+    fontSize:24,
+    textAlign:"left",
+    color:'orange',
   },
   login:{
     fontSize:20,
