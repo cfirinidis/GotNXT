@@ -4,29 +4,26 @@ import{
 	Text,
 	Alert,
 	View,
-	Button,
 	TextInput,
   Modal,
   TouchableHighlight,
   ScrollView,
-	KeyboardAvoidingView,
 } from 'react-native';
-import { createAppContainer } from 'react-navigation';
-import { createStackNavigator} from 'react-navigation-stack'; 
-import Setup from './Setup'
-import SelectMultiple from 'react-native-select-multiple';
+import configureStore from './store';
+import { connect } from 'react-redux';
+import { editCompList, editMSRedux } from '../store/actions';
 
-export default class EditNames extends React.Component {
+
+class EditNames extends React.Component {
   constructor(props) {
        super(props);
        this.state = {
-         masterList : this.props.navigation.getParam("list", "blank"),
-         courtArr: this.props.navigation.getParam("courtArr", "blank"),
-         completeList : this.props.navigation.getParam("compList", "blank"),
-           modalInputVisible: false,
-           title: '',
-           name: '',
-           wrongName: ''
+          courtArr: this.props.navigation.getParam("courtArr", "blank"),
+          courtName: this.props.navigation.getParam("courtName", "blank"),
+          modalInputVisible: false,
+          title: '',
+          name: '',
+          wrongName: ''
        };
      }
 
@@ -38,7 +35,7 @@ export default class EditNames extends React.Component {
 
   getNames=()=>{
     r = [];
-     Object.values(this.state.masterList).map(function(val) {
+     Object.values(configureStore.getState().masterListReducer).map(function(val) {
         for (j in val[1]){
           r.push(val[1][j]['player']);
           c += 1;
@@ -48,100 +45,82 @@ export default class EditNames extends React.Component {
   }
 
   GoToList=()=>{
-      this.setState({masterList: this.state.masterList})
-      this.setState({completeList: this.state.completeList})
-      this.props.navigation.navigate("List", {arena: this.state.Arena,
-      list: this.state.masterList, courtArr: this.state.courtArr, compList: this.state.completeList});  
-  }
+      this.props.navigation.navigate("List", {courtArr: this.state.courtArr}); }
 
 
-print=()=>{
-  if (this.state.name.length == 0 || this.state.name in this.state.completeList){
+editName=()=>{
+  let san = this.state.name.toLowerCase()
+  let wrongSan = this.state.wrongName.toLowerCase()
+  console.log("EDITNAME FUNC", san, configureStore.getState().compListReducer)
+  if (san.length == 0 || san in configureStore.getState().compListReducer ){
     setTimeout(()=>{
-      Alert.alert("No Name Was Entered")
-      
+      Alert.alert("Name Already Exists or No Name Entered")
     }, 1);
     this.setState({name:''})
     return 0
   }
 
-  for (k in this.state.completeList){
-    if (k == this.state.wrongName){
-      // console.log(k)
-        delete this.state.completeList[k] 
-        this.state.completeList[this.state.name.replace(/\s/g, '').toLowerCase()] = 1
-    }}
-
-  for(i=0; i<this.state.masterList.length ; i++){
-    for (j=0; j<this.state.masterList[i][1].length; j++){
-      if ( this.state.wrongName == this.state.masterList[i][1][j]['player']){
-        this.state.masterList[i][1][j]['player'] = this.state.name
-    }}
-  } 
+  // console.log("WRONGSAN", wrongSan)
+  this.props.edit(san, wrongSan, this.state.courtName)
+  this.props.editMSRedux(this.state.name, this.state.wrongName)
   let alertName = this.state.name
-
     setTimeout( ()=>{
       this.setState({name:''})
-      this.setState({masterList: this.state.masterList})
-      this.setState({completeList: this.state.completeList})
       Alert.alert("CHANGE: ", this.state.wrongName + '\n' + "\n TO \n" + '\n' +  alertName);
       this.GoToList();   
   },1);   
 }
 
 render() {
-this.state.playerList = this.getNames()
+let playerList = this.getNames()
+console.log(playerList)
 
 return (
-<ScrollView>
-<View>  
-    
-<Text style={styles.header}>EDIT NAMES</Text>
-<View style={{backgroundColor:'#feebff', marginBottom:25}}>
-  { this.state.playerList.map((item, key)=>(
-         <Text  key={key} style={{fontSize:30, marginBottom: 25, color: 'blue'}}
-          onPress={()=>this.setModalInputVisible(!this.state.modalInputVisible, "EDIT  -  "+ item, item.toString() ) }>
-         {key+1}   { item } </Text>)
-         )}
-</View>
- 
-  <Modal visible={this.state.modalInputVisible}>
-    <View style={styles.modalStyle}>
-        <Text style={{fontSize:30, backgroundColor:'gray', color:'white', marginBottom:70, textAlign:'center'}}>
-        EDIT NAMES </Text>
+  <ScrollView>
+  <View>  
       
-      <TextInput
-          placeholder= {this.state.title}
-          onChangeText={(name) => this.setState({name}) }
-          value={this.state.name}
-          style={styles.textInput} 
-          placeholderTextColor='red' />
-      <TouchableHighlight onPress={ () =>{
-          this.setModalInputVisible(!this.state.modalInputVisible, "something").then(this.print())}} 
-        style={styles.modalButtons}>
-            <Text style={styles.modalText}>DONE</Text>
-      </TouchableHighlight>
-    </View>
-  </Modal>
-</View>
-</ScrollView>
-    );
-  }
+  <Text style={styles.header}>EDIT NAMES</Text>
+  <View style={{backgroundColor:'#feebff', marginBottom:25}}>
+    { playerList.map((item, key)=>(
+           <Text  key={key} style={{fontSize:30, marginBottom: 25, color: 'blue'}}
+            onPress={()=>this.setModalInputVisible(!this.state.modalInputVisible, "EDIT  -  "+ item, item.toString() ) }>
+           {key+1}   { item } </Text>)
+           )}
+  </View>
+   
+    <Modal visible={this.state.modalInputVisible}>
+      <View style={styles.modalStyle}>
+          <Text style={{fontSize:30, backgroundColor:'gray', color:'white', marginBottom:70, textAlign:'center'}}>
+          EDIT NAMES </Text>        
+        <TextInput
+            placeholder= {this.state.title}
+            onChangeText={(name) => this.setState({name}) }
+            value={this.state.name}
+            style={styles.textInput} 
+            placeholderTextColor='red' />
+        <TouchableHighlight onPress={ () =>{
+            this.setModalInputVisible(!this.state.modalInputVisible, "something").then(this.editName())}} 
+          style={styles.modalButtons}>
+              <Text style={styles.modalText}>DONE</Text>
+        </TouchableHighlight>
+      </View>
+    </Modal>
+  </View>
+  </ScrollView>
+    )};
 }
 
 
 const styles = StyleSheet.create({
-  header: {
-    fontSize:33,
-    height: 75,
+   header: {
+    fontSize:30,
+    height: 60,
     padding: 8,
     backgroundColor:'gray',
     color: 'white',
     width:"100%",
     alignItems: 'center',
-    textAlign: "center", 
     justifyContent: 'center',
-
  },
    textInput: {
     fontSize: 28,
@@ -179,3 +158,22 @@ const styles = StyleSheet.create({
   },
 
 });	
+
+
+const mapStateToProps = (state) => {
+  // console.log("STATE : ", state);
+  return{
+    playerlists: state.compListReducer.origCompList,
+    reduxMasterList: state.masterListReducer.reduxMasterList
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return{
+    edit:(right, wrong, courtName)=>dispatch(editCompList(right, wrong, courtName)),
+    editMSRedux:(right, wrong)=>dispatch(editMSRedux(right, wrong))
+  }
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(EditNames);

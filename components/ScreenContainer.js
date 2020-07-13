@@ -1,4 +1,3 @@
-import React, { Component } from 'react';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator} from 'react-navigation-stack'; 
 import MainActivity from './Main'; 
@@ -6,10 +5,15 @@ import Setup from './Setup';
 import ShowList from './ListPage';
 import PopUp from './PopUp';
 import ModalExample from './Modal'
-import StartFunction from './function'
 import EditNames from './Edit'
 import Login from './Login';
-import SignUp from './SignUp'
+import SignUp from './SignUp';
+import UserPage from './UserPage';
+import UserList from './UserList';
+import activeCourts from './activeCourts';
+import activeCourtList from './activeCourtList';
+import personalStats from './personalStats';
+import addCourtPage from './addCourtPage';
 
 
 const MainNavigator = createStackNavigator({
@@ -19,18 +23,16 @@ const MainNavigator = createStackNavigator({
     SignUp:{
         screen: SignUp
     },
-
-    Main: { 
+    Setup: { 
         screen: Setup,
     },
     EditNames:{
         screen: EditNames,
     },
-  
-    List: {
+    MainActivity: {
     	screen: MainActivity,
     },
-    Show: {
+    List: {
     	screen: ShowList,
     },
     Test: {
@@ -39,12 +41,28 @@ const MainNavigator = createStackNavigator({
     Modal: {
         screen: ModalExample,
     },
-    Functions: {
-        screen: StartFunction,
+    User: {
+        screen: UserPage,
+    },
+    UserList: {
+        screen: UserList,
+    },
+    activeCourts: {
+        screen: activeCourts,
+    },
+    activeCourtList: {
+        screen: activeCourtList,
+    },
+    personalStats: {
+        screen: personalStats,
+    },
+    addCourtPage: {
+        screen: addCourtPage,
     }
-
 });
 
 
 const App = createAppContainer(MainNavigator);
 export default App;
+
+

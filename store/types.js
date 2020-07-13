@@ -1,0 +1,25 @@
+export const CREATE_PLAYER = "CREATE_PLAYER";
+export const DELETE_PLAYER = "DELETE_PLAYER";
+export const EDIT_PLAYER = "EDIT_PLAYER";
+export const ADD_PLAYER = "ADD_PLAYER";
+export const DELETE_SHOOTER = "DELETE_SHOOTER";
+export const ADD_MASTERLIST = "ADD_MASTERLIST";
+export const SHOOT_MASTERLIST = "SHOOT_MASTERLIST";
+export const UPDATE_MASTER = "UPDATE_MASTER";
+export const CORRECT_MASTER = "CORRECT_MASTER";
+export const DELETE_MASTER = "DELETE_MASTER";
+export const EXTRACT_MASTER = "EXTRACT_MASTER";
+export const END_MASTER = "END_MASTER";
+export const WINWIN_MASTER = "WINWIN_MASTER";
+export const SETPREF_MASTER = "SETPREF_MASTER";
+export const REMOVE_MASTER = "REMOVE_MASTER";
+export const EDIT_MASTER = "EDIT_MASTER";
+export const SETUP_ARENA = "SETUP_ARENA";
+export const CORRECT_ARENA = "CORRECT_ARENA";
+export const ADDNUMS_ARENA = "ADDNUMS_ARENA";
+export const ADDSET_ARENA = "ADDSET_ARENA";
+export const LOGIN_USER = "LOGIN_USER";
+export const READ_COURT = "READ_COURT";
+export const CREATE_COURT= "CREATE_COURT";
+export const WIN_LOSS = "WIN_LOSS";
+

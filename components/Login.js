@@ -4,28 +4,27 @@ import{
 	Text,
 	Alert,
 	View,
-	Button,
-	TextInput,
 	KeyboardAvoidingView,
 	TouchableOpacity,
   ActivityIndicator,
-	AsyncStorage,
-	Image,
 } from 'react-native';
-import Input from '../buttonsETC/Input';
-import firebase from '../buttonsETC/Firebase';
-import { createAppContainer } from 'react-navigation';
-import { createStackNavigator} from 'react-navigation-stack'; 
+import { connect } from 'react-redux';
+import { loginUser } from '../store/actions';
+import { readCourts } from '../store/actions';
+import Input from '../elements/Input';
+import firebase from '../elements/Firebase';
 
 
-export default class Logo extends React.Component {
+
+class Login extends React.Component {
   constructor(props) {
        super(props);
        this.state = {
-         email: '',
-         password: '',
+         email: 'a@aa.com',
+         password: 'testing',
          authenticating:false,
-         errorMessage: ''
+         errorMessage: '',
+         courts:[]
        };
      }
 
@@ -33,37 +32,39 @@ export default class Logo extends React.Component {
     this.props.navigation.navigate("SignUp");  
   }
  
-  // componentWillMount() {
-  //   const firebaseConfig = {
-  //     apiKey: ' AIzaSyDNKMFfGnHZ9jANyVN0QJyD93lb35Q7Awo',
-  //     authDomain: 'gotnxt.firebaseapp.com ',
-  //   }
-  //   firebase.initializeApp(firebaseConfig); 
-  // }
+  GoToUser=()=>{
+    this.props.navigation.navigate("User");  
+  }
+
 
   onPressSignIn(){
-    console.log("Button Pressed")
+    // console.log("Button Pressed")
     if(this.state.email === '' && this.state.password === ''){
       Alert.alert("Enter Email And Password")
     }else{
-      console.log(this.state.email)
+      // console.log(this.state.email)
     this.setState({
       authenticating: true,
     });
     firebase
     .auth().signInWithEmailAndPassword(this.state.email, this.state.password)
     .then((res)=>{
-      console.log("USER LOGGED IN")
+    // console.log("USER LOGGED IN", res)
       this.setState({
         authenticating: false,
         email: '',
         password: ''
       })
-      this.props.navigation.navigate("Main")
-    })
+      Promise.all([
+      this.props.loginUser( res['user']['displayName'], res['user']['email'])
+       ])
+    }).then(()=>{this.props.navigation.navigate("User")})
+    // console.log("TEST")
+    
+
     .catch((error)=> {this.setState({ 
       errorMessage: error.message,
-      email:'',
+      email: '',
       password:'',
       authenticating: false
       })
@@ -72,18 +73,26 @@ export default class Logo extends React.Component {
   }
 }
 
-  onAuthButtonPress=()=>{
-    console.log("A button was pressed", this.state.email, this.state.password)
-  }
 
 renderCurrentState(){
+  
   if(this.state.authenticating){
+    console.log("Thinking")
     return(
       <View style={styles.waiting}>
         <ActivityIndicator size='large' color='blue'/>
       </View>
       )
     }
+    let test = {}    
+    var courts = firebase.database().ref('/courts');
+    // console.log( firebase.database().ref('courts/').once('value', snapshot) )
+    courts.once('value', function (snapshot) {
+      // console.log(snapshot.key, "*****", snapshot.val(), Object.keys(snapshot.val()))
+      test = snapshot.val()
+      // console.log("TEST", test)
+  });
+    // console.log("TEST", test)
 
     return(
       <KeyboardAvoidingView>
@@ -107,9 +116,8 @@ renderCurrentState(){
              <Text style={styles.buttonText}>LOGIN</Text>
            </TouchableOpacity>
 
-           <TouchableOpacity style={styles.login} onPress={this.GoToSignUp.bind(this)}>
-             <Text style={styles.login}>Don't Have an account?</Text>
-             <Text style={styles.login}>SIGN UP!</Text>
+           <TouchableOpacity style={styles.signUp} onPress={this.GoToSignUp.bind(this)}>
+             <Text style={{fontSize:26, color:'#1c313a'}}>SIGN UP!</Text>
            </TouchableOpacity>
 
       </View>
@@ -121,7 +129,7 @@ renderCurrentState(){
 render(){
   return(
     <View style={styles.container}>
-      {this.renderCurrentState()}
+       {this.renderCurrentState()}
     </View>
     );
   }
@@ -139,13 +147,21 @@ const styles = StyleSheet.create({
   },
   text:{
     fontSize:32,
+    fontWeight: 'bold',
     textAlign:"center",
     color:'white',
   },
-  login:{
-    fontSize:20,
-    textAlign:"center",
-    color:'white',
+  signUp:{
+    backgroundColor:'orange',
+    width:"40%",
+    height: 45,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 6,
+    borderColor:'#1c313a',
+    borderRadius: 50,
+    left: '30%',
+    marginVertical: 25,
   },
   button: {
     backgroundColor:'#1c313a',
@@ -166,3 +182,27 @@ const styles = StyleSheet.create({
   }
 
 });
+
+const mapStateToProps = (state) => {
+  // console.log("STATE MAIN: ", state);
+  return{
+    playerlists: state.compListReducer.origCompList,
+    shooterRedux: state.shooterReducer.shooter,
+    reduxMasterList: state.masterListReducer.reduxMasterList,
+    arenaRedux: state.arenaReducer.arenaReduxx,
+    dbcourts: state.readCourtReducer.dbcourts,
+    // loginUser: state.userReducer.user
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return{
+        loginUser:(username, email)=>dispatch(loginUser(username, email)),
+        readCourts:(courtName)=>dispatch(readCourts(courtName))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
+
+
+
