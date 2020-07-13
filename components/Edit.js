@@ -49,9 +49,10 @@ class EditNames extends React.Component {
 
 
 editName=()=>{
-  let san = this.state.name.replace(/\s/g, '').toLowerCase()
-  let wrongSan = this.state.wrongName.replace(/\s/g, '').toLowerCase()
-  if (san.length == 0 || configureStore.getState().compListReducer.includes(san)){
+  let san = this.state.name.toLowerCase()
+  let wrongSan = this.state.wrongName.toLowerCase()
+  console.log("EDITNAME FUNC", san, configureStore.getState().compListReducer)
+  if (san.length == 0 || san in configureStore.getState().compListReducer ){
     setTimeout(()=>{
       Alert.alert("Name Already Exists or No Name Entered")
     }, 1);

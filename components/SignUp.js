@@ -88,10 +88,8 @@ database=()=>{
     win:0, loss:0
   })
   
-
   // firebase.database().ref('new/'+ "emailz").update({handle:this.state.password}) 
 }
-
 
 
   registerUser=()=>{

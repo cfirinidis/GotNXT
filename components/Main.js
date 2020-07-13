@@ -11,11 +11,12 @@ import{
   AsyncStorage,
   Modal,
 } from 'react-native';
+import firebase from '../elements/Firebase';
 import configureStore from './store';
 import { connect } from 'react-redux';
 import { addToCompList, delFromCompList , addToShooters, resetShooters, addToReduxMaster,
-shootML, correctOrSub, reduxUpdateMaster, removeFromMLRedux,
-endGameMLRedux, arenaCorOrSub, updatePlayerNums, addSet, winWinRedux} from '../store/actions';
+  shootML, correctOrSub, reduxUpdateMaster, removeFromMLRedux,
+  endGameMLRedux, arenaCorOrSub, updatePlayerNums, addSet, winWinRedux, winLossResults} from '../store/actions';
 import styles from './mainStyleFile'
 import ListAndStartButton from '../elements/ListAndStartButton';
 import EnterName from '../elements/EnterName';
@@ -37,6 +38,7 @@ class MainActivity extends React.Component {
         curPlayersB: {},
         tempCourt: [],
         winnersW: [],
+        members:{},
         move: [], 
         team: '',
         tempNum: 0,
@@ -61,16 +63,28 @@ class MainActivity extends React.Component {
        };
      }
 
-  AddItemsToArray=()=>{
-    let san = this.state.Name.replace(/\s/g, '').toLowerCase()
-    if (!(configureStore.getState().compListReducer.includes(san))){
-      if (san.length != 0 && san.length != 0 ){
-        this.state.tempNameArray.push({player: this.state.Name, replacement: false});
+  AddItemsToArray(){
+    // let san = this.state.Name.replace(/\s/g, '').toLowerCase()
+    let san = this.state.Name.toLowerCase()
+    console.log("SAN CUZ CRASH: ", san, this.state.courtName, configureStore.getState().compListReducer)
+    // console.log(san, "TESTG", /\s/.test(san), configureStore.getState().compListReducer, this.state.members)
+    if (!(configureStore.getState().compListReducer[this.state.courtName].hasOwnProperty(san))){
+      if (san.length != 0 && !/\s/.test(san) ){
+
+      // add if name is member: True
+        if (san in this.state.members){
+          this.state.tempNameArray.push({player: this.state.members[san], replacement: false, member:true});
+          Alert.alert("HES A MEMBER")  
+        }
+        else{
+          this.state.tempNameArray.push({player: this.state.Name, replacement: false, member:false});
+        }
       }
       else{
-        Alert.alert("Please Enter A Name")
+        Alert.alert("Please Enter A Name Without ANY Spaces")
+        return 
       }
-      this.props.add(san, this.state.courtName) 
+      this.props.add(san, this.state.courtName, this.state.Name) 
       this.setState({Name:''})
       this.setState({tempNameArray: this.state.tempNameArray})
       this.setState({totalPlayers: this.state.totalPlayers + 1})
@@ -102,6 +116,24 @@ class MainActivity extends React.Component {
     }
   }//good
 
+  componentDidMount(){
+    console.log("MAIN COMPONENT DID MOUNT")
+        let c = firebase.database().ref('users')
+        return c.once('value', snapshot => {
+          // console.log(snapshot)
+            let users =  snapshot.val()
+            let names = {}
+            for( handle in users){
+              console.log("FOR", handle)
+              // this.state.list.push(snapshot.val()[i])
+              names[handle.toLowerCase()]=handle
+            }
+            console.log("NAMES:", names)
+        this.setState({members: names});
+        // this.setState({loading: false})
+        });
+  }
+
   AddMaster2=()=>{
       let reduxShooter = configureStore.getState().shooterReducer
       this.props.shootML(this.state.restNum, this.state.hitShot, reduxShooter)
@@ -119,7 +151,7 @@ class MainActivity extends React.Component {
     }//good
 
   GoToLists=()=>{
-    this.props.navigation.navigate("List", {list: this.state.masterList, courtArr: this.state.courtArr,
+    this.props.navigation.navigate("List", {list: configureStore.getState().masterListReducer, courtArr: this.state.courtArr,
           courtName: this.state.courtName}); }
    
   GoToModal=()=>{
@@ -132,7 +164,7 @@ class MainActivity extends React.Component {
       this.setState({ remPlayer:[] });
       return 0
     }
-      this.props.arenaCorOrSub(this.state.remPlayer, this.state.tempNum, this.state.team);
+      this.props.arenaCorOrSub(this.state.remPlayer, this.state.tempNum, this.state.team, this.state.courtName);
       let repP = [];
       Object.values(configureStore.getState().masterListReducer).map(function(val) {
         for (j in val[1]){
@@ -206,7 +238,7 @@ updateMaster=()=>{
     console.log("PRINT SOMETHING ***********************")
   }
 
-  saveData(){
+  saveData=()=>{
     let ML = JSON.stringify(configureStore.getState().masterListReducer);
     let CL = JSON.stringify(configureStore.getState().compListReducer);
     let AR  = JSON.stringify(configureStore.getState().arenaReducer);
@@ -222,7 +254,7 @@ updateMaster=()=>{
   }
 
 
-   async StartGame(){
+  async StartGame(){
       let delArray = [];
       let names = 0;
       AsyncAlert = (title, msg) => new Promise((resolve, reject) => {  
@@ -235,13 +267,15 @@ updateMaster=()=>{
                     );
       });
         let reduxML = configureStore.getState().masterListReducer
+        let arenaReducer = configureStore.getState().arenaReducer[0]
         for(let run = 0; run < reduxML.length; run++){//add full contingency
-          while(this.state.current < configureStore.getState().arenaReducer.length && 
-                  configureStore.getState().arenaReducer[this.state.current]["teamANum"]  +
-                   configureStore.getState().arenaReducer[this.state.current]["teamBNum"] == 2*this.state.cap){
+          // console.log("ERROR in STARTGAME", configureStore.getState().arenaReducer[0][this.state.courtName].length)
+          while(this.state.current < arenaReducer[this.state.courtName].length && 
+                arenaReducer[this.state.courtName][this.state.current]["teamANum"] + arenaReducer[this.state.courtName][this.state.current]["teamBNum"]
+                == 2*this.state.cap){
                   this.state.current++;
                   }
-                  if (this.state.current >= configureStore.getState().arenaReducer.length){
+                  if (this.state.current >= arenaReducer[this.state.courtName].length){
                     this.setState({ current: this.state.current})
                    Alert.alert("GAMES FULL!")
                    break
@@ -249,57 +283,60 @@ updateMaster=()=>{
               if(this.state.current + 1 != reduxML[names][0]['pref'] && reduxML[names][0]['pref'] != 0 ){
                   names++;
                 }
-              else if(reduxML[names][1].length + configureStore.getState().arenaReducer[this.state.current]["teamANum"]  <= this.state.cap
-                || reduxML[names][1].length + configureStore.getState().arenaReducer[this.state.current]["teamBNum"]  <= this.state.cap){
-                let team = (reduxML[names][1].length + configureStore.getState().arenaReducer[this.state.current]["teamANum"]  <= this.state.cap)? "teamA":"teamB"
+              else if(reduxML[names][1].length + arenaReducer[this.state.courtName][this.state.current]["teamANum"]  <= this.state.cap
+                || reduxML[names][1].length + arenaReducer[this.state.courtName][this.state.current]["teamBNum"]  <= this.state.cap){
+                let team = (reduxML[names][1].length + arenaReducer[this.state.courtName][this.state.current]["teamANum"]  <= this.state.cap) ? "teamA":"teamB"
                 let sets = this.extractFromList(names);
-                this.props.updatePlayerNums(this.state.current, team, reduxML[names][1].length)
+                this.props.updatePlayerNums(this.state.current, team, reduxML[names][1].length, this.state.courtName )
                 delArray += [names];
-                this.props.addSet(this.state.current, team, sets);
+                this.props.addSet(this.state.current, team, sets, this.state.courtName);
                 names++;
                 if (names == reduxML.length){
                     names = 0
                     delArray = this.removeFromList(delArray)
                 }}
-                else  if( configureStore.getState().arenaReducer[this.state.current]["teamANum"] + 
-                  configureStore.getState().arenaReducer[this.state.current]["teamBNum"] != 2*this.state.cap){
-                  let s = '';
-                  for (i in reduxML[names][1]){
-                    s += reduxML[names][1][i]['player'] + '  '  
-                    this.props.addShooter(reduxML[names][1][i]['player'])
-                  }
-                  this.state.diff = (this.state.cap*2) - ( configureStore.getState().arenaReducer[this.state.current]["teamANum"]  + 
-                                  configureStore.getState().arenaReducer[this.state.current]["teamBNum"] );
-                  if ( this.state.diff >= configureStore.getState().shooterReducer.length ){
-                    this.state.command = " Shoot for " + ( this.state.cap - configureStore.getState().arenaReducer[this.state.current]["teamANum"] + 
+              else  if( arenaReducer[this.state.courtName][this.state.current]["teamANum"] + 
+                          arenaReducer[this.state.courtName][this.state.current]["teamBNum"] != 2*this.state.cap){
+                        let s = '';
+                        for (i in reduxML[names][1]){
+                          s += reduxML[names][1][i]['player'] + '  '  
+                          this.props.addShooter(reduxML[names][1][i]['player'])
+                        }
+                        this.state.diff = (this.state.cap*2) - ( arenaReducer[this.state.courtName][this.state.current]["teamANum"]  + 
+                                    arenaReducer[this.state.courtName][this.state.current]["teamBNum"] );
+                        if ( this.state.diff >= configureStore.getState().shooterReducer.length ){
+                            this.state.command = " Shoot for " + ( this.state.cap - arenaReducer[this.state.courtName][this.state.current]["teamANum"] + 
                       " To Play On TEAM-A")
-                    this.state.diff = ( this.state.cap - configureStore.getState().arenaReducer[this.state.current]["teamANum"])
-                  }
-                  else{
-                  this.state.command = "Shoot for " + this.state.diff
-                  }
-                let response = await AsyncAlert(this.state.command, s);
-                if (response == "YES"){
-                    delArray += [names]
-                    this.state.restNum = names - (delArray.length - 1)
-                    delArray = this.removeFromList(delArray)
-                    this.setModalVisible( 'modalVisible',true,  "Select Player(s) That Hit");
-                    break
-                } 
-                  else{this.setState({shooters: []});
-                delArray = this.removeFromList(delArray)
-              }
-               names++;
+                    this.state.diff = ( this.state.cap - arenaReducer[this.state.courtName][this.state.current]["teamANum"])
+                        }
+                        else{
+                          this.state.command = "Shoot for " + this.state.diff
+                        }
+                        let response = await AsyncAlert(this.state.command, s);
+                        if (response == "YES"){
+                            delArray += [names]
+                            this.state.restNum = names - (delArray.length - 1)
+                            delArray = this.removeFromList(delArray)
+                            this.setModalVisible( 'modalVisible',true,  "Select Player(s) That Hit");
+                            break
+                          } 
+                        else{this.setState({shooters: []});
+                            delArray = this.removeFromList(delArray)
+                            }
+                names++;
                 }
             // GAME READY
-        if( configureStore.getState().arenaReducer[this.state.current]["teamANum"] + 
-          configureStore.getState().arenaReducer[this.state.current]["teamBNum"] == 2*this.state.cap){
+        if( arenaReducer[this.state.courtName][this.state.current]["teamANum"] + 
+            arenaReducer[this.state.courtName][this.state.current]["teamBNum"] == 2*this.state.cap){
           this.setState({ current: this.state.current+1 })
           this.removeFromList( delArray )
+          console.log("Inside if")
           break;
          }//if full        
         }//end of while
         this.saveData();
+        console.log("ENMD OF STARTGAME ")
+        this.setState({courtName: this.state.courtName})
   }
 
 
@@ -342,18 +379,16 @@ updateMaster=()=>{
 
 
   async endGame(courtNum, loser, winner, status){
-    if ( (configureStore.getState().arenaReducer[courtNum-1]["teamBNum"] +
-         configureStore.getState().arenaReducer[courtNum-1]["teamANum"]) < (this.state.cap*2)) {
+    if ( (configureStore.getState().arenaReducer[0][this.state.courtName][courtNum-1]["teamBNum"] +
+         configureStore.getState().arenaReducer[0][this.state.courtName][courtNum-1]["teamANum"]) < (this.state.cap*2)) {
       alert("Game has not started");
       return
     }
-    
     makeSure = () => new Promise((resolve) => {  
             Alert.alert(
                     "Are you Sure: ",
                     winner + " WON?",
-                    [ {text: "Yes", onPress: () => { resolve('YES') }},
-                      {text: "NO", onPress: () => { resolve('NO') }}  ],
+                    [ {text: "Yes", onPress: () => { resolve('YES') }}, {text: "NO", onPress: () => { resolve('NO') }}  ],
                     { cancelable: false},
                     );
             });
@@ -363,29 +398,44 @@ updateMaster=()=>{
     }
       let temp = [];
       let titleP = '';
+      let winLoss = {};
       this.state.current = courtNum-1
       let tempC = 0;
-      
-      let arenaRedx = configureStore.getState().arenaReducer
-      for (i in arenaRedx[courtNum-1][winner]){
+      let arenaRedx = configureStore.getState().arenaReducer[0]
+      for (i in arenaRedx[this.state.courtName][courtNum-1][winner]){
+        console.log("winnner", arenaRedx[this.state.courtName][courtNum-1][winner])
+        console.log("WINNNNNN", arenaRedx[this.state.courtName][courtNum-1][winner][i][0]['player'])
+        if (arenaRedx[this.state.courtName][courtNum-1][winner][i][0]['member'] == true){
+           console.log("winloss: ", arenaRedx[this.state.courtName][courtNum-1][winner][i][0]['player'])
+          winLoss[this.state.members[arenaRedx[this.state.courtName][courtNum-1][winner][i][0]['player'].toLowerCase()]] = 'won' 
+        }
         // configureStore.getState().arenaReducer[courtNum-1][winner][i][0]['replacement'] = false 
-        arenaRedx[courtNum-1][winner][i][0]['replacement'] = false
+        arenaRedx[this.state.courtName][courtNum-1][winner][i][0]['replacement'] = false
       }
 
-      for (i=0; i< arenaRedx[courtNum-1][loser].length; i++){
-        if (arenaRedx[courtNum-1][loser][i][0]['replacement'] == false){
-            temp.push(arenaRedx[courtNum-1][loser][i][0])
-            titleP += " " + (arenaRedx[courtNum-1][loser][i][0]['player'])
-            arenaRedx[courtNum-1][loser].splice(i, 1);
+      // console.log(arenaRedx)
+      for (i=0; i< arenaRedx[this.state.courtName][courtNum-1][loser].length; i++){
+        if (arenaRedx[this.state.courtName][courtNum-1][loser][i][0]['member'] == true){
+          console.log("winloss: ", arenaRedx[this.state.courtName][courtNum-1][loser][i][0]['player'].toLowerCase())
+
+          winLoss[this.state.members[arenaRedx[this.state.courtName][courtNum-1][loser][i][0]['player'].toLowerCase()]] = 'lost' 
+        }
+        if (arenaRedx[this.state.courtName][courtNum-1][loser][i][0]['replacement'] == false){
+            temp.push(arenaRedx[this.state.courtName][courtNum-1][loser][i][0])
+            titleP += " " + (arenaRedx[this.state.courtName][courtNum-1][loser][i][0]['player'])
+            arenaRedx[this.state.courtName][courtNum-1][loser].splice(i, 1);
             i--;
             tempC += 1            
         }
         else{
-          arenaRedx[courtNum-1][loser][i][0]['replacement'] = false  
+          arenaRedx[this.state.courtName][courtNum-1][loser][i][0]['replacement'] = false  
         }
+
+
+
       } //end
 
-      arenaRedx[courtNum-1][loser+"Num"] -= tempC;
+      arenaRedx[this.state.courtName][courtNum-1][loser+"Num"] -= tempC;
       if (temp.length>0){ 
         if (status == 'reg'){
           this.props.endGameMLRedux(temp)
@@ -397,7 +447,24 @@ updateMaster=()=>{
             this.setState({winnersW: temp})
             this.saveData();
         }}
-      this.StartGame();  
+
+
+        console.log("SEND THIS TO FIREBASE", winLoss, this.state.courtName)
+      this.props.winLossResults(winLoss, this.state.courtName)
+
+
+      this.StartGame(); 
+
+
+      
+
+
+
+
+
+
+
+       
 }
 
 winnersWinners(){
@@ -407,7 +474,10 @@ winnersWinners(){
 }
 
  render() {
-  let Game = configureStore.getState().arenaReducer.map((val, key)=> {
+  // console.log("RENDER MASTERLIST:",configureStore.getState().masterListReducer)
+  // console.log("RENDER GAME ",configureStore.getState().arenaReducer[0][this.state.courtName]    )
+  console.log("FRANK")
+  let Game = configureStore.getState().arenaReducer[0][this.state.courtName].map((val, key)=> {
     let A = []
     let B = []
     let t = {}
@@ -466,7 +536,7 @@ Game = Game.filter(function(item){
       <ScrollView>
       <View >
           <Text style={styles.topInfo}> Court Name: 
-          <Text style={{color: "black", fontSize:20}}> { this.state.courtName}</Text>
+          <Text style={{color: "black", fontSize:20}}> { this.state.courtName} </Text>
         </Text>
       </View>
       <View>
@@ -592,13 +662,14 @@ const mapStateToProps = (state) => {
     playerlists: state.compListReducer.origCompList,
     shooterRedux: state.shooterReducer.shooter,
     reduxMasterList: state.masterListReducer.reduxMasterList,
-    arenaRedux: state.arenaReducer.arenaRedux
+    arenaRedux: state.arenaReducer.arenaRedux,
+    recordsRedux: state.recordsReducer.recordsRedux
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return{
-    add:(data, courtName)=>dispatch(addToCompList(data, courtName)),
+    add:(data, courtName, displayName)=>dispatch(addToCompList(data, courtName, displayName)),
     del:(data, courtName)=>dispatch(delFromCompList(data, courtName)),
     addShooter:(data)=>dispatch(addToShooters(data)),
     resetShooters:()=>dispatch(resetShooters()),
@@ -609,9 +680,10 @@ const mapDispatchToProps = (dispatch) => {
     removeFromMLRedux:(delArray)=>dispatch(removeFromMLRedux(delArray)),
     endGameMLRedux:(temp)=>dispatch(endGameMLRedux(temp)),
     winWinRedux:(prefCourt, winWin)=>dispatch(winWinRedux(prefCourt, winWin)),
-    arenaCorOrSub:(remplayer, tempNum, team)=>dispatch(arenaCorOrSub(remplayer, tempNum, team)),
-    updatePlayerNums:(current, team, mlSize)=>dispatch(updatePlayerNums(current, team, mlSize)),
-    addSet:(current, team, sets)=>dispatch(addSet(current, team, sets))
+    arenaCorOrSub:(remplayer, tempNum, team, courtName)=>dispatch(arenaCorOrSub(remplayer, tempNum, team, courtName)),
+    updatePlayerNums:(current, team, mlSize, courtName)=>dispatch(updatePlayerNums(current, team, mlSize, courtName)),
+    addSet:(current, team, sets, courtName)=>dispatch(addSet(current, team, sets, courtName)),
+    winLossResults:(winLoss, courtName)=>dispatch(winLossResults(winLoss, courtName)),
   }
 }
 

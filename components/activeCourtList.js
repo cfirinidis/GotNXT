@@ -11,7 +11,7 @@ import configureStore from './store';
 import firebase from '../elements/Firebase';
 import Input from '../elements/Input';
 
-export default class UserList extends React.Component {
+export default class activeCourtList extends React.Component {
   constructor(props) {
        super(props);
        this.state = {
@@ -23,10 +23,11 @@ export default class UserList extends React.Component {
        };
      }
 
-  tempBridge=()=>{
+    tempBridge=()=>{
       console.log("Tempbridge ", this.state.courtName)
       this.props.navigation.navigate("Setup", {courtName: this.state.courtName});  
     }
+
 
   componentDidMount(){
         console.log("COMPONENT DID MOUNT", this.state.courtName)
@@ -37,9 +38,13 @@ export default class UserList extends React.Component {
             let y = []
             for( i in x){
               console.log("FOR", i, snapshot.val()[i])
+              // this.state.list.push(snapshot.val()[i])
               y.push(snapshot.val()[i])
             }
+        // this.props.readCourts(y)
         this.setState({list: y});
+        // this.setState({loading: false})
+       
         });  
     }
 
@@ -59,35 +64,40 @@ export default class UserList extends React.Component {
       this.state.email = user.providerData[0]['email']
       console.log(user.providerData)
       return(
-        <KeyboardAvoidingView >
-        <View >
-            <View style={styles.info}>
-            <Text style={styles.text}>
-              EMAIL: 
-                <Text style={{color:'black'}}> { user.providerData[0]['email'] }
-                </Text>
-            </Text>
-            <Text style={styles.text}>
-              HANDLE:
-                <Text style={{color:'white'}}> { user.providerData[0]['displayName']} 
-                </Text>
+
+
+      <KeyboardAvoidingView >
+      <View >
+
+          <View style={styles.info}>
+          <Text style={styles.text}>
+             EMAIL: 
+              <Text style={{color:'black'}}> { user.providerData[0]['email'] }
               </Text>
-            </View>
-            <View>
-              <Text style={styles.text}> {this.state.courtName} </Text>
-            </View>
-            <View>
-              {this.state.list.map((item, key)=>(
-                  <Text  key={key} style={styles.listStyle}>
-                    {key+1} {item}
-                  </Text>)
-              )}
-            </View>
-            <TouchableOpacity style={styles.button} onPress={this.tempBridge.bind(this)}>
-              <Text style={styles.login}> GO TO SETUP  </Text>
-            </TouchableOpacity>
-        </View>
-        </KeyboardAvoidingView>
+          </Text>
+          <Text style={styles.text}>
+             HANDLE:
+              <Text style={{color:'white'}}> { user.providerData[0]['displayName']} 
+              </Text>
+            </Text>
+
+          </View>
+
+          <View>
+            <Text style={styles.text}> {this.state.courtName} </Text>
+          </View>
+
+      <View>
+        
+        {this.state.list.map((item, key)=>(
+           <Text  key={key} style={styles.listStyle}>
+             {key+1} {item}
+        </Text>)
+        )}
+      </View>
+
+      </View>
+      </KeyboardAvoidingView>
       )
     }
     else{

@@ -20,4 +20,6 @@ export const ADDNUMS_ARENA = "ADDNUMS_ARENA";
 export const ADDSET_ARENA = "ADDSET_ARENA";
 export const LOGIN_USER = "LOGIN_USER";
 export const READ_COURT = "READ_COURT";
+export const CREATE_COURT= "CREATE_COURT";
+export const WIN_LOSS = "WIN_LOSS";
 

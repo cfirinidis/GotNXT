@@ -10,6 +10,10 @@ import Login from './Login';
 import SignUp from './SignUp';
 import UserPage from './UserPage';
 import UserList from './UserList';
+import activeCourts from './activeCourts';
+import activeCourtList from './activeCourtList';
+import personalStats from './personalStats';
+import addCourtPage from './addCourtPage';
 
 
 const MainNavigator = createStackNavigator({
@@ -43,6 +47,18 @@ const MainNavigator = createStackNavigator({
     UserList: {
         screen: UserList,
     },
+    activeCourts: {
+        screen: activeCourts,
+    },
+    activeCourtList: {
+        screen: activeCourtList,
+    },
+    personalStats: {
+        screen: personalStats,
+    },
+    addCourtPage: {
+        screen: addCourtPage,
+    }
 });
 
 

@@ -20,14 +20,26 @@ import {ADDNUMS_ARENA} from './types';
 import {ADDSET_ARENA} from './types';
 import {LOGIN_USER} from './types';
 import {READ_COURT} from './types';
+import {CREATE_COURT} from './types';
+import {WIN_LOSS} from './types';
 
 
-export const addToCompList = (name, courtName) =>{
+export const addToCompList = (name, courtName, displayName) =>{
 	return{
 		type: CREATE_PLAYER,
 		payload:{
-			data:name,
-			court: courtName
+			data: name,
+			court: courtName,
+			displayName: displayName
+
+		}}
+};
+
+export const addCourtToCompList = (courtName) =>{
+	return{
+		type: CREATE_COURT,
+		payload:{
+			court:courtName
 		}}
 };
 
@@ -142,31 +154,34 @@ export const editMSRedux=(right, wrong, courtName)=>{
 	}
 }
 
-export const setupArena=(courtsNum, capacity, gameStarted, answer)=>{
+export const setupArena=(courtsNum, capacity, gameStarted, answer, courtName)=>{
 	return{
 		type: SETUP_ARENA,
 		courtsNum: courtsNum,
 		capacity: capacity,
 		gameStarted: gameStarted,
-		answer: answer
+		answer: answer,
+		courtName : courtName
 	}
 }
 
-export const arenaCorOrSub=(remplayer, tempNum, team)=>{
+export const arenaCorOrSub=(remplayer, tempNum, team, courtName)=>{
 	return{
 		type: CORRECT_ARENA,
 		remplayer: remplayer,
 		tempNum: tempNum,
 		team: team,
+		courtName : courtName
 	}
 }
 
-export const updatePlayerNums=(current, team, mlSize)=>{
+export const updatePlayerNums=(current, team, mlSize, courtName)=>{
 	return{
 		type: ADDNUMS_ARENA,
 		current: current,
 		team: team,
-		mlSize: mlSize
+		mlSize: mlSize,
+		courtName : courtName
 	}
 }
 
@@ -178,18 +193,27 @@ export const loginUser=(username, email)=>{
 	}
 }
 
-export const addSet=(current, team, sets)=>{
+export const addSet=(current, team, sets, courtName)=>{
 	return{
 		type: ADDSET_ARENA,
 		current: current,
 		team, team,
-		sets, sets
+		sets, sets,
+		courtName : courtName
 	}
 }
 
 export const readCourts=(courtName)=>{
 	return{
 		type: READ_COURT,
+		courtName: courtName
+	}
+}
+
+export const winLossResults=(winLoss, courtName)=>{
+	return{
+		type: WIN_LOSS,
+		winLoss: winLoss,
 		courtName: courtName
 	}
 }

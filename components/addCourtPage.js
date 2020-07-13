@@ -16,7 +16,7 @@ import configureStore from './store';
 import firebase from '../elements/Firebase';
 import Input from '../elements/Input';
 
-class UserPage extends React.Component {
+class addCourtPage extends React.Component {
   constructor(props) {
        super(props);
        this.state = {
@@ -33,16 +33,6 @@ class UserPage extends React.Component {
        };
      }
 
-    // NEEDS :: ADD COURT FUNCTION  , STATS LINK to personalStats.js
-
-  tempBridge=()=>{
-    console.log("BRIDGE")
-    this.props.navigation.navigate("activeCourts");  
-  }
-
-  goToAddCourt=()=>{
-    this.props.navigation.navigate('addCourtPage');
-  }
 
 
   onPressAdd=()=>{
@@ -51,25 +41,26 @@ class UserPage extends React.Component {
   }
 
   componentDidMount(){
-      console.log("COMPONENT DID MOUNT", this.state.loading)
-      let c = firebase.database().ref('courts')
-      let handle = firebase.auth().currentUser.displayName
-      return c.once('value', snapshot => {
-          let x =  snapshot.val()
-          let all = []
-          let y = []
-          for( i in x){
-            if(snapshot.child(i).val().owner === handle ){
-              y.push(i)
-            }
-            all.push(i)
-          }
-      // adds all courts to database
-      this.props.readCourts(all)
-      this.setState({courts: y});
-      this.setState({loading: false})
+    //   console.log("COMPONENT DID MOUNT", this.state.loading)
+    //   let c = firebase.database().ref('courts')
+    //   let handle = firebase.auth().currentUser.displayName
+    //   return c.once('value', snapshot => {
+    //       let x =  snapshot.val()
+    //       let all = []
+    //       let y = []
+    //       for( i in x){
+    //         if(snapshot.child(i).val().owner === handle ){
+    //           y.push(i)
+    //         }
+    //         all.push(i)
+    //       }
+    //   // adds all courts to database
+    //   this.props.readCourts(all)
+    //   this.setState({courts: y});
+   
      
-      });
+    //   });
+      this.setState({loading: false})
   }
 
   onPressCreateCourt=(handle)=>{
@@ -81,14 +72,10 @@ class UserPage extends React.Component {
     firebase.database().ref('courts/'+ this.state.newCourtName).set({
       owner:handle, updated:this.state.date.toLocaleString('en-US'), list:[]
     })
+    this.props.navigation.navigate("Setup", {courtName: this.state.newCourtName}); 
     this.componentDidMount();
   }
 
-courtSelected=(item)=>{
-console.log("coiurt selected ",item)
-this.state.courtName = item
-this.props.navigation.navigate("UserList", {courtName: this.state.courtName} )
-}
 
 //RENDER
 
@@ -131,24 +118,17 @@ this.props.navigation.navigate("UserList", {courtName: this.state.courtName} )
               </Text>
             </Text>
           </View>
-        <Text style={{fontSize:24, textAlign:'center', backgroundColor:'white'}}>YOUR COURTS</Text>
-           <View>
-             {this.state.courts.map((item, key)=>(
-                <Text  key={key} style={{fontSize:22, marginBottom: 10, color: 'pink', marginLeft:'15%'}}
-                  onPress={()=>this.courtSelected(item) }>
-                  {item}
-             </Text>)
-        )}
-      </View>
+
+        <Input
+            placeholder= " NEW COURT NAME "
+            onChangeText={newCourtName => this.setState({newCourtName}) }
+            value={this.state.newCourtName}
+            />
 
 
-          <TouchableOpacity style={styles.login} onPress={this.tempBridge.bind(this)}>
-             <Text style={styles.login}> Active Court Lists  </Text>
-           </TouchableOpacity>
-
-           <TouchableOpacity style={styles.login} onPress={this.goToAddCourt.bind(this)}>
-             <Text style={styles.login}> Add New Court  </Text>
-           </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={()=>this.onPressCreateCourt(handle)}>
+                <Text style={styles.buttonText}>ADD COURT</Text>
+            </TouchableOpacity>
 
 
 
@@ -241,7 +221,7 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserPage);
+export default connect(mapStateToProps, mapDispatchToProps)(addCourtPage);
 
 
 
@@ -249,23 +229,3 @@ export default connect(mapStateToProps, mapDispatchToProps)(UserPage);
 
 
 
-// <Input
-// placeholder= " NEW COURT NAME "
-// onChangeText={newCourtName => this.setState({newCourtName}) }
-// value={this.state.newCourtName}
-// />
-
-
-// <TouchableOpacity style={styles.button} onPress={()=>this.onPressCreateCourt(handle)}>
-//  <Text style={styles.buttonText}>ADD COURT</Text>
-// </TouchableOpacity>
-
-// <Input
-// placeholder= " NEW Player "
-// onChangeText={newName => this.setState({newName}) }
-// value={this.state.newName}
-// />
-
-// <TouchableOpacity style={styles.button} onPress={this.onPressAdd.bind(this)}>
-//  <Text style={styles.buttonText}>ADD NAMES</Text>
-// </TouchableOpacity>

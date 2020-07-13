@@ -13,7 +13,7 @@ import{
 } from 'react-native';
 import configureStore from './store';
 import { connect } from 'react-redux';
-import { setupArena } from '../store/actions';
+import { setupArena, addCourtToCompList } from '../store/actions';
 import firebase from '../elements/Firebase';
 import SelectMultiple from 'react-native-select-multiple';
 
@@ -22,8 +22,8 @@ class Setup extends React.Component {
        super(props);
        this.state = {
          Arena: [],
-         courtsNum: '',
-         capacity: '',
+         courtsNum: "1",
+         capacity: "2",
          courtArr:[],
          test:'',
          completeList: {},
@@ -53,7 +53,7 @@ class Setup extends React.Component {
       this.setState({courtArr : [] });
       this.setState({numGamesStarted: [] });
       this.setState({gamesStarted: [] });
-      configureStore.getState().compListReducer = []
+      configureStore.getState().compListReducer = {}
       configureStore.getState().masterListReducer = []
       configureStore.getState().arenaReducer = []
     }
@@ -104,7 +104,8 @@ class Setup extends React.Component {
           this.state.courtArr.push("Court : "+ (i+1))
       }//for loop
       this.state.courtArr.push("Waiting : "+ 'W')
-      this.props.setupArena(this.state.courtsNum, this.state.capacity, this.state.gamesStarted, answer)
+      this.props.setupArena(this.state.courtsNum, this.state.capacity, this.state.gamesStarted, answer, this.state.courtName)
+      this.props.addCourtToCompList(this.state.courtName);
       this.props.navigation.navigate("MainActivity", { cap:this.state.capacity, 
         courtsNum:this.state.courtsNum, courtArr: this.state.courtArr, courtName: this.state.courtName});      
   }//end of func
@@ -171,6 +172,7 @@ class Setup extends React.Component {
               underlineColorAndroid="gray" 
               placeholder=" Enter # Of Courts "
               onChangeText={(courtsNum) => this.setState({courtsNum: courtsNum }) }
+              // value={ this.state.courtsNum}
               value={ this.state.courtsNum}
               style = {styles.textInput}
               keyboardType={'numeric'}  
@@ -339,7 +341,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return{
-    setupArena:(courtsNum, capacity, gameStarted, answer)=>dispatch(setupArena(courtsNum, capacity, gameStarted, answer)),
+    setupArena:(courtsNum, capacity, gameStarted, answer,courtName)=>dispatch(setupArena(courtsNum, capacity, gameStarted, answer, courtName)),
+    addCourtToCompList:(courtName)=>dispatch(addCourtToCompList(courtName)),
   }
 }
 

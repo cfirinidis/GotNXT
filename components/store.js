@@ -5,6 +5,7 @@ import masterListReducer from '../store/masterListReducer';
 import arenaReducer from '../store/arenaReducer';
 import loginUser from '../store/userReducer';
 import readCourtReducer from "../store/readCourtReducer";
+import recordsReducer from "../store/recordsReducer";
 
 
 
@@ -16,7 +17,8 @@ const ourDepartment = combineReducers({
 	masterListReducer: masterListReducer,
 	arenaReducer: arenaReducer,
 	loginUser: loginUser,
-	readCourtReducer: readCourtReducer
+	readCourtReducer: readCourtReducer,
+	recordsReducer: recordsReducer,
 });
 
 const configureStore=createStore(ourDepartment);

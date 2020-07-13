@@ -16,7 +16,7 @@ import configureStore from './store';
 import firebase from '../elements/Firebase';
 import Input from '../elements/Input';
 
-class UserPage extends React.Component {
+class personalStats extends React.Component {
   constructor(props) {
        super(props);
        this.state = {
@@ -33,17 +33,8 @@ class UserPage extends React.Component {
        };
      }
 
-    // NEEDS :: ADD COURT FUNCTION  , STATS LINK to personalStats.js
 
-  tempBridge=()=>{
-    console.log("BRIDGE")
-    this.props.navigation.navigate("activeCourts");  
-  }
-
-  goToAddCourt=()=>{
-    this.props.navigation.navigate('addCourtPage');
-  }
-
+  //  INCLUDE LAST TIME UPDATED AND SORT ACCORDINGLY
 
   onPressAdd=()=>{
     console.log("ADD", this.state.newCourtName.replace(/\s/g, '').length)
@@ -57,18 +48,12 @@ class UserPage extends React.Component {
       return c.once('value', snapshot => {
           let x =  snapshot.val()
           let all = []
-          let y = []
           for( i in x){
-            if(snapshot.child(i).val().owner === handle ){
-              y.push(i)
-            }
             all.push(i)
           }
       // adds all courts to database
-      this.props.readCourts(all)
-      this.setState({courts: y});
+      this.setState({courts: all});
       this.setState({loading: false})
-     
       });
   }
 
@@ -131,7 +116,7 @@ this.props.navigation.navigate("UserList", {courtName: this.state.courtName} )
               </Text>
             </Text>
           </View>
-        <Text style={{fontSize:24, textAlign:'center', backgroundColor:'white'}}>YOUR COURTS</Text>
+        <Text style={{fontSize:24, textAlign:'center', backgroundColor:'white'}}>ACTIVE LISTS</Text>
            <View>
              {this.state.courts.map((item, key)=>(
                 <Text  key={key} style={{fontSize:22, marginBottom: 10, color: 'pink', marginLeft:'15%'}}
@@ -139,18 +124,7 @@ this.props.navigation.navigate("UserList", {courtName: this.state.courtName} )
                   {item}
              </Text>)
         )}
-      </View>
-
-
-          <TouchableOpacity style={styles.login} onPress={this.tempBridge.bind(this)}>
-             <Text style={styles.login}> Active Court Lists  </Text>
-           </TouchableOpacity>
-
-           <TouchableOpacity style={styles.login} onPress={this.goToAddCourt.bind(this)}>
-             <Text style={styles.login}> Add New Court  </Text>
-           </TouchableOpacity>
-
-
+        </View>
 
       </View>
       </KeyboardAvoidingView>
@@ -241,31 +215,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserPage);
-
-
-
-
-
-
-
-// <Input
-// placeholder= " NEW COURT NAME "
-// onChangeText={newCourtName => this.setState({newCourtName}) }
-// value={this.state.newCourtName}
-// />
-
-
-// <TouchableOpacity style={styles.button} onPress={()=>this.onPressCreateCourt(handle)}>
-//  <Text style={styles.buttonText}>ADD COURT</Text>
-// </TouchableOpacity>
-
-// <Input
-// placeholder= " NEW Player "
-// onChangeText={newName => this.setState({newName}) }
-// value={this.state.newName}
-// />
-
-// <TouchableOpacity style={styles.button} onPress={this.onPressAdd.bind(this)}>
-//  <Text style={styles.buttonText}>ADD NAMES</Text>
-// </TouchableOpacity>
+export default connect(mapStateToProps, mapDispatchToProps)(personalStats);
