@@ -1,20 +1,17 @@
 import React from 'react';
 import{
-	StyleSheet,
 	Text,
   View,
-  FlatList,
   ScrollView,
   ActivityIndicator,
-	KeyboardAvoidingView,
-	TouchableOpacity,
+  KeyboardAvoidingView,
+  TouchableOpacity,
   Alert,
 } from 'react-native';
 import { connect } from 'react-redux';
 import {readCourts } from '../store/actions';
-import configureStore from './store';
+import styles from './generalStyle'
 import firebase from '../elements/Firebase';
-import Input from '../elements/Input';
 
 class activeCourts extends React.Component {
   constructor(props) {
@@ -27,8 +24,6 @@ class activeCourts extends React.Component {
          loading: 'true',
           courts: [],
           date: new Date(),
-          DUMB: [],
-          wrong: ["blue", "pink", 'orange'],
           courtName: '',
        };
      }
@@ -39,6 +34,10 @@ class activeCourts extends React.Component {
   onPressAdd=()=>{
     console.log("ADD", this.state.newCourtName.replace(/\s/g, '').length)
     // firebase.database().ref('courts/' + "black" + '/list/').set([this.state.newName]) 
+  }
+
+  logOut=()=>{
+    this.props.navigation.navigate('Login');
   }
 
   componentDidMount(){
@@ -103,25 +102,40 @@ this.props.navigation.navigate("activeCourtList", {courtName: this.state.courtNa
       // this.something();
   return(
       <KeyboardAvoidingView >
-      <View >
-          <View style={styles.info}>
-          <Text style={styles.text}>
-             EMAIL: 
-              <Text style={{color:'black'}}> { user.providerData[0]['email'] }
+          <View >
+
+
+          <View style={styles.topPart}>
+            <View style={styles.info}>
+             
+              <Text style={styles.infoKey}>
+                  EMAIL: 
+                  <Text style={styles.infoValue}> { user.providerData[0]['email'] }
+                  </Text>
               </Text>
-          </Text>
-          <Text style={styles.text}>
-             HANDLE:
-              <Text style={{color:'white'}}> { handle} 
+              <Text style={styles.infoKey}>
+                HANDLE:
+                <Text style={styles.infoValue}> {user.providerData[0]['displayName']} 
+                </Text>
               </Text>
-            </Text>
+      
+            </View>
+
+              <View style={styles.logOut}>
+                    <TouchableOpacity style={styles.logOutButton} onPress={this.logOut.bind(this)}>
+                      <Text style={styles.logOutText}> Log Out  </Text>
+                    </TouchableOpacity>
+                </View>
           </View>
-        <Text style={{fontSize:24, textAlign:'center', backgroundColor:'white'}}>ACTIVE LISTS</Text>
-           <View>
+
+
+        <View style={styles.body}>
+          <Text style={styles.topBanner}>ACTIVE COURTS</Text>
+           
              {this.state.courts.map((item, key)=>(
                 <Text  key={key} style={{fontSize:22, marginBottom: 10, color: 'pink', marginLeft:'15%'}}
                   onPress={()=>this.courtSelected(item) }>
-                  {item}
+                 {key+1} {item}
              </Text>)
         )}
         </View>
@@ -147,51 +161,6 @@ render(){
     );
   }
 }
-  
-
-const styles = StyleSheet.create({
-  container : {
-    flex: 1,
-    justifyContent:'center',
-    backgroundColor:'gray',
-    width: "100%"
-  },
-  info:{
-    backgroundColor: 'lightgray',
-    width: '50%',
-  },
-  text:{
-    fontSize:24,
-    textAlign:"left",
-    color:'orange',
-  },
-  login:{
-    fontSize:20,
-    textAlign:"center",
-    color:'white',
-  },
-  button: {
-    backgroundColor:'#1c313a',
-    borderRadius: 50,
-    width: "75%",
-    marginVertical: 10,
-    paddingVertical: 13,
-    justifyContent: 'center',
-    alignItems: 'center',
-    left:"12%",
-
-  },
-  waiting : {
-    justifyContent:'center',
-    backgroundColor:'yellow',
-  },
-  buttonText: {
-    fontSize:18,
-    fontWeight:'500',
-    color:'white',
-    textAlign:'center'
-  }
-});
 
 
 

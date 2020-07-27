@@ -9,6 +9,7 @@ import{
 	TouchableOpacity,
 } from 'react-native';
 import Input from '../elements/Input';
+import styles from './generalStyle';
 import firebase from '../elements/Firebase';
 
 export default class SignUp extends React.Component {
@@ -100,9 +101,9 @@ database=()=>{
     else if(this.state.password != this.state.pw2){
       Alert.alert("Passwords do not match")
     }
-    else if(this.state.currentHandles.contains(this.state.handle)){
-      Alert.alert("HANDLE ALREADY TAKEN")
-    }
+    // else if(this.state.currentHandles.contains(this.state.handle)){
+    //   Alert.alert("HANDLE ALREADY TAKEN")
+    // }
     else{
       // console.log("BUTTON PRESSED", this.state.email, this.state.password)
       this.setState({
@@ -117,11 +118,16 @@ database=()=>{
         })
         console.log("User Registered")
         Promise.all([
-          firebase.database().ref('users/'+ this.state.handle).set({email: this.state.email}),
-          firebase.database().ref('users/'+ this.state.handle+"/overall-record").set({
+          firebase.database().ref('users/'+ this.state.handle.toString()).set({
+            email: this.state.email, handle:this.state.handle
+          }),
+          firebase.database().ref('users/'+ this.state.handle.toString()+"/overall-record").set({
+            win:0, loss:0
+          }),
+          firebase.database().ref('users/'+ this.state.handle+"/historical record/"+ this.state.date+'/'+
+          this.state.loc).set({
             win:0, loss:0
           })
-      
       ]).then( ()=>{
         this.setState({
           loading: false,
@@ -157,12 +163,12 @@ database=()=>{
     }
 
     return(
-      <KeyboardAvoidingView >
+
       <View >
-
-          <Text style={styles.text}> GotNXT </Text>
-          <Text style={styles.text}> SIGN UP </Text>
-
+        <View>
+          <Text style={styles.title}> GotNXT </Text>
+          <Text style={styles.title}> SIGN UP </Text>
+        </View>
           <Input
             placeholder= " EMAIL "
             onChangeText={(email) => this.setState({email}) }
@@ -191,70 +197,23 @@ database=()=>{
              <Text style={styles.buttonText}>SIGN UP</Text>
            </TouchableOpacity>
 
-           <TouchableOpacity style={styles.button} onPress={this.database.bind(this)}>
-             <Text style={styles.buttonText}>DATABASE TEST</Text>
-           </TouchableOpacity>
-
-
-          <TouchableOpacity style={styles.login} onPress={this.tempBridge.bind(this)}>
-             <Text style={styles.login}> BRIDGE  </Text>
-           </TouchableOpacity>
-
       </View>
-      </KeyboardAvoidingView>
+    
       )
     }
 
 render(){
   return(
-    <View style={styles.container}>
-      {this.renderCurrentState()}
-    </View>
+    
+      <View style={styles.container}>
+        <KeyboardAvoidingView>
+        {this.renderCurrentState()}
+        </KeyboardAvoidingView>
+      </View>
+   
+ 
     );
   }
 }
   
-
-const styles = StyleSheet.create({
-  container : {
-    flex: 1,
-    justifyContent:'center',
-    backgroundColor:'gray',
-    width: "100%"
-  },
-  text:{
-    fontSize:32,
-    textAlign:"center",
-    color:'white',
-  },
-  login:{
-    fontSize:20,
-    textAlign:"center",
-    color:'white',
-  },
-  button: {
-    backgroundColor:'#1c313a',
-    borderRadius: 50,
-    width: "75%",
-    marginVertical: 10,
-    paddingVertical: 13,
-    justifyContent: 'center',
-    alignItems: 'center',
-    left:"12%",
-
-  },
-  waiting : {
-    justifyContent:'center',
-    backgroundColor:'yellow',
-  },
-  buttonText: {
-    fontSize:18,
-    fontWeight:'500',
-    color:'white',
-    textAlign:'center'
-  }
-
-});
-
-
 

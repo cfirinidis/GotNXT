@@ -1,17 +1,18 @@
 import React from 'react';
 import{
-	StyleSheet,
 	Text,
 	Alert,
 	View,
 	KeyboardAvoidingView,
 	TouchableOpacity,
   ActivityIndicator,
+  AsyncStorage,
 } from 'react-native';
 import { connect } from 'react-redux';
 import { loginUser } from '../store/actions';
 import { readCourts } from '../store/actions';
 import Input from '../elements/Input';
+import styles from './generalStyle'
 import firebase from '../elements/Firebase';
 
 
@@ -22,11 +23,73 @@ class Login extends React.Component {
        this.state = {
          email: 'a@aa.com',
          password: 'testing',
-         authenticating:false,
+         authenticating:true,
          errorMessage: '',
          courts:[]
        };
      }
+
+    //  saveData=()=>{
+    //   let ML = JSON.stringify(configureStore.getState().masterListReducer);
+    //   let CL = JSON.stringify(configureStore.getState().compListReducer);
+    //   let AR  = JSON.stringify(configureStore.getState().arenaReducer);
+    //   let CAP = JSON.stringify(this.state.cap);
+    //   let CN = JSON.stringify(this.state.courtsNum);
+    //   let CARRAY = JSON.stringify(this.state.courtArr);
+    //   AsyncStorage.setItem('compList', CL)
+    //   AsyncStorage.setItem('masterList', ML);
+    //   AsyncStorage.setItem('arena', AR);
+    //   AsyncStorage.setItem('capacity', CAP);
+    //   AsyncStorage.setItem('courtN', CN);
+    //   AsyncStorage.setItem('courtA', CARRAY);
+    // }
+
+
+    //  loadData = async() =>{
+    //   try{
+    //     // let mas = await AsyncStorage.getItem('master');
+    //     let are = await AsyncStorage.getItem('arena');
+    //     let cap = await AsyncStorage.getItem('capacity');
+    //     let cNum = await AsyncStorage.getItem('courtN');
+    //     let cArray = await AsyncStorage.getItem('courtA');
+    //     let mlr = await AsyncStorage.getItem('masterList');
+    //     let cl = await AsyncStorage.getItem('compList')
+    //     configureStore.getState().compListReducer = JSON.parse(cl)
+    //     configureStore.getState().masterListReducer = JSON.parse(mlr);
+    //     configureStore.getState().arenaReducer = JSON.parse(are);
+    //     this.state.capacity = JSON.parse(cap);
+    //     this.state.courtsNum = JSON.parse(cNum);
+    //     this.state.courtArr = JSON.parse(cArray);
+    //     this.setState({capacity:this.state.capacity});
+    //     this.setState({courtsNum:this.state.courtsNum});
+    //     this.setState({courtArr:this.state.courtArr});
+    //     this.props.navigation.navigate("MainActivity", { cap:this.state.capacity, 
+    //     courtsNum:this.state.courtsNum, courtArr: this.state.courtArr, courtName: this.state.courtName});
+    //   }
+    //   catch(error){
+    //     console.log("ERROR")
+    //     alert(error);
+    //   }
+    // }
+
+  componentDidMount= async() =>{
+    console.log("IT BEGINS")
+    try{
+      let username = await AsyncStorage.getItem('user')
+      console.log(username, "INSIDE")
+
+      if (usersname != null){
+        this.setState({authenticating: false}) 
+      }
+    
+      }  
+    catch{
+      console.log("CATCH")
+        this.setState({authenticating: false}) 
+      }
+    }
+  
+
 
   GoToSignUp=()=>{
     this.props.navigation.navigate("SignUp");  
@@ -97,8 +160,8 @@ renderCurrentState(){
     return(
       <KeyboardAvoidingView>
       <View>
-          <Text style={styles.text}> GotNXT </Text>
-          <Text style={styles.text}> LOGIN </Text>
+          <Text style={styles.title}> GotNXT </Text>
+          <Text style={styles.title}> LOGIN </Text>
 
           <Input
             placeholder= " EMAIL "
@@ -135,53 +198,7 @@ render(){
   }
 }
  
-const styles = StyleSheet.create({
-  container : {
-    justifyContent:'center',
-    height: '100%',
-    backgroundColor:'gray',
-  },
-  waiting : {
-    justifyContent:'center',
-    backgroundColor:'yellow',
-  },
-  text:{
-    fontSize:32,
-    fontWeight: 'bold',
-    textAlign:"center",
-    color:'white',
-  },
-  signUp:{
-    backgroundColor:'orange',
-    width:"40%",
-    height: 45,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 6,
-    borderColor:'#1c313a',
-    borderRadius: 50,
-    left: '30%',
-    marginVertical: 25,
-  },
-  button: {
-    backgroundColor:'#1c313a',
-    borderRadius: 50,
-    width: "75%",
-    marginVertical: 10,
-    paddingVertical: 13,
-    justifyContent: 'center',
-    alignItems: 'center',
-    left:"12%",
 
-  },
-  buttonText: {
-    fontSize:18,
-    fontWeight:'500',
-    color:'white',
-    textAlign:'center'
-  }
-
-});
 
 const mapStateToProps = (state) => {
   // console.log("STATE MAIN: ", state);

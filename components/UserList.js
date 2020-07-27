@@ -1,6 +1,5 @@
 import React from 'react';
 import{
-	StyleSheet,
 	Text,
   View,
   ActivityIndicator,
@@ -8,8 +7,9 @@ import{
 	TouchableOpacity,
 } from 'react-native';
 import configureStore from './store';
+import styles from './generalStyle';
 import firebase from '../elements/Firebase';
-import Input from '../elements/Input';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export default class UserList extends React.Component {
   constructor(props) {
@@ -26,6 +26,10 @@ export default class UserList extends React.Component {
   tempBridge=()=>{
       console.log("Tempbridge ", this.state.courtName)
       this.props.navigation.navigate("Setup", {courtName: this.state.courtName});  
+    }
+
+    logOut=()=>{
+      this.props.navigation.navigate('Login');
     }
 
   componentDidMount(){
@@ -61,22 +65,33 @@ export default class UserList extends React.Component {
       return(
         <KeyboardAvoidingView >
         <View >
+
+        <View style={styles.topPart}>
             <View style={styles.info}>
-            <Text style={styles.text}>
-              EMAIL: 
-                <Text style={{color:'black'}}> { user.providerData[0]['email'] }
-                </Text>
-            </Text>
-            <Text style={styles.text}>
-              HANDLE:
-                <Text style={{color:'white'}}> { user.providerData[0]['displayName']} 
+             
+              <Text style={styles.infoKey}>
+                  EMAIL: 
+                  <Text style={styles.infoValue}> { user.providerData[0]['email'] }
+                  </Text>
+              </Text>
+              <Text style={styles.infoKey}>
+                HANDLE:
+                <Text style={styles.infoValue}> {user.providerData[0]['displayName']} 
                 </Text>
               </Text>
+      
             </View>
-            <View>
-              <Text style={styles.text}> {this.state.courtName} </Text>
-            </View>
-            <View>
+
+              <View style={styles.logOut}>
+                    <TouchableOpacity style={styles.logOutButton} onPress={this.logOut.bind(this)}>
+                      <Text style={styles.logOutText}> Log Out  </Text>
+                    </TouchableOpacity>
+                </View>
+          </View>
+
+
+            <View style={styles.body}>
+            <Text style={styles.courtNameStyle}> Court Name:  {this.state.courtName} </Text>
               {this.state.list.map((item, key)=>(
                   <Text  key={key} style={styles.listStyle}>
                     {key+1} {item}
@@ -100,63 +115,11 @@ export default class UserList extends React.Component {
 render(){
   return(
     <View style={styles.container}>
-      {this.renderCurrentState()}
+      <ScrollView>
+       {this.renderCurrentState()}
+      </ScrollView>
     </View>
     );
   }
 }
   
-
-const styles = StyleSheet.create({
-  container : {
-    flex: 1,
-    backgroundColor:'gray',
-    width: "100%"
-  },
-  info:{
-    backgroundColor: 'lightgray',
-    width: '50%',
-  },
-  text:{
-    fontSize:24,
-    textAlign:"left",
-    color:'orange',
-  },
-  listStyle:{
-    width:'100%',
-    fontSize:18,
-    marginBottom: 10,
-    color: 'yellow',
-    justifyContent: 'center',
-    marginLeft : '20%',
-  },
-  login:{
-    fontSize:20,
-    textAlign:"center",
-    color:'white',
-  },
-  button: {
-    backgroundColor:'#1c313a',
-    borderRadius: 50,
-    width: "75%",
-    marginVertical: 10,
-    paddingVertical: 13,
-    justifyContent: 'center',
-    alignItems: 'center',
-    left:"12%",
-
-  },
-  waiting : {
-    justifyContent:'center',
-    backgroundColor:'yellow',
-  },
-  buttonText: {
-    fontSize:18,
-    fontWeight:'500',
-    color:'white',
-    textAlign:'center'
-  }
-});
-
-
-

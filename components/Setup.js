@@ -22,8 +22,8 @@ class Setup extends React.Component {
        super(props);
        this.state = {
          Arena: [],
-         courtsNum: "1",
-         capacity: "2",
+         courtsNum: "",
+         capacity: "",
          courtArr:[],
          test:'',
          completeList: {},
@@ -78,7 +78,6 @@ class Setup extends React.Component {
       this.setState({capacity:this.state.capacity});
       this.setState({courtsNum:this.state.courtsNum});
       this.setState({courtArr:this.state.courtArr});
-
       this.props.navigation.navigate("MainActivity", { cap:this.state.capacity, 
       courtsNum:this.state.courtsNum, courtArr: this.state.courtArr, courtName: this.state.courtName});
     }

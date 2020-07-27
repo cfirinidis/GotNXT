@@ -1,20 +1,18 @@
 import React from 'react';
 import{
-	StyleSheet,
 	Text,
   View,
-  FlatList,
   ScrollView,
   ActivityIndicator,
 	KeyboardAvoidingView,
-	TouchableOpacity,
+  TouchableOpacity,
+  BackHandler,
   Alert,
 } from 'react-native';
 import { connect } from 'react-redux';
+import styles from './generalStyle';
 import {readCourts } from '../store/actions';
-import configureStore from './store';
 import firebase from '../elements/Firebase';
-import Input from '../elements/Input';
 
 class UserPage extends React.Component {
   constructor(props) {
@@ -44,6 +42,10 @@ class UserPage extends React.Component {
     this.props.navigation.navigate('addCourtPage');
   }
 
+  logOut=()=>{
+    this.props.navigation.navigate('Login');
+  }
+
 
   onPressAdd=()=>{
     console.log("ADD", this.state.newCourtName.replace(/\s/g, '').length)
@@ -68,8 +70,20 @@ class UserPage extends React.Component {
       this.props.readCourts(all)
       this.setState({courts: y});
       this.setState({loading: false})
-     
+      BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
+      console.log("COMPONENET DID MOUNT   BAKCKCKCKCKCKC")
       });
+  }
+
+  componentWillUnmount() {
+    console.log("WILL UNMOUNTTTTTT")
+    BackHandler.removeEventListener('hardwareBackPress', this.onBackPress);
+  }
+
+  onBackPress = () => {
+
+    console.log("ONBACKPRESS")
+    return true; 
   }
 
   onPressCreateCourt=(handle)=>{
@@ -118,40 +132,48 @@ this.props.navigation.navigate("UserList", {courtName: this.state.courtName} )
       // this.something();
   return(
       <KeyboardAvoidingView >
-      <View >
-          <View style={styles.info}>
-          <Text style={styles.text}>
-             EMAIL: 
-              <Text style={{color:'black'}}> { user.providerData[0]['email'] }
+      <View>
+          <View style={styles.topPart}>
+            <View style={styles.info}>
+             
+              <Text style={styles.infoKey}>
+                  EMAIL: 
+                  <Text style={styles.infoValue}> { user.providerData[0]['email'] }
+                  </Text>
               </Text>
-          </Text>
-          <Text style={styles.text}>
-             HANDLE:
-              <Text style={{color:'white'}}> { handle} 
+              <Text style={styles.infoKey}>
+                HANDLE:
+                <Text style={styles.infoValue}> { handle} 
+                </Text>
               </Text>
-            </Text>
+      
+            </View>
+
+              <View style={styles.logOut}>
+                    <TouchableOpacity style={styles.logOutButton} onPress={this.logOut.bind(this)}>
+                      <Text style={styles.logOutText}> Log Out  </Text>
+                    </TouchableOpacity>
+                </View>
           </View>
-        <Text style={{fontSize:24, textAlign:'center', backgroundColor:'white'}}>YOUR COURTS</Text>
-           <View>
-             {this.state.courts.map((item, key)=>(
-                <Text  key={key} style={{fontSize:22, marginBottom: 10, color: 'pink', marginLeft:'15%'}}
-                  onPress={()=>this.courtSelected(item) }>
-                  {item}
-             </Text>)
-        )}
-      </View>
 
+              <View style={styles.body}>
+                <Text style={styles.banner}>YOUR COURTS</Text>
+                  {this.state.courts.map((item, key)=>(
+                      <Text  key={key} style={styles.managedList}
+                        onPress={()=>this.courtSelected(item) }>
+                        {item}
+                      </Text>)
+                    )}
+                    <View style={{alignItems:'center'}}>
+                        <TouchableOpacity style={styles.addNewButton} onPress={this.goToAddCourt.bind(this)}>
+                              <Text style={styles.addNewText}>  + Add Court   </Text>
+                      </TouchableOpacity>
+                  </View>
+            </View>
 
-          <TouchableOpacity style={styles.login} onPress={this.tempBridge.bind(this)}>
-             <Text style={styles.login}> Active Court Lists  </Text>
-           </TouchableOpacity>
-
-           <TouchableOpacity style={styles.login} onPress={this.goToAddCourt.bind(this)}>
-             <Text style={styles.login}> Add New Court  </Text>
-           </TouchableOpacity>
-
-
-
+            <TouchableOpacity style={styles.button} onPress={this.tempBridge.bind(this)}>
+                  <Text style={styles.login}> Active Court Lists  </Text>
+            </TouchableOpacity>
       </View>
       </KeyboardAvoidingView>
       )
@@ -165,7 +187,7 @@ this.props.navigation.navigate("UserList", {courtName: this.state.courtName} )
 
 render(){
   return(
-    <View style={styles.container}>
+    <View style={styles.containerNoTop}>
        <ScrollView>
           {this.renderCurrentState()}
       </ScrollView>
@@ -173,64 +195,14 @@ render(){
     );
   }
 }
-  
-
-const styles = StyleSheet.create({
-  container : {
-    flex: 1,
-    justifyContent:'center',
-    backgroundColor:'gray',
-    width: "100%"
-  },
-  info:{
-    backgroundColor: 'lightgray',
-    width: '50%',
-  },
-  text:{
-    fontSize:24,
-    textAlign:"left",
-    color:'orange',
-  },
-  login:{
-    fontSize:20,
-    textAlign:"center",
-    color:'white',
-  },
-  button: {
-    backgroundColor:'#1c313a',
-    borderRadius: 50,
-    width: "75%",
-    marginVertical: 10,
-    paddingVertical: 13,
-    justifyContent: 'center',
-    alignItems: 'center',
-    left:"12%",
-
-  },
-  waiting : {
-    justifyContent:'center',
-    backgroundColor:'yellow',
-  },
-  buttonText: {
-    fontSize:18,
-    fontWeight:'500',
-    color:'white',
-    textAlign:'center'
-  }
-});
-
-
-
 
 const mapStateToProps = (state) => {
-  // console.log("STATE MAIN: ", state);
   return{
     playerlists: state.compListReducer.origCompList,
     shooterRedux: state.shooterReducer.shooter,
     reduxMasterList: state.masterListReducer.reduxMasterList,
     arenaRedux: state.arenaReducer.arenaReduxx,
     dbcourts: state.readCourtReducer.dbcourts,
-    // loginUser: state.userReducer.user
   }
 }
 
@@ -242,30 +214,3 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserPage);
-
-
-
-
-
-
-
-// <Input
-// placeholder= " NEW COURT NAME "
-// onChangeText={newCourtName => this.setState({newCourtName}) }
-// value={this.state.newCourtName}
-// />
-
-
-// <TouchableOpacity style={styles.button} onPress={()=>this.onPressCreateCourt(handle)}>
-//  <Text style={styles.buttonText}>ADD COURT</Text>
-// </TouchableOpacity>
-
-// <Input
-// placeholder= " NEW Player "
-// onChangeText={newName => this.setState({newName}) }
-// value={this.state.newName}
-// />
-
-// <TouchableOpacity style={styles.button} onPress={this.onPressAdd.bind(this)}>
-//  <Text style={styles.buttonText}>ADD NAMES</Text>
-// </TouchableOpacity>

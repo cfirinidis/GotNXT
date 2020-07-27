@@ -12,7 +12,7 @@ import{
 } from 'react-native';
 import { connect } from 'react-redux';
 import {readCourts } from '../store/actions';
-import configureStore from './store';
+import styles from './generalStyle'
 import firebase from '../elements/Firebase';
 import Input from '../elements/Input';
 
@@ -38,6 +38,10 @@ class addCourtPage extends React.Component {
   onPressAdd=()=>{
     console.log("ADD", this.state.newCourtName.replace(/\s/g, '').length)
     // firebase.database().ref('courts/' + "black" + '/list/').set([this.state.newName]) 
+  }
+
+  logOut=()=>{
+    this.props.navigation.navigate('Login');
   }
 
   componentDidMount(){
@@ -73,7 +77,6 @@ class addCourtPage extends React.Component {
       owner:handle, updated:this.state.date.toLocaleString('en-US'), list:[]
     })
     this.props.navigation.navigate("Setup", {courtName: this.state.newCourtName}); 
-    this.componentDidMount();
   }
 
 
@@ -106,19 +109,28 @@ class addCourtPage extends React.Component {
   return(
       <KeyboardAvoidingView >
       <View >
-          <View style={styles.info}>
-          <Text style={styles.text}>
-             EMAIL: 
-              <Text style={{color:'black'}}> { user.providerData[0]['email'] }
+      <View style={styles.topPart}>
+            <View style={styles.info}>
+             
+              <Text style={styles.infoKey}>
+                  EMAIL: 
+                  <Text style={styles.infoValue}> { user.providerData[0]['email'] }
+                  </Text>
               </Text>
-          </Text>
-          <Text style={styles.text}>
-             HANDLE:
-              <Text style={{color:'white'}}> { handle} 
+              <Text style={styles.infoKey}>
+                HANDLE:
+                <Text style={styles.infoValue}> {user.providerData[0]['displayName']} 
+                </Text>
               </Text>
-            </Text>
-          </View>
+      
+            </View>
 
+              <View style={styles.logOut}>
+                    <TouchableOpacity style={styles.logOutButton} onPress={this.logOut.bind(this)}>
+                      <Text style={styles.logOutText}> Log Out  </Text>
+                    </TouchableOpacity>
+                </View>
+          </View>
         <Input
             placeholder= " NEW COURT NAME "
             onChangeText={newCourtName => this.setState({newCourtName}) }
@@ -153,51 +165,7 @@ render(){
     );
   }
 }
-  
 
-const styles = StyleSheet.create({
-  container : {
-    flex: 1,
-    justifyContent:'center',
-    backgroundColor:'gray',
-    width: "100%"
-  },
-  info:{
-    backgroundColor: 'lightgray',
-    width: '50%',
-  },
-  text:{
-    fontSize:24,
-    textAlign:"left",
-    color:'orange',
-  },
-  login:{
-    fontSize:20,
-    textAlign:"center",
-    color:'white',
-  },
-  button: {
-    backgroundColor:'#1c313a',
-    borderRadius: 50,
-    width: "75%",
-    marginVertical: 10,
-    paddingVertical: 13,
-    justifyContent: 'center',
-    alignItems: 'center',
-    left:"12%",
-
-  },
-  waiting : {
-    justifyContent:'center',
-    backgroundColor:'yellow',
-  },
-  buttonText: {
-    fontSize:18,
-    fontWeight:'500',
-    color:'white',
-    textAlign:'center'
-  }
-});
 
 
 

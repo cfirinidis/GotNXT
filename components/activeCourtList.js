@@ -1,15 +1,15 @@
 import React from 'react';
 import{
-	StyleSheet,
 	Text,
   View,
   ActivityIndicator,
+  TouchableOpacity,
 	KeyboardAvoidingView,
-	TouchableOpacity,
 } from 'react-native';
 import configureStore from './store';
 import firebase from '../elements/Firebase';
-import Input from '../elements/Input';
+import styles from './generalStyle'
+import { ScrollView } from 'react-native-gesture-handler';
 
 export default class activeCourtList extends React.Component {
   constructor(props) {
@@ -19,7 +19,8 @@ export default class activeCourtList extends React.Component {
          password: '',
          list: [],
          courtName: this.props.navigation.getParam("courtName", "blank"),
-         loading: false
+         loading: false,
+         lastUpdate: '',
        };
      }
 
@@ -28,31 +29,41 @@ export default class activeCourtList extends React.Component {
       this.props.navigation.navigate("Setup", {courtName: this.state.courtName});  
     }
 
+    logOut=()=>{
+      this.props.navigation.navigate('Login');
+    }
+
 
   componentDidMount(){
+        let dumb = ''
+        let y = []
         console.log("COMPONENT DID MOUNT", this.state.courtName)
         let c = firebase.database().ref('courts/' + this.state.courtName + '/list')
-        return c.once('value', snapshot => {
-          console.log(snapshot)
+        let update =  firebase.database().ref('courts/' + this.state.courtName + '/updated')
+        update.once("value", function(snapshot) {
+            console.log("ONNNNNNNNNNNNNNNN",snapshot.val(), snapshot);
+              dumb = snapshot.val();
+        }, function (errorObject) {
+          console.log("The read failed: " + errorObject.code);
+        })
+        c.once('value', snapshot => {
             let x =  snapshot.val()
-            let y = []
             for( i in x){
-              console.log("FOR", i, snapshot.val()[i])
-              // this.state.list.push(snapshot.val()[i])
+              // console.log("FOR", i, snapshot.val()[i])
               y.push(snapshot.val()[i])
             }
-        // this.props.readCourts(y)
+        this.setState({lastUpdate: dumb});
         this.setState({list: y});
-        // this.setState({loading: false})
        
         });  
+
     }
 
 
   renderCurrentState(){
     let user = firebase.auth().currentUser;
-    x = configureStore.getState().compListReducer
-    console.log("LIST ",x) 
+    let handle = user.providerData[0]['displayName']
+
     if(this.state.loading){
       return(
         <View style={styles.waiting}>
@@ -65,36 +76,52 @@ export default class activeCourtList extends React.Component {
       console.log(user.providerData)
       return(
 
-
       <KeyboardAvoidingView >
-      <View >
+        <View >
 
-          <View style={styles.info}>
-          <Text style={styles.text}>
-             EMAIL: 
-              <Text style={{color:'black'}}> { user.providerData[0]['email'] }
-              </Text>
-          </Text>
-          <Text style={styles.text}>
-             HANDLE:
-              <Text style={{color:'white'}}> { user.providerData[0]['displayName']} 
-              </Text>
-            </Text>
 
+        <View style={styles.topPart}>
+            <View style={styles.info}>
+             
+              <Text style={styles.infoKey}>
+                  EMAIL: 
+                  <Text style={styles.infoValue}> { user.providerData[0]['email'] }
+                  </Text>
+              </Text>
+              <Text style={styles.infoKey}>
+                HANDLE:
+                <Text style={styles.infoValue}> {user.providerData[0]['displayName']} 
+                </Text>
+              </Text>
+      
+            </View>
+
+              <View style={styles.logOut}>
+                    <TouchableOpacity style={styles.logOutButton} onPress={this.logOut.bind(this)}>
+                      <Text style={styles.logOutText}> Log Out  </Text>
+                    </TouchableOpacity>
+                </View>
           </View>
 
-          <View>
-            <Text style={styles.text}> {this.state.courtName} </Text>
-          </View>
+      <View style={styles.body}>
+         <Text style={styles.topBanner}>
+            {this.state.courtName}
+        </Text>
+            
+            {this.state.list.map((item, key)=>(
+              <Text  key={key} style={styles.listStyle}>
+              {key+1} {item}
+              </Text>)
+            )}
 
-      <View>
-        
-        {this.state.list.map((item, key)=>(
-           <Text  key={key} style={styles.listStyle}>
-             {key+1} {item}
-        </Text>)
-        )}
+        <Text style={styles.updated}>
+            UPDATED : 
+        </Text>
+        <Text style={styles.updated}>
+            {this.state.lastUpdate}
+        </Text>
       </View>
+
 
       </View>
       </KeyboardAvoidingView>
@@ -110,63 +137,14 @@ export default class activeCourtList extends React.Component {
 render(){
   return(
     <View style={styles.container}>
+    <ScrollView>
+    
       {this.renderCurrentState()}
+    
+    </ScrollView>
     </View>
     );
   }
 }
   
-
-const styles = StyleSheet.create({
-  container : {
-    flex: 1,
-    backgroundColor:'gray',
-    width: "100%"
-  },
-  info:{
-    backgroundColor: 'lightgray',
-    width: '50%',
-  },
-  text:{
-    fontSize:24,
-    textAlign:"left",
-    color:'orange',
-  },
-  listStyle:{
-    width:'100%',
-    fontSize:18,
-    marginBottom: 10,
-    color: 'yellow',
-    justifyContent: 'center',
-    marginLeft : '20%',
-  },
-  login:{
-    fontSize:20,
-    textAlign:"center",
-    color:'white',
-  },
-  button: {
-    backgroundColor:'#1c313a',
-    borderRadius: 50,
-    width: "75%",
-    marginVertical: 10,
-    paddingVertical: 13,
-    justifyContent: 'center',
-    alignItems: 'center',
-    left:"12%",
-
-  },
-  waiting : {
-    justifyContent:'center',
-    backgroundColor:'yellow',
-  },
-  buttonText: {
-    fontSize:18,
-    fontWeight:'500',
-    color:'white',
-    textAlign:'center'
-  }
-});
-
-
 

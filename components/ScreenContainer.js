@@ -18,7 +18,11 @@ import addCourtPage from './addCourtPage';
 
 const MainNavigator = createStackNavigator({
     Login:{
-        screen: Login
+        screen: Login,
+        navigationOptions:  {
+            header: null,
+            gesturesEnabled: false,
+         }
     },
     SignUp:{
         screen: SignUp
@@ -43,6 +47,10 @@ const MainNavigator = createStackNavigator({
     },
     User: {
         screen: UserPage,
+        navigationOptions:  {
+            header: null,
+            gesturesEnabled: false,
+         }
     },
     UserList: {
         screen: UserList,

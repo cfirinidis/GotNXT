@@ -474,63 +474,76 @@ winnersWinners(){
 }
 
  render() {
-  // console.log("RENDER MASTERLIST:",configureStore.getState().masterListReducer)
-  // console.log("RENDER GAME ",configureStore.getState().arenaReducer[0][this.state.courtName]    )
-  console.log("FRANK")
-  let Game = configureStore.getState().arenaReducer[0][this.state.courtName].map((val, key)=> {
-    let A = []
-    let B = []
-    let t = {}
-    let currentPlayerA = []
-    let currentPlayerB = []
-   
-  for (keys in val){
-      if (keys == "teamA"){
-        for (things in val[keys]){
-          for (players in val[keys][things]){
-            A += [val[keys][things][players]['player']+'\n']
-            currentPlayerA.push(val[keys][things][players]['player'])
-      }}
-      if(A.length>1){
-        A = A.replace(/\n$/, "") 
-      }
+  console.log("RENDER MASTERLIST:",configureStore.getState().masterListReducer)
+  console.log("RENDER GAME ",this.state.courtName    )
+  console.log("FRANK"  , configureStore.getState().arenaReducer[0][this.state.courtName])
+
+  //this should load something from server
+  if (!configureStore.getState().arenaReducer[0][this.state.courtName]){
+    configureStore.getState().arenaReducer[0][this.state.courtName] = []
     }
-      else if(keys == "teamB"){
-        for (things in val[keys]){
-          for (players in val[keys][things]){
-            B += [val[keys][things][players]['player']+'\n']
-            currentPlayerB.push(val[keys][things][players]['player'])}
+
+    // console.log("IT EXISTS")
+        let Game = configureStore.getState().arenaReducer[0][this.state.courtName].map((val, key)=> {
+          let A = []
+          let B = []
+          let t = {}
+          let currentPlayerA = []
+          let currentPlayerB = []
+        
+        for (keys in val){
+          if (keys == "teamA"){
+            for (things in val[keys]){
+              for (players in val[keys][things]){
+                A += [val[keys][things][players]['player']+'\n']
+                currentPlayerA.push(val[keys][things][players]['player'])
+            }}
+            if(A.length>1){
+              A = A.replace(/\n$/, "") 
+            }
+          }
+          else if(keys == "teamB"){
+            for (things in val[keys]){
+              for (players in val[keys][things]){
+                B += [val[keys][things][players]['player']+'\n']
+                currentPlayerB.push(val[keys][things][players]['player'])}
+            }
+            if(B.length>1){
+              B = B.replace(/\n$/, "") 
+            }
+          }}
+        
+        t["key"] =  val.Num.toString()
+        t["valA"] = A 
+        t["valB"] = B
+        this.addToCurA(currentPlayerA, val.Num)
+        this.addToCurB(currentPlayerB, val.Num)
+      if (A.length > 0 ){
+        console.log(t)
+        return t 
       }
-      if(B.length>1){
-        B = B.replace(/\n$/, "") 
-      }
-    }}
-  
-     t["key"] =  val.Num.toString()
-     t["valA"] = A 
-     t["valB"] = B
-  this.addToCurA(currentPlayerA, val.Num)
-  this.addToCurB(currentPlayerB, val.Num)
-if (A.length > 0 ){
-  return t 
-}
-}); 
+      }); 
 
-  let pending = Object.values(this.state.tempNameArray).map(function(vals) {
-      let t= {} ;
-      for (val in vals){
-          if(vals[val] != false && vals[val] != true){
-              t["key"] = vals[val]; 
-        }}
-      return t
-  });
 
-Game = Game.filter(function(item){
-    if (item != undefined){
-      return item
-    }
-});
+    console.log("GAMEEEE:  ", Game)
 
+    Game = Game.filter(function(item){
+        if (item != undefined){
+          return item
+        }
+      });
+
+
+
+      let pending = Object.values(this.state.tempNameArray).map(function(vals) {
+        let t= {} ;
+        for (val in vals){
+            if(vals[val] != false && vals[val] != true){
+                t["key"] = vals[val]; 
+          }}
+        console.log(t)
+        return t
+      });
    return (
       <KeyboardAvoidingView style={styles.wrapper}>
       <ScrollView>
