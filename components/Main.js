@@ -22,6 +22,7 @@ import PopUp from './PopUp';
 import Dialog from "react-native-dialog";
 import CustomPromptComponent from './Modal';
 import Games from './currentGames';
+import Something from './indiPlayer';
 import StartFunction from './function';
 import SelectMultiple from 'react-native-select-multiple';
 
@@ -30,6 +31,8 @@ export default class MainActivity extends React.Component {
   constructor(props) {
        super(props);
        this.state = {
+         teamAArray:[],
+         teamBArray:[],
          hitShot: [],
          diff: 0,
          title: '',
@@ -57,20 +60,20 @@ export default class MainActivity extends React.Component {
          prefCourt: [],
          totalPlayers:0,
          SampleArray : [],
-        //  masterList : [
-        //  [{pref:0}, [{player: "Lebron", replacement: false}, {player:"AntDavis", replacement: false}]],
-        //  [{pref:0}, [{player:"Kyrie", replacement: true}, {player:"Durant", replacement: true}]],
-        // [{pref:0}, [{player:"Majerle", replacement: false}]],
-        // [{pref:0}, [{player:"Kawhi", replacement: false}, {player:"PG13", replacement: false}]],
-        //  [{pref:0}, [{player:'Larry', replacement: false}, {player:'Parish', replacement: false}]], 
-        //   [{pref:0}, [{player:'CONZ', replacement: false}]]
-        //   ],  
+         masterList : [
+         [{pref:0}, [{player: "Lebron", replacement: false}, {player:"AntDavis", replacement: false}]],
+         [{pref:0}, [{player:"Kyrie", replacement: true}, {player:"Durant", replacement: true}]],
+        [{pref:0}, [{player:"Majerle", replacement: false}]],
+        [{pref:0}, [{player:"Kawhi", replacement: false}, {player:"PG13", replacement: false}]],
+         [{pref:0}, [{player:'Larry', replacement: false}, {player:'Parish', replacement: false}]], 
+          [{pref:0}, [{player:'CONZ', replacement: false}]]
+          ],  
          cap: this.props.navigation.getParam("cap", "blank"),
          Arena: this.props.navigation.getParam("arena", "blank"),
          courtsNum: this.props.navigation.getParam("courtsNum", "blank"),
          courtArr: this.props.navigation.getParam("courtArr", "blank"),
          courtArrPref: [],
-         masterList: this.props.navigation.getParam("masterList", "blank"),
+        //  masterList: this.props.navigation.getParam("masterList", "blank"),
          current: 0,
          answer: 'none'
        };
@@ -288,13 +291,10 @@ export default class MainActivity extends React.Component {
 
   async StartGame(){
     this.func = new StartFunction();
-    // this.func.printF();
       let teamcap = (this.state.cap/2);
       let delArray = [];
       let crash = 0;
       let names = 0;
-      // console.log("START GAME TOP : WHAT GAME # - ", this.state.current)
-      // console.log('TeamAnum :'  ,this.state.Arena, "NBUMM: ",this.state.Arena['teamANum'], "NUM______", this.state.Arena['Num']  )
       
       AsyncAlert = (title, msg) => new Promise((resolve, reject) => {  
         Alert.alert(
@@ -306,38 +306,11 @@ export default class MainActivity extends React.Component {
                     );
       });
 
-      // let start = await AsyncAlert("Pick teams from List", '')
-      // if (start =="YES"){
-      //   console.log(this.state.masterList)
-      //   for(i in this.state.masterList){
-      //     console.log("i", i, this.state.masterList[i].length)
-      //     if (this.state.masterList[i].length > 1){
-      //       for (j in this.state.masterList[i]){
-      //         console.log("FOR j ", this.state.masterList[i][j]['player'])
-      //         this.state.shooters.push(this.state.masterList[i][j]['player'])
-
-      //       }
-      //     }
-      //     else{
-      //       console.log("single player", this.state.masterList[i][0])
-      //     this.state.shooters.push(this.state.masterList[i][0]['player'])
-      //   }
-      //   }
-      //   // console.log("SHooter", this.state.shooters)
-      //   this.setState({modalVisible: true});
-      //   console.log(this.state.theyHit)
-
-      // }
-
-      // else{
         while(crash < this.state.masterList.length){//add full contingency
               if (this.state.current >= this.state.Arena.length){
                    Alert.alert("GAMES FULL!")
                    break
               }
-              // console.log("The Cureenty place: ", this.state.current, this.state.masterList[names][0]['pref'], this.state.masterList[names])
-            // console.log("TOP : ", this.state.Arena[this.state.current]["teamANum"],this.state.Arena[this.state.current]["teamBNum"],"names", names,  this.state.masterList[names][1].length, this.state.masterList.length )
-              // console.log("TOP MS: ",this.state.masterList)
               if(this.state.current + 1 != this.state.masterList[names][0]['pref'] && this.state.masterList[names][0]['pref'] != 0 ){
                   // console.log("Wanted to be skipped")
                   names++;
@@ -460,8 +433,6 @@ export default class MainActivity extends React.Component {
       alert("Game has not started");
       return
     }
-    
-    // console.log('cn ', courtNum,'loser ', loser,'winner ', winner,'status ', status, this.state.Arena)
       var temp = [];
       var titleP = '';
       this.state.current = courtNum-1
@@ -470,7 +441,6 @@ export default class MainActivity extends React.Component {
         this.state.Arena[courtNum-1][winner][i][0]['replacement'] = false 
       }
       for (i=0; i< this.state.Arena[courtNum-1][loser].length; i++){
-        // console.log(this.state.Arena[courtNum-1][loser][i])
         if (this.state.Arena[courtNum-1][loser][i][0]['replacement'] == false){
             temp.push(this.state.Arena[courtNum-1][loser][i][0])
             titleP += " " + (this.state.Arena[courtNum-1][loser][i][0]['player'])
@@ -508,7 +478,6 @@ export default class MainActivity extends React.Component {
        }
         }}
       this.setState({Arena:this.state.Arena});
-      // console.log("right before start", this.state.Arena)
       this.StartGame();
   
 }
@@ -525,20 +494,18 @@ winnersWinners(){
 }
 
  render() {
-  // console.log("NUMMM: ", this.state.courtsNum)
-  // console.log("MasterList : ", this.state.masterList)
-  // console.log("RENDER THE ARENA : ", this.state.Arena, this.state.curPlayers, "TEMPO: ", this.state.tempCourt)
+  console.log("Arena: ", this.state.Arena)
   let Game = this.state.Arena.map((val, key)=> {
     let A = []
     let B = []
     let t = {}
     let currentPlayerA = []
     let currentPlayerB = []
-   
   for (keys in val){
       if (keys == "teamA"){
         for (things in val[keys]){
           for (players in val[keys][things]){
+            console.log("PLAYERS: ", val[keys][things][players]['player'])
             A += [val[keys][things][players]['player'] + '    ']
             currentPlayerA.push(val[keys][things][players]['player'])
       }}}
@@ -552,10 +519,58 @@ winnersWinners(){
      t["key"] =  val.Num.toString()
      t["valA"] = A 
      t["valB"] = B
+  console.log(this.state.teamAArray, this.state.teamBArray)
   this.addToCurA(currentPlayerA, val.Num)
   this.addToCurB(currentPlayerB, val.Num)
   return t
+  // return   <indiPlayer key={key} keyval={key} val={val} AddMaster={()=>this.AddMaster()}/>
 }); 
+
+let arrayA = this.state.Arena.map((val, key)=> {
+    arrA=[]
+    for (keys in val){
+        if (keys == "teamA"){
+          for (things in val[keys]){
+            for (players in val[keys][things]){
+              if (val[keys][things][players]['player']){
+              console.log("PLAYERS: ", val[keys][things][players]['player'])
+              arrA.push({ 'player': val[keys][things][players]['player'], sub:false})
+              }
+        }}}
+    }
+return arrA
+});
+
+let arrayB = this.state.Arena.map((val, key)=> {
+  arrB=[]
+  for (keys in val){
+      if (keys == "teamB"){
+        for (things in val[keys]){
+          for (players in val[keys][things]){
+            console.log("PLAYERS: ", val[keys][things][players]['player'])
+            arrB.push({ 'player': val[keys][things][players]['player'], sub:false})
+      }}}
+  }
+return arrB
+// return   <indiPlayer key={key} keyval={key} val={val} AddMaster={()=>this.AddMaster()}/>
+}); 
+
+console.log("AA", arrayA)
+console.log("BBBBB", arrayB)
+
+let teamAAA = arrayA[0].map((val, key)=>{
+  console.log("BEFORE SOMETHING")
+  console.log("TEAMAAAAAAAAAAAAAA", key, val.player)
+return <Something key={key} keyval={key} val={val}/>
+});
+
+let teamBBB = arrayB[0].map((val, key)=>{
+  console.log("BEFORE SOMETHING")
+  console.log("TEAMAAAAAAAAAAAAAA", key, val.player)
+return <Something key={key} keyval={key} val={val}/>
+});
+
+
 
   let pending = Object.values(this.state.SampleArray).map(function(vals) {
       var t= {} ;
@@ -608,32 +623,15 @@ winnersWinners(){
 
     <View style={{padding:20}}>  
     <Text style={{fontSize:40, backgroundColor:'black', color:'white', textAlign:'center',flexDirection:'row', justifyContent:'flex-end'}}>Current Games</Text>
-    <FlatList
-    data={Game} 
-    renderItem={({ item }) => (
-    <View>
-    <Text style={{fontSize:30, color:'black'}}>Game {item.key} : </Text>
 
-      <TouchableHighlight onPress={()=>this.replacePlayer(item.key, "teamA", this.state.curPlayersA) } style={styles.teamStyle}>
-        
-        <Text style={{color:"gray", fontSize:28}}>TEAM A :{"\n"}{item.valA}</Text>
-      </TouchableHighlight>
 
-      <Text style={{color:"black", fontSize:34}}>- V S -</Text>
-    <TouchableHighlight onPress={()=>this.replacePlayer(item.key, "teamB", this.state.curPlayersB) } style={styles.teamStyle}>
-      
-      <Text style={{color:"red", fontSize:28}}>TEAM B :{"\n"}{item.valB}</Text>
-    </TouchableHighlight>
 
-    <TouchableHighlight onPress={()=>this.endGame(item.key, "teamB", "teamA", 'reg')} style={styles.teamAWonStyle} >
-      <Text style={{color:"white", fontSize:26}}>Team A Won</Text>
-    </TouchableHighlight>
+    <ScrollView>
+       {teamAAA}
+       {teamBBB}
+       </ScrollView>
 
-    <TouchableHighlight onPress={()=>this.endGame(item.key, "teamA", "teamB", 'reg') } style={styles.teamBWonStyle}>
-      <Text style={{color:"white", fontSize:26}}>Team B Won</Text>
-    </TouchableHighlight>
-    
-    </View>)}/>
+
     </View>
 
     <Modal 

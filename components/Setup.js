@@ -20,8 +20,8 @@ export default class Setup extends React.Component {
        super(props);
        this.state = {
          Arena: [],
-         courtsNum: '',
-         capacity: '',
+         courtsNum: "2",
+         capacity: "6",
          masterList: [],
          courtArr:[],
          test:''
