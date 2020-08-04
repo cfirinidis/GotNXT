@@ -63,7 +63,7 @@ export default class MainActivity extends React.Component {
          masterList : [
          [{pref:0}, [{player: "Lebron", replacement: false}, {player:"AntDavis", replacement: false}]],
          [{pref:0}, [{player:"Kyrie", replacement: true}, {player:"Durant", replacement: true}]],
-        [{pref:0}, [{player:"Majerle", replacement: false}]],
+        [{pref:0}, [{player:"Majerle", replacement: false}]],   [{pref:0}, [{player:"Miller", replacement: false}]],   [{pref:0}, [{player:"Barkley", replacement: false}]],
         [{pref:0}, [{player:"Kawhi", replacement: false}, {player:"PG13", replacement: false}]],
          [{pref:0}, [{player:'Larry', replacement: false}, {player:'Parish', replacement: false}]], 
           [{pref:0}, [{player:'CONZ', replacement: false}]]
@@ -496,6 +496,7 @@ winnersWinners(){
  render() {
   console.log("Arena: ", this.state.Arena)
   let Game = this.state.Arena.map((val, key)=> {
+    let Atest = []
     let A = []
     let B = []
     let t = {}
@@ -505,8 +506,13 @@ winnersWinners(){
       if (keys == "teamA"){
         for (things in val[keys]){
           for (players in val[keys][things]){
-            console.log("PLAYERS: ", val[keys][things][players]['player'])
+            // console.log("PLAYERS: ", val[keys][things][players]['player'])
+            // Atest.push( val[keys][things][players]['player']       )
             A += [val[keys][things][players]['player'] + '    ']
+            Atest.push({"player" : val[keys][things][players]['player'],
+                    "sub": 'false', "key":val[keys][things][players]['player'],
+                  'attr':'basketball'  })
+
             currentPlayerA.push(val[keys][things][players]['player'])
       }}}
       else{
@@ -516,60 +522,18 @@ winnersWinners(){
             currentPlayerB.push(val[keys][things][players]['player'])
       }}}
   }
+
+  console.log("ATEST: ", Atest)
      t["key"] =  val.Num.toString()
      t["valA"] = A 
      t["valB"] = B
+     t['valATest'] = Atest
   console.log(this.state.teamAArray, this.state.teamBArray)
   this.addToCurA(currentPlayerA, val.Num)
   this.addToCurB(currentPlayerB, val.Num)
   return t
   // return   <indiPlayer key={key} keyval={key} val={val} AddMaster={()=>this.AddMaster()}/>
 }); 
-
-let arrayA = this.state.Arena.map((val, key)=> {
-    arrA=[]
-    for (keys in val){
-        if (keys == "teamA"){
-          for (things in val[keys]){
-            for (players in val[keys][things]){
-              if (val[keys][things][players]['player']){
-              console.log("PLAYERS: ", val[keys][things][players]['player'])
-              arrA.push({ 'player': val[keys][things][players]['player'], sub:false})
-              }
-        }}}
-    }
-return arrA
-});
-
-let arrayB = this.state.Arena.map((val, key)=> {
-  arrB=[]
-  for (keys in val){
-      if (keys == "teamB"){
-        for (things in val[keys]){
-          for (players in val[keys][things]){
-            console.log("PLAYERS: ", val[keys][things][players]['player'])
-            arrB.push({ 'player': val[keys][things][players]['player'], sub:false})
-      }}}
-  }
-return arrB
-// return   <indiPlayer key={key} keyval={key} val={val} AddMaster={()=>this.AddMaster()}/>
-}); 
-
-console.log("AA", arrayA)
-console.log("BBBBB", arrayB)
-
-let teamAAA = arrayA[0].map((val, key)=>{
-  console.log("BEFORE SOMETHING")
-  console.log("TEAMAAAAAAAAAAAAAA", key, val.player)
-return <Something key={key} keyval={key} val={val}/>
-});
-
-let teamBBB = arrayB[0].map((val, key)=>{
-  console.log("BEFORE SOMETHING")
-  console.log("TEAMAAAAAAAAAAAAAA", key, val.player)
-return <Something key={key} keyval={key} val={val}/>
-});
-
 
 
   let pending = Object.values(this.state.SampleArray).map(function(vals) {
@@ -581,6 +545,9 @@ return <Something key={key} keyval={key} val={val}/>
       return t
   });
 
+
+
+console.log(Game)
 
    return (
       <KeyboardAvoidingView style={styles.wrapper} behavior="padding" enabled>
@@ -626,13 +593,66 @@ return <Something key={key} keyval={key} val={val}/>
 
 
 
-    <ScrollView>
-       {teamAAA}
-       {teamBBB}
-       </ScrollView>
-
-
     </View>
+
+
+
+    <FlatList
+    data={Game} 
+    renderItem={({ item }) => (
+    <View>
+    <Text style={{fontSize:30, color:'black'}}>Game {item.key} : </Text>
+
+
+      <TouchableHighlight onPress={()=>this.replacePlayer(item.key, "teamA", this.state.curPlayersA) } style={styles.teamStyle}>
+
+        <Text style={{color:"gray", fontSize:28}}>TEAM A :{"\n"}{item.valA}</Text>
+      </TouchableHighlight>
+      
+      
+      <View  style={styles.teamStyle}>
+      <Text style={{color:"gray", fontSize:28}}>TEAM A :</Text>
+          <FlatList
+              style={{ backgroundColor: 'yellow', paddingBottom: 5}}
+              data={item.valATest} 
+              keyExtractor={(item, index) => { return index.toString() }}
+              renderItem={({ item }) => 
+              <Text style={[
+                (item.sub == 'true' ) ?   styles.colors : styles.colorsTest,
+                (item.sub == 'false' ) ? styles.colorsSub : styles.colorsTest, styles.colorsTest,
+
+               ] }> ----> {item.player}  </Text>}
+          />
+      </View>
+      <Text style={{color:"black", fontSize:34}}>- V S -</Text>
+
+    <TouchableHighlight onPress={()=>this.replacePlayer(item.key, "teamB", this.state.curPlayersB) } style={styles.teamStyle}>
+   
+      <Text style={{color:"red", fontSize:28}}>TEAM B :{"\n"}{item.valB}</Text>
+      
+    </TouchableHighlight>
+
+
+    <TouchableHighlight onPress={()=>this.endGame(item.key, "teamB", "teamA", 'reg')} style={styles.teamAWonStyle} >
+
+      <Text style={{color:"white", fontSize:26}}>Team A Won</Text>
+    </TouchableHighlight>
+
+    <TouchableHighlight onPress={()=>this.endGame(item.key, "teamA", "teamB", 'reg') } style={styles.teamBWonStyle}>
+      <Text style={{color:"white", fontSize:26}}>Team B Won</Text>
+    </TouchableHighlight>
+
+    </View>)}/>
+
+
+
+
+
+
+
+
+
+
 
     <Modal 
     visible={this.state.modalVisible}>
@@ -723,6 +743,15 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#e8eae7',
     padding: 5,
+  },
+  colorsTest:{
+   fontSize:28, backgroundColor: 'pink', marginBottom: 10, borderWidth: 6, borderColor: 'black'
+  },
+  colors:{
+    color:'purple'
+  },
+  colorsSub:{
+    color:'orange'
   },
   teamStyle: {
     backgroundColor: 'white',
