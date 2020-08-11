@@ -497,6 +497,7 @@ winnersWinners(){
   console.log("Arena: ", this.state.Arena)
   let Game = this.state.Arena.map((val, key)=> {
     let Atest = []
+    let Btest = []
     let A = []
     let B = []
     let t = {}
@@ -519,6 +520,9 @@ winnersWinners(){
         for (things in val[keys]){
           for (players in val[keys][things]){
             B += [val[keys][things][players]['player'] + '    ']
+            Btest.push({"player" : val[keys][things][players]['player'],
+            "sub": 'false', "key":val[keys][things][players]['player'],
+          'attr':'basketball'  })
             currentPlayerB.push(val[keys][things][players]['player'])
       }}}
   }
@@ -528,6 +532,7 @@ winnersWinners(){
      t["valA"] = A 
      t["valB"] = B
      t['valATest'] = Atest
+     t['valBTest'] = Btest
   console.log(this.state.teamAArray, this.state.teamBArray)
   this.addToCurA(currentPlayerA, val.Num)
   this.addToCurB(currentPlayerB, val.Num)
@@ -613,9 +618,10 @@ console.log(Game)
       <View  style={styles.teamStyle}>
       <Text style={{color:"gray", fontSize:28}}>TEAM A :</Text>
           <FlatList
+              // listKey={"A"}
               style={{ backgroundColor: 'yellow', paddingBottom: 5}}
               data={item.valATest} 
-              keyExtractor={(item, index) => { return index.toString() }}
+              listKey={(item, index) => { return index.toString() }}
               renderItem={({ item }) => 
               <Text style={[
                 (item.sub == 'true' ) ?   styles.colors : styles.colorsTest,
@@ -626,12 +632,33 @@ console.log(Game)
       </View>
       <Text style={{color:"black", fontSize:34}}>- V S -</Text>
 
+
+      <View  style={styles.teamStyle}>
+
     <TouchableHighlight onPress={()=>this.replacePlayer(item.key, "teamB", this.state.curPlayersB) } style={styles.teamStyle}>
    
       <Text style={{color:"red", fontSize:28}}>TEAM B :{"\n"}{item.valB}</Text>
-      
-    </TouchableHighlight>
+      {/* <Text style={{color:"red", fontSize:28}}>TEAM B :{"\n"}{item.valBTest}</Text> */}
+     
+      </TouchableHighlight>
 
+<View key={2}>
+      <FlatList
+              // listKey={"B"}
+              style={{ backgroundColor: 'yellow', paddingBottom: 5}}
+              data={item.valBTest} 
+              listKey={(item, index) => { return item.player }}
+              renderItem={({ item }) => 
+              <Text style={[
+                (item.sub == 'true' ) ?   styles.colors : styles.colorsTest,
+                (item.sub == 'false' ) ? styles.colorsSub : styles.colorsTest, styles.colorsTest,
+
+               ] }> ----> {item.player}  </Text>}
+          />
+
+</View>
+    
+               </View>
 
     <TouchableHighlight onPress={()=>this.endGame(item.key, "teamB", "teamA", 'reg')} style={styles.teamAWonStyle} >
 
