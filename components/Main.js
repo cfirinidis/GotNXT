@@ -621,7 +621,7 @@ console.log(Game)
               // listKey={"A"}
               style={{ backgroundColor: 'yellow', paddingBottom: 5}}
               data={item.valATest} 
-              listKey={(item, index) => { return index.toString() }}
+              listKey={(item) => { return item.player }}
               renderItem={({ item }) => 
               <Text style={[
                 (item.sub == 'true' ) ?   styles.colors : styles.colorsTest,
@@ -636,18 +636,15 @@ console.log(Game)
       <View  style={styles.teamStyle}>
 
     <TouchableHighlight onPress={()=>this.replacePlayer(item.key, "teamB", this.state.curPlayersB) } style={styles.teamStyle}>
-   
-      <Text style={{color:"red", fontSize:28}}>TEAM B :{"\n"}{item.valB}</Text>
-      {/* <Text style={{color:"red", fontSize:28}}>TEAM B :{"\n"}{item.valBTest}</Text> */}
-     
-      </TouchableHighlight>
+      <Text style={{color:"red", fontSize:28}}>TEAM B :{"\n"}{item.valB}</Text> 
+    </TouchableHighlight>
 
 <View key={2}>
       <FlatList
               // listKey={"B"}
               style={{ backgroundColor: 'yellow', paddingBottom: 5}}
               data={item.valBTest} 
-              listKey={(item, index) => { return item.player }}
+              listKey={(item) => { return item.player }}
               renderItem={({ item }) => 
               <Text style={[
                 (item.sub == 'true' ) ?   styles.colors : styles.colorsTest,
