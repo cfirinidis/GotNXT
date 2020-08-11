@@ -582,10 +582,11 @@ winnersWinners(){
               <View>
 
                 <TouchableHighlight onPress={()=>this.replacePlayer(item.key, "teamA", this.state.curPlayersA) } style={styles.teamStyleA}>  
+                    
                     <FlatList
                     style={{ backgroundColor: 'yellow', paddingBottom: 5}}
                     data={item.teamAInfo} 
-                    keyExtractor={(item) => { return item.player }}
+                    listKey={(item) => { return index.toString() }}
                     renderItem={({ item }) => 
                     <Text style={[
                       (item.sub == 'true' ) ?   styles.colors : styles.colorsTest,
@@ -601,14 +602,13 @@ winnersWinners(){
 
 
 
-<View>
           <TouchableHighlight onPress={()=>this.replacePlayer(item.key, "teamB", this.state.curPlayersB) } style={styles.teamStyleB}>
             <Text style={{color:"red", fontSize:28}}>{item.valB}</Text>
 
             <FlatList
                     style={{ backgroundColor: 'yellow', paddingBottom: 5}}
-                    data={item.teamAInfo} 
-                    keyExtractor={(item) => { return item.player }}
+                    data={item.teamBInfo} 
+                    listKey={(item, index) => { return index.toString() }}
                     renderItem={({ item }) => 
                     <Text style={[
                       (item.sub == 'true' ) ?   styles.colors : styles.colorsTest,
@@ -624,7 +624,6 @@ winnersWinners(){
           </TouchableHighlight>
 
 
-</View>
         
           
 
