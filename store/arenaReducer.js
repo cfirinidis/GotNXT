@@ -20,9 +20,9 @@ const arenaReducer=(arenaRedux=[], action)=>{
             courts["teamANum"] = parseInt(action.capacity)
             courts["teamBNum"] = parseInt(action.capacity)
             for (let j =0; j<2 * action.capacity; j++){
-              courts['teamA'].push([{"player": "*PLYR"+j + "CRT" + courts['Num'], "replacement": false }])
+              courts['teamA'].push([{"player": "*PLYR"+j + "CRT" + courts['Num'], "replacement": false, "member" : false  }])
                 j++;
-              courts['teamB'].push([{"player": "*PLYR"+j + "CRT" + courts['Num'], "replacement": false }])
+              courts['teamB'].push([{"player": "*PLYR"+j + "CRT" + courts['Num'], "replacement": false, "member" : false }])
             }
           count++;
         }

@@ -486,6 +486,8 @@ winnersWinners(){
     // console.log("IT EXISTS")
         let Game = configureStore.getState().arenaReducer[0][this.state.courtName].map((val, key)=> {
           let A = []
+          let Atest = []
+          let Btest = []
           let B = []
           let t = {}
           let currentPlayerA = []
@@ -496,6 +498,10 @@ winnersWinners(){
             for (things in val[keys]){
               for (players in val[keys][things]){
                 A += [val[keys][things][players]['player']+'\n']
+                Atest.push({"player" : val[keys][things][players]['player'],
+                    "sub": val[keys][things][players]['replacement'],
+                    "member": val[keys][things][players]['member'],
+                    "key":val[keys][things][players]['player'], })
                 currentPlayerA.push(val[keys][things][players]['player'])
             }}
             if(A.length>1){
@@ -506,6 +512,10 @@ winnersWinners(){
             for (things in val[keys]){
               for (players in val[keys][things]){
                 B += [val[keys][things][players]['player']+'\n']
+                Btest.push({"player" : val[keys][things][players]['player'],
+                "sub": val[keys][things][players]['replacement'],
+                "member": val[keys][things][players]['member'],
+                "key":val[keys][things][players]['player'], })
                 currentPlayerB.push(val[keys][things][players]['player'])}
             }
             if(B.length>1){
@@ -516,6 +526,8 @@ winnersWinners(){
         t["key"] =  val.Num.toString()
         t["valA"] = A 
         t["valB"] = B
+        t['teamAInfo'] = Atest
+        t['teamBInfo'] = Btest
         this.addToCurA(currentPlayerA, val.Num)
         this.addToCurB(currentPlayerB, val.Num)
       if (A.length > 0 ){
@@ -569,17 +581,52 @@ winnersWinners(){
                 <Text style={styles.gameBottonText}> Game {item.key} </Text>
               <View>
 
-            <TouchableHighlight onPress={()=>this.replacePlayer(item.key, "teamA", this.state.curPlayersA) } style={styles.teamStyleA}>  
-              <Text style={{color:"gray", fontSize:28}}>{item.valA}</Text>
-            </TouchableHighlight>
+                <TouchableHighlight onPress={()=>this.replacePlayer(item.key, "teamA", this.state.curPlayersA) } style={styles.teamStyleA}>  
+                    <FlatList
+                    style={{ backgroundColor: 'yellow', paddingBottom: 5}}
+                    data={item.teamAInfo} 
+                    keyExtractor={(item) => { return item.player }}
+                    renderItem={({ item }) => 
+                    <Text style={[
+                      (item.sub == 'true' ) ?   styles.colors : styles.colorsTest,
+                      (item.sub == 'false' ) ? styles.colorsSub : styles.colorsTest, styles.colorsTest,
+      
+                      ] }> ----> {item.player}  </Text>}
+                    />
+                </TouchableHighlight>
 
-          <TouchableHighlight onPress={()=>this.endGame(item.key, "teamB", "teamA", 'reg')} style={styles.teamAWonStyle}>
-            <Text style={{color:"white", fontSize:26}}>Team A Won</Text>
-          </TouchableHighlight>
+              <TouchableHighlight onPress={()=>this.endGame(item.key, "teamB", "teamA", 'reg')} style={styles.teamAWonStyle}>
+                <Text style={{color:"white", fontSize:26}}>Team A Won</Text>
+              </TouchableHighlight>
 
+
+
+<View>
           <TouchableHighlight onPress={()=>this.replacePlayer(item.key, "teamB", this.state.curPlayersB) } style={styles.teamStyleB}>
             <Text style={{color:"red", fontSize:28}}>{item.valB}</Text>
+
+            <FlatList
+                    style={{ backgroundColor: 'yellow', paddingBottom: 5}}
+                    data={item.teamAInfo} 
+                    keyExtractor={(item) => { return item.player }}
+                    renderItem={({ item }) => 
+                    <Text style={[
+                      (item.sub == 'true' ) ?   styles.colors : styles.colorsTest,
+                      (item.sub == 'false' ) ? styles.colorsSub : styles.colorsTest, styles.colorsTest,
+      
+                      ] }> ----> {item.player}  </Text>}
+                    />
+
+
+
+
+
           </TouchableHighlight>
+
+
+</View>
+        
+          
 
           <TouchableHighlight onPress={()=>this.endGame(item.key, "teamA", "teamB", 'reg') } style={styles.teamBWonStyle}>
             <Text style={{color:"white", fontSize:26}}>Team B Won</Text>
@@ -587,7 +634,8 @@ winnersWinners(){
 
       </View>
           
-          </View>)}/>
+          </View>
+          )}/>
           
       </View>
       <View>

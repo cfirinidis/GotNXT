@@ -6,6 +6,20 @@ export default StyleSheet.create({
     backgroundColor: '#e8eae7',
     padding: "2%",
   },
+
+
+  colorsTest:{
+    fontSize:28, backgroundColor: 'pink', marginBottom: 10, borderWidth: 6, borderColor: 'black'
+   },
+   colors:{
+     color:'purple'
+   },
+   colorsSub:{
+     color:'orange'
+   },
+
+
+   
   topInfo:{
     fontSize: 20,
     color: 'orange',
