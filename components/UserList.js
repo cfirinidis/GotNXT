@@ -33,15 +33,12 @@ export default class UserList extends React.Component {
     }
 
   componentDidMount(){
-        console.log("COMPONENT DID MOUNT", this.state.courtName)
         let c = firebase.database().ref('courts/' + this.state.courtName + '/list')
         return c.once('value', snapshot => {
-          console.log(snapshot)
             let x =  snapshot.val()
             let y = []
             for( i in x){
-              console.log("FOR", i, snapshot.val()[i])
-              y.push(snapshot.val()[i])
+              y.push(i)
             }
         this.setState({list: y});
         });  
@@ -51,7 +48,6 @@ export default class UserList extends React.Component {
   renderCurrentState(){
     let user = firebase.auth().currentUser;
     x = configureStore.getState().compListReducer
-    console.log("LIST ",x) 
     if(this.state.loading){
       return(
         <View style={styles.waiting}>

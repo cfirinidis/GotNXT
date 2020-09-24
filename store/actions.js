@@ -48,7 +48,7 @@ export const delFromCompList = (names, courtName) =>{
 		type: DELETE_PLAYER,
 		payload:{
 			data:names,
-			court: courtName
+			courtName: courtName
 		}}
 };
 
@@ -83,27 +83,30 @@ export const addToReduxMaster = (data) =>{
 	}
 };
 
-export const shootML = (num, hitShot, shooters) =>{
+export const shootML = (num, hitShot, shooters, members) =>{
 	return{
 		type: SHOOT_MASTERLIST,
 		num: num,
 		hitShot: hitShot,
-		shooters: shooters
+		shooters: shooters,
+		members:members
 	}
 };
 
-export const reduxUpdateMaster = (move, repFlag) =>{
+export const reduxUpdateMaster = (move, repFlag, members) =>{
 	return{
 		type: UPDATE_MASTER,
 		move: move,
-		flag: repFlag
+		flag: repFlag,
+		members: members
 	}
 };
 
-export const correctOrSub = (name) =>{
+export const correctOrSub = (name, members) =>{
 	return{
 		type: CORRECT_MASTER,
-		name:name
+		name:name,
+		members: members
 	}
 };
 

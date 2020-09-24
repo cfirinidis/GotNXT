@@ -21,73 +21,57 @@ class Login extends React.Component {
   constructor(props) {
        super(props);
        this.state = {
-         email: 'a@aa.com',
-         password: 'testing',
-         authenticating:true,
+         email: '',
+         password: '',
+         authenticating:false,
          errorMessage: '',
          courts:[]
        };
      }
 
-    //  saveData=()=>{
-    //   let ML = JSON.stringify(configureStore.getState().masterListReducer);
-    //   let CL = JSON.stringify(configureStore.getState().compListReducer);
-    //   let AR  = JSON.stringify(configureStore.getState().arenaReducer);
-    //   let CAP = JSON.stringify(this.state.cap);
-    //   let CN = JSON.stringify(this.state.courtsNum);
-    //   let CARRAY = JSON.stringify(this.state.courtArr);
-    //   AsyncStorage.setItem('compList', CL)
-    //   AsyncStorage.setItem('masterList', ML);
-    //   AsyncStorage.setItem('arena', AR);
-    //   AsyncStorage.setItem('capacity', CAP);
-    //   AsyncStorage.setItem('courtN', CN);
-    //   AsyncStorage.setItem('courtA', CARRAY);
-    // }
+     saveData=()=>{
+       console.log('SAVESD DATA ', this.state.email)
+      let EMAIL = JSON.stringify(this.state.email);
+      let PASSWORD = JSON.stringify(this.state.password);
+      AsyncStorage.setItem('email', EMAIL)
+      AsyncStorage.setItem('password', PASSWORD);
+    }
 
 
-    //  loadData = async() =>{
-    //   try{
-    //     // let mas = await AsyncStorage.getItem('master');
-    //     let are = await AsyncStorage.getItem('arena');
-    //     let cap = await AsyncStorage.getItem('capacity');
-    //     let cNum = await AsyncStorage.getItem('courtN');
-    //     let cArray = await AsyncStorage.getItem('courtA');
-    //     let mlr = await AsyncStorage.getItem('masterList');
-    //     let cl = await AsyncStorage.getItem('compList')
-    //     configureStore.getState().compListReducer = JSON.parse(cl)
-    //     configureStore.getState().masterListReducer = JSON.parse(mlr);
-    //     configureStore.getState().arenaReducer = JSON.parse(are);
-    //     this.state.capacity = JSON.parse(cap);
-    //     this.state.courtsNum = JSON.parse(cNum);
-    //     this.state.courtArr = JSON.parse(cArray);
-    //     this.setState({capacity:this.state.capacity});
-    //     this.setState({courtsNum:this.state.courtsNum});
-    //     this.setState({courtArr:this.state.courtArr});
-    //     this.props.navigation.navigate("MainActivity", { cap:this.state.capacity, 
-    //     courtsNum:this.state.courtsNum, courtArr: this.state.courtArr, courtName: this.state.courtName});
-    //   }
-    //   catch(error){
-    //     console.log("ERROR")
-    //     alert(error);
-    //   }
-    // }
+     loadData = async() =>{
+       console.log("LOAD DATA")
+      try{
+        // let mas = await AsyncStorage.getItem('master');
+        let pw = await AsyncStorage.getItem('password');
+        let em = await AsyncStorage.getItem('email');
+        this.state.email = JSON.parse(em);
+        this.state.password = JSON.parse(pw);
+        this.setState({email:this.state.email});
+        this.setState({password:this.state.password});
 
-  componentDidMount= async() =>{
-    console.log("IT BEGINS")
-    try{
-      let username = await AsyncStorage.getItem('user')
-      console.log(username, "INSIDE")
-
-      if (usersname != null){
-        this.setState({authenticating: false}) 
       }
-    
-      }  
-    catch{
-      console.log("CATCH")
-        this.setState({authenticating: false}) 
+      catch(error){
+        console.log("ERROR")
+        alert(error);
+      }
+
+      console.log("LOAD AFTER ", this.state.email)
+      if(this.state.email != '' && this.state.password != ''){
+        console.log("IN THE IF")
+        this.onPressSignIn()
       }
     }
+
+  componentDidMount= async() =>{
+    this.loadData()
+    console.log("IT BEGINS")
+    console.log("DATE", this.state.email, "   ", this.state.password)
+   
+  
+  
+  
+  
+  }
   
 
 
@@ -112,8 +96,10 @@ class Login extends React.Component {
     firebase
     .auth().signInWithEmailAndPassword(this.state.email, this.state.password)
     .then((res)=>{
+      this.saveData();
     // console.log("USER LOGGED IN", res)
       this.setState({
+       
         authenticating: false,
         email: '',
         password: ''

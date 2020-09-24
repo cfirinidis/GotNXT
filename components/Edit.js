@@ -9,6 +9,7 @@ import{
   TouchableHighlight,
   ScrollView,
 } from 'react-native';
+import firebase from '../elements/Firebase';
 import configureStore from './store';
 import { connect } from 'react-redux';
 import { editCompList, editMSRedux } from '../store/actions';
@@ -23,9 +24,31 @@ class EditNames extends React.Component {
           modalInputVisible: false,
           title: '',
           name: '',
-          wrongName: ''
+          wrongName: '',
+          members:{}
        };
      }
+
+
+
+
+     componentDidMount(){
+      console.log("MAIN COMPONENT DID MOUNT")
+          let c = firebase.database().ref('users')
+          return c.once('value', snapshot => {
+            // console.log(snapshot)
+              let users =  snapshot.val()
+              let names = {}
+              for( handle in users){
+                // console.log("FOR", handle)
+                // this.state.list.push(snapshot.val()[i])
+                names[handle.toLowerCase()]=handle
+              }
+              // console.log("NAMES:", names)
+          this.setState({members: names});
+          // this.setState({loading: false})
+          });
+    }
 
   setModalInputVisible=(visible, p, wrong)=> new Promise((resolve)=> {
     this.state.title = p;
@@ -59,6 +82,9 @@ editName=()=>{
     this.setState({name:''})
     return 0
   }
+
+  let mem = (san in this.state.members) ? true : false;
+
 
   // console.log("WRONGSAN", wrongSan)
   this.props.edit(san, wrongSan, this.state.courtName)

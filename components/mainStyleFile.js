@@ -8,14 +8,36 @@ export default StyleSheet.create({
   },
 
 
-  colorsTest:{
-    fontSize:28, backgroundColor: 'pink', marginBottom: 10, borderWidth: 6, borderColor: 'black'
+  nameList:{
+    padding: 5,
+    backgroundColor: '#e8eae7',
+  },
+
+
+  namesSection:{
+    fontSize:17,
+    
+       padding: 8, 
+      marginBottom: 4,
+      marginTop: 4,
+     
+      // color: 'white',
+      
+      // alignSelf: 'center',
+      alignItems: 'center',
+      // textAlign: 'center',
    },
+
+
    colors:{
-     color:'purple'
+     color:'purple',
+     borderColor: 'purple',
+     borderWidth: 2,
+     backgroundColor: '#fcbf07',
    },
    colorsSub:{
-     color:'orange'
+     color:'black',
+     backgroundColor: '#e8eae7',
    },
 
 
@@ -47,7 +69,8 @@ export default StyleSheet.create({
     fontSize:40, 
     backgroundColor:'black', 
     color:'white', 
-    textAlign:'center',
+    justifyContent: 'center',
+    textAlign: 'center',
     flexDirection:'row', 
     justifyContent:'flex-end'
   },
@@ -77,6 +100,7 @@ export default StyleSheet.create({
     width: "45%",
   },
     teamStyleB: {
+    flexDirection: 'column',
     position:'absolute',
     alignSelf: 'flex-end',
     backgroundColor: 'white',
@@ -90,10 +114,11 @@ export default StyleSheet.create({
     justifyContent: 'center',
     height: 50,
     borderWidth: 2,
+    marginTop: 3,
     borderColor: 'black',
   },
   teamBWonStyle:{
-    position:'relative',
+    // position:'absolute',
     flexDirection: 'row',
     alignSelf: 'flex-end',
     width:'45%',
@@ -109,8 +134,9 @@ export default StyleSheet.create({
     fontSize:26,
     width: '40%',
     borderWidth: 5,
+    // padding: 5,
     margin: 5,
-    backgroundColor:'yellow',
+    backgroundColor:'#e8eae7',
     color:'black',
     flexDirection: 'row',
     alignSelf: 'center',

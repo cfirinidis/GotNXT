@@ -23,16 +23,16 @@ import firebase from '../elements/Firebase';
 
 
 const recordsReducer=(record={}, action)=>{
-    console.log("RECRDS REDUCER", action)
+    // console.log("RECRDS REDUCER", action)
     if(action.type === "WIN_LOSS"){
-        console.log("action winloss")
+        // console.log("action winloss")
         for (handle in action.winLoss){
-            console.log("HANDLES", handle, date)
+            // console.log("HANDLES", handle, date)
             let daily = firebase.database().ref('users/' + handle +"/historical-record/"+ date +'/'+action.courtName+'/'+action.winLoss[handle])
             daily.transaction(function (current_value){
                 return (current_value || 0) + 1;
             });
-            console.log("TESTING RETURN ")
+            // console.log("TESTING RETURN ")
             let overall = firebase.database().ref('users/' + handle+"/overall-record/"+action.winLoss[handle])
             overall.transaction(function (current_value){
                 return (current_value || 0) + 1;

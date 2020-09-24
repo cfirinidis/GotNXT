@@ -54,7 +54,7 @@ removePlayers=()=>{
     removePlayer.push(this.state.toRemove[i]['label'])
     removeComp.push(this.state.toRemove[i]['label'].toLowerCase())
   }
-  this.props.del(removeComp)
+  this.props.del(removeComp, this.state.courtName)
   this.props.removeRedux(removePlayer)
 
   this.setState({completeList: this.state.completeList})  
@@ -95,6 +95,8 @@ setPrefMaster=()=>{
 }
 
 render() {
+//  console.log("VOURT ARRAY", this.state.courtArr, this.state.courtName)
+
 let currentList = Object.values(configureStore.getState().masterListReducer).map(function(vals, i) {
       var t= {} ;
       for (val in vals[1]){
@@ -240,7 +242,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return{
     add:(data)=>dispatch(addToCompList(data)),
-    del:(data)=>dispatch(delFromCompList(data)),
+    del:(data, courtName)=>dispatch(delFromCompList(data, courtName)),
     removeRedux:(removePlayer)=>dispatch(removeRedux(removePlayer)),
     setPrefRedux:(prefCourt, prefPos)=>dispatch(setPrefRedux(prefCourt, prefPos))
   }

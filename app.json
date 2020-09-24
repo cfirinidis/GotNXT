@@ -16,11 +16,11 @@
     ],
   "android": {
     "package": "com.conzstructions.GotNXT",
-    "icon": "badLogo.png",
+    "icon": "badLogo.png"
   },
   "ios": {
       "bundleIdentifier": "com.conzstructions.GotNXT",
-      "supportsTablet": true,
-    },
+      "supportsTablet": true
+    }
 }
 }

@@ -14,6 +14,7 @@ import activeCourts from './activeCourts';
 import activeCourtList from './activeCourtList';
 import personalStats from './personalStats';
 import addCourtPage from './addCourtPage';
+import mapTest from './mapTest';
 
 
 const MainNavigator = createStackNavigator({

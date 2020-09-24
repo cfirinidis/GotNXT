@@ -42,6 +42,7 @@ const arenaReducer=(arenaRedux=[], action)=>{
       return arenaRedux
     }
 
+    // Remove player from arena when subbed or replaced
     if(action.type === 'CORRECT_ARENA'){
       // console.log("CORRECT ARENA" ,action)
       for (i=0; i< action.remplayer.length; i++){      

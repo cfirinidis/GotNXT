@@ -57,7 +57,7 @@ componentDidMount(){
   return c.once('value', snapshot => {
     // console.log(snapshot.val(), snapshot.key)
     for (i in snapshot.val()){
-      console.log("for", i)
+      // console.log("for", i)
       this.state.currentHandles.push(i)
     }
       

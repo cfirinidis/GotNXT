@@ -22,7 +22,7 @@ class Setup extends React.Component {
        super(props);
        this.state = {
          Arena: [],
-         courtsNum: "",
+         courtsNum: '',
          capacity: "",
          courtArr:[],
          test:'',
@@ -97,16 +97,14 @@ class Setup extends React.Component {
   });
 
   createPlaceholders=(answer)=>{
-    let courts = {};
-    let count = 0;
-    for (var i=0; i<this.state.courtsNum; i++){
-          this.state.courtArr.push("Court : "+ (i+1))
+    for (var i=0; i<parseInt(this.state.courtsNum)+1; i++){
+          this.state.courtArr.push("Court : "+ (i))
       }//for loop
       this.state.courtArr.push("Waiting : "+ 'W')
       this.props.setupArena(this.state.courtsNum, this.state.capacity, this.state.gamesStarted, answer, this.state.courtName)
       this.props.addCourtToCompList(this.state.courtName);
       this.props.navigation.navigate("MainActivity", { cap:this.state.capacity, 
-        courtsNum:this.state.courtsNum, courtArr: this.state.courtArr, courtName: this.state.courtName});      
+        courtsNum:this.state.courtsNum, courtArr: this.state.courtArr, courtName: this.state.courtName});     
   }//end of func
 
   async SetupCourt(){

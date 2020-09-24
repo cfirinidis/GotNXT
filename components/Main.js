@@ -124,19 +124,20 @@ class MainActivity extends React.Component {
             let users =  snapshot.val()
             let names = {}
             for( handle in users){
-              console.log("FOR", handle)
+              // console.log("FOR", handle)
               // this.state.list.push(snapshot.val()[i])
               names[handle.toLowerCase()]=handle
             }
-            console.log("NAMES:", names)
+            // console.log("NAMES:", names)
         this.setState({members: names});
         // this.setState({loading: false})
         });
   }
 
   AddMaster2=()=>{
+    // console.log("ADDMASTER 2 : ", this.state.restNum, this.state.hitShot, reduxShooter)
       let reduxShooter = configureStore.getState().shooterReducer
-      this.props.shootML(this.state.restNum, this.state.hitShot, reduxShooter)
+      this.props.shootML(this.state.restNum, this.state.hitShot, reduxShooter, this.state.members)
       this.setState({hitShot: [] });
       this.setState({restNum: 0 });
       this.props.resetShooters()
@@ -173,7 +174,8 @@ class MainActivity extends React.Component {
       });
 
     if(this.state.remPlayer[0]['label'][0] != '*'){ 
-      this.props.correctOrSub(this.state.remPlayer[0]['label'])
+      console.log("MEMBERs", this.state.members)
+      this.props.correctOrSub(this.state.remPlayer[0]['label'], this.state.members)
     }
     this.state.tempCourt = [];
     this.state.remPlayer = [];
@@ -195,7 +197,7 @@ updateMaster=()=>{
        return 0
     }
 
-    this.props.reduxUpdateMaster(this.state.move, this.state.repFlag)
+    this.props.reduxUpdateMaster(this.state.move, this.state.repFlag, this.state.members)
     this.setState( { move: [] } );
     this.setState( { repFlag: false } );
     this.StartGame();
@@ -289,6 +291,7 @@ updateMaster=()=>{
                 let sets = this.extractFromList(names);
                 this.props.updatePlayerNums(this.state.current, team, reduxML[names][1].length, this.state.courtName )
                 delArray += [names];
+                console.log("ADDSET", sets)
                 this.props.addSet(this.state.current, team, sets, this.state.courtName);
                 names++;
                 if (names == reduxML.length){
@@ -330,12 +333,12 @@ updateMaster=()=>{
             arenaReducer[this.state.courtName][this.state.current]["teamBNum"] == 2*this.state.cap){
           this.setState({ current: this.state.current+1 })
           this.removeFromList( delArray )
-          console.log("Inside if")
+          // console.log("Inside if")
           break;
          }//if full        
         }//end of while
         this.saveData();
-        console.log("ENMD OF STARTGAME ")
+        // console.log("ENMD OF STARTGAME ")
         this.setState({courtName: this.state.courtName})
   }
 
@@ -403,10 +406,10 @@ updateMaster=()=>{
       let tempC = 0;
       let arenaRedx = configureStore.getState().arenaReducer[0]
       for (i in arenaRedx[this.state.courtName][courtNum-1][winner]){
-        console.log("winnner", arenaRedx[this.state.courtName][courtNum-1][winner])
-        console.log("WINNNNNN", arenaRedx[this.state.courtName][courtNum-1][winner][i][0]['player'])
+        // console.log("winnner", arenaRedx[this.state.courtName][courtNum-1][winner])
+        // console.log("WINNNNNN", arenaRedx[this.state.courtName][courtNum-1][winner][i][0]['player'])
         if (arenaRedx[this.state.courtName][courtNum-1][winner][i][0]['member'] == true){
-           console.log("winloss: ", arenaRedx[this.state.courtName][courtNum-1][winner][i][0]['player'])
+          //  console.log("winloss: ", arenaRedx[this.state.courtName][courtNum-1][winner][i][0]['player'])
           winLoss[this.state.members[arenaRedx[this.state.courtName][courtNum-1][winner][i][0]['player'].toLowerCase()]] = 'won' 
         }
         // configureStore.getState().arenaReducer[courtNum-1][winner][i][0]['replacement'] = false 
@@ -416,7 +419,7 @@ updateMaster=()=>{
       // console.log(arenaRedx)
       for (i=0; i< arenaRedx[this.state.courtName][courtNum-1][loser].length; i++){
         if (arenaRedx[this.state.courtName][courtNum-1][loser][i][0]['member'] == true){
-          console.log("winloss: ", arenaRedx[this.state.courtName][courtNum-1][loser][i][0]['player'].toLowerCase())
+          // console.log("winloss: ", arenaRedx[this.state.courtName][courtNum-1][loser][i][0]['player'].toLowerCase())
 
           winLoss[this.state.members[arenaRedx[this.state.courtName][courtNum-1][loser][i][0]['player'].toLowerCase()]] = 'lost' 
         }
@@ -449,20 +452,11 @@ updateMaster=()=>{
         }}
 
 
-        console.log("SEND THIS TO FIREBASE", winLoss, this.state.courtName)
+        // console.log("SEND THIS TO FIREBASE", winLoss, this.state.courtName)
       this.props.winLossResults(winLoss, this.state.courtName)
 
 
       this.StartGame(); 
-
-
-      
-
-
-
-
-
-
 
        
 }
@@ -474,9 +468,9 @@ winnersWinners(){
 }
 
  render() {
-  console.log("RENDER MASTERLIST:",configureStore.getState().masterListReducer)
-  console.log("RENDER GAME ",this.state.courtName    )
-  console.log("FRANK"  , configureStore.getState().arenaReducer[0][this.state.courtName])
+  // console.log("RENDER MASTERLIST:",configureStore.getState().masterListReducer)
+  // console.log("RENDER GAME ",this.state.courtName    )
+  // console.log("FRANK"  , configureStore.getState().arenaReducer[0][this.state.courtName])
 
   //this should load something from server
   if (!configureStore.getState().arenaReducer[0][this.state.courtName]){
@@ -531,13 +525,13 @@ winnersWinners(){
         this.addToCurA(currentPlayerA, val.Num)
         this.addToCurB(currentPlayerB, val.Num)
       if (A.length > 0 ){
-        console.log(t)
+        // console.log(t)
         return t 
       }
       }); 
 
 
-    console.log("GAMEEEE:  ", Game)
+    // console.log("GAMEEEE:  ", Game)
 
     Game = Game.filter(function(item){
         if (item != undefined){
@@ -553,7 +547,7 @@ winnersWinners(){
             if(vals[val] != false && vals[val] != true){
                 t["key"] = vals[val]; 
           }}
-        console.log(t)
+        // console.log(t)
         return t
       });
    return (
@@ -573,7 +567,7 @@ winnersWinners(){
           </View>
 
           <Text style={styles.curGameStyle}>Current Games</Text>
-    
+   <View>
            <FlatList
               data={Game} 
               renderItem={({ item }) => (
@@ -581,61 +575,59 @@ winnersWinners(){
                 <Text style={styles.gameBottonText}> Game {item.key} </Text>
               <View>
 
-                <TouchableHighlight onPress={()=>this.replacePlayer(item.key, "teamA", this.state.curPlayersA) } style={styles.teamStyleA}>  
-                    
-                    <FlatList
-                    style={{ backgroundColor: 'yellow', paddingBottom: 5}}
-                    data={item.teamAInfo} 
-                    listKey={(item) => { return index.toString() }}
-                    renderItem={({ item }) => 
-                    <Text style={[
-                      (item.sub == 'true' ) ?   styles.colors : styles.colorsTest,
-                      (item.sub == 'false' ) ? styles.colorsSub : styles.colorsTest, styles.colorsTest,
-      
-                      ] }> ----> {item.player}  </Text>}
-                    />
-                </TouchableHighlight>
+              
+                    <TouchableHighlight onPress={()=>this.replacePlayer(item.key, "teamA", this.state.curPlayersA) } style={styles.teamStyleA}>  
+                        
+                        <FlatList
+                        style={styles.nameList}
+                        data={item.teamAInfo} 
+                        listKey={(item) => { return item.player }}
+                        renderItem={({ item }) => 
+                        <Text style={[
+                          (item.member == true ) ?   styles.colors : styles.namesSection,
+                          (item.member == false ) ? styles.colorsSub : styles.namesSection, styles.namesSection,
+          
+                          ] }>{item.player}  </Text>}
+                        />
+                    </TouchableHighlight>
 
-              <TouchableHighlight onPress={()=>this.endGame(item.key, "teamB", "teamA", 'reg')} style={styles.teamAWonStyle}>
-                <Text style={{color:"white", fontSize:26}}>Team A Won</Text>
+                  <TouchableHighlight onPress={()=>this.endGame(item.key, "teamB", "teamA", 'reg')} style={styles.teamAWonStyle}>
+                    <Text style={{color:"white", fontSize:26}}>Team A Won</Text>
+                  </TouchableHighlight>
+           
+
+          
+              <TouchableHighlight onPress={()=>this.replacePlayer(item.key, "teamB", this.state.curPlayersB) } style={styles.teamStyleB}>
+
+                      <FlatList
+                        style={styles.nameList}
+                        data={item.teamBInfo} 
+                        listKey={(item) => { return item.player }}
+                        renderItem={({ item }) => 
+                        <Text style={[
+                          (item.member == true ) ?   styles.colors : styles.namesSection,
+                          (item.member == false ) ? styles.colorsSub : styles.namesSection, styles.namesSection,
+          
+                          ] }>{item.player}  </Text>}
+                        />
+
               </TouchableHighlight>
 
 
-
-          <TouchableHighlight onPress={()=>this.replacePlayer(item.key, "teamB", this.state.curPlayersB) } style={styles.teamStyleB}>
-            <Text style={{color:"red", fontSize:28}}>{item.valB}</Text>
-
-            <FlatList
-                    style={{ backgroundColor: 'yellow', paddingBottom: 5}}
-                    data={item.teamBInfo} 
-                    listKey={(item, index) => { return index.toString() }}
-                    renderItem={({ item }) => 
-                    <Text style={[
-                      (item.sub == 'true' ) ?   styles.colors : styles.colorsTest,
-                      (item.sub == 'false' ) ? styles.colorsSub : styles.colorsTest, styles.colorsTest,
-      
-                      ] }> ----> {item.player}  </Text>}
-                    />
-
-
-
-
-
-          </TouchableHighlight>
-
-
-        
-          
-
-          <TouchableHighlight onPress={()=>this.endGame(item.key, "teamA", "teamB", 'reg') } style={styles.teamBWonStyle}>
-            <Text style={{color:"white", fontSize:26}}>Team B Won</Text>
-          </TouchableHighlight>
-
+              <TouchableHighlight onPress={()=>this.endGame(item.key, "teamA", "teamB", 'reg') } style={styles.teamBWonStyle}>
+                <Text style={{color:"white", fontSize:26}}>Team B Won</Text>
+              </TouchableHighlight>
+         
       </View>
           
           </View>
           )}/>
           
+
+
+
+</View>
+
       </View>
       <View>
           <Modal 
@@ -734,9 +726,9 @@ const mapDispatchToProps = (dispatch) => {
     addShooter:(data)=>dispatch(addToShooters(data)),
     resetShooters:()=>dispatch(resetShooters()),
     addToReduxMaster:(data)=>dispatch(addToReduxMaster(data)),
-    shootML:(restNum, hitShot, shooters)=>dispatch(shootML(restNum, hitShot, shooters)),
-    correctOrSub:(name)=>dispatch(correctOrSub(name)),
-    reduxUpdateMaster:(move, flag)=>dispatch(reduxUpdateMaster(move, flag)),
+    shootML:(restNum, hitShot, shooters, members)=>dispatch(shootML(restNum, hitShot, shooters, members)),
+    correctOrSub:(name, members)=>dispatch(correctOrSub(name, members)),
+    reduxUpdateMaster:(move, flag, members)=>dispatch(reduxUpdateMaster(move, flag, members)),
     removeFromMLRedux:(delArray)=>dispatch(removeFromMLRedux(delArray)),
     endGameMLRedux:(temp)=>dispatch(endGameMLRedux(temp)),
     winWinRedux:(prefCourt, winWin)=>dispatch(winWinRedux(prefCourt, winWin)),
