@@ -21,8 +21,8 @@ class Login extends React.Component {
   constructor(props) {
        super(props);
        this.state = {
-         email: '',
-         password: '',
+         email: 'cfirinidis@gmail.com',
+         password: 'testing',
          authenticating:false,
          errorMessage: '',
          courts:[]
@@ -44,10 +44,17 @@ class Login extends React.Component {
         // let mas = await AsyncStorage.getItem('master');
         let pw = await AsyncStorage.getItem('password');
         let em = await AsyncStorage.getItem('email');
-        this.state.email = JSON.parse(em);
-        this.state.password = JSON.parse(pw);
-        this.setState({email:this.state.email});
-        this.setState({password:this.state.password});
+
+        console.log("EMMML:::", em)
+        if (em != null){
+          console.log("HOH ", em)
+          this.state.email = JSON.parse(em);
+          this.state.password = JSON.parse(pw);
+          
+          this.setState({email:this.state.email});
+          this.setState({password:this.state.password});
+        }
+      
 
       }
       catch(error){
@@ -89,7 +96,7 @@ class Login extends React.Component {
     if(this.state.email === '' && this.state.password === ''){
       Alert.alert("Enter Email And Password")
     }else{
-      // console.log(this.state.email)
+      console.log("EMAIL ", this.state.email)
     this.setState({
       authenticating: true,
     });

@@ -18,11 +18,14 @@ import mapTest from './mapTest';
 
 
 const MainNavigator = createStackNavigator({
+    mapTest:{
+        screen: mapTest
+    },
     Login:{
         screen: Login,
         navigationOptions:  {
-            header: null,
-            gesturesEnabled: false,
+            headerShown: null,
+            gestureEnabled: false,
          }
     },
     SignUp:{
@@ -49,8 +52,8 @@ const MainNavigator = createStackNavigator({
     User: {
         screen: UserPage,
         navigationOptions:  {
-            header: null,
-            gesturesEnabled: false,
+            headerShown: null,
+            gestureEnabled: false,
          }
     },
     UserList: {
