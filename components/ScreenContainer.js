@@ -18,9 +18,7 @@ import mapTest from './mapTest';
 
 
 const MainNavigator = createStackNavigator({
-    mapTest:{
-        screen: mapTest
-    },
+
     Login:{
         screen: Login,
         navigationOptions:  {

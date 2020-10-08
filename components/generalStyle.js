@@ -184,7 +184,7 @@ export default StyleSheet.create({
             fontSize:32,
             fontWeight: 'bold',
             textAlign:"center",
-            color:'white',
+            color:'orange',
           },
           topBanner:{
         

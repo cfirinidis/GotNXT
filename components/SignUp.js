@@ -16,13 +16,13 @@ export default class SignUp extends React.Component {
   constructor(props) {
        super(props);
        this.state = {
-         email: 'c@conz.com',
-         password: 'testing',
+         email: '',
+         password: '',
          handle:'',
-         pw2:'testing',
+         pw2:'',
          loading: false,
-         date: '06-13-2020',
-         loc: "SOME GYM",
+         date: '',
+         loc: "",
          currentHandles: [],
        };
   }

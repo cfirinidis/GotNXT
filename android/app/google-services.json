@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:61744995226:android:4f381e0a106d0f3c06f823",
+        "mobilesdk_app_id": "1:61744995226:android:a7d16d7b7e97011506f823",
         "android_client_info": {
-          "package_name": "com.gotnext"
+          "package_name": "com.gotnxt"
         }
       },
       "oauth_client": [

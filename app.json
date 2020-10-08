@@ -1,26 +1,59 @@
+// {
+//   "expo": {
+//     "name": "GotNXT",
+//     "slug": "expo-template-bare",
+//     "version": "1.0.0",
+//     "orientation": "portrait",
+//     "icon": "badLogo.png",
+//     "splash": {
+//       "image": "./assets/splash.png",
+//       "resizeMode": "contain",
+//       "backgroundColor": "#ffffff"
+//     },
+//     "updates": {
+//       "fallbackToCacheTimeout": 0
+//     },
+//     "assetBundlePatterns": [
+//       "**/*"
+//     ],
+//     "ios": {
+//       "supportsTablet": true
+//     },
+//     "web": {
+//       "favicon": "./assets/favicon.png"
+//     },
+//     "android": {
+//     "package": "com.conzstructions.GotNXT",
+//     "icon": "badLogo.png"
+//     }
+//   }
+// }
+
+
 {
+  "name": "GotNXT",
+  "displayName": "GotNXT",
   "expo": {
     "name": "GotNXT",
-    "slug": "GotNXT",
+    "icon": "badLogo.png",
+    "slug": "expo-template-bare",
+    "privacy": "public",
+    "sdkVersion": "39.0.0",
     "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
-    "assetBundlePatterns": [
-      "**/*"
+    "entryPoint": "node_modules/expo/AppEntry.js",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
     ],
-    "ios": {
+  "android": {
+    "package": "com.conzstructions.GotNXT",
+    "icon": "badLogo.png",
+    "versionCode": 3
+  },
+  "ios": {
+      "bundleIdentifier": "com.conzstructions.GotNXT",
       "supportsTablet": true
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
     }
-  }
+}
 }
