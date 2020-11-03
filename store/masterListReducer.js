@@ -1,18 +1,37 @@
-import {ADD_MASTERLIST} from './types';
-import {DELETE_PLAYER} from './types';
-import {EDIT_PLAYER} from './types';
-import {SHOOT_MASTERLIST} from './types';
-import {CORRECT_MASTER} from './types';
-import {DELETE_MASTER} from './types';
-import {END_MASTER} from './types';
-import {WINWIN_MASTER} from './types';
-import {REMOVE_MASTER} from './types';
-import {SETPREF_MASTER} from './types';
+// import {ADD_MASTERLIST} from './types';
+// import {DELETE_PLAYER} from './types';
+// import {EDIT_PLAYER} from './types';
+// import {SHOOT_MASTERLIST} from './types';
+// import {CORRECT_MASTER} from './types';
+// import {DELETE_MASTER} from './types';
+// import {END_MASTER} from './types';
+// import {WINWIN_MASTER} from './types';
+// import {REMOVE_MASTER} from './types';
+// import {SETPREF_MASTER} from './types';
 
 
 let test =  [
 
-        
+  // [{pref:0}, [{player: "Lebron", replacement: false}, {player:"AntDavis", replacement: false}]],
+  //  [{pref:0}, [{player:"Kyrie", replacement: true}, {player:"Durant", replacement: true}]],
+  // [{pref:0}, [{player:"Majerle", replacement: false}]],
+  // [{pref:0}, [{player:"Kawhi", replacement: false}, {player:"PG13", replacement: false}]],
+  //  [{pref:0}, [{player:'Larry', replacement: false}, {player:'Parish', replacement: false}]], 
+  //   [{pref:0}, [{player:'Kidd', replacement: false}]]
+  //   ,
+  //     [{pref:0}, [{player: "Lebron1", replacement: false}, {player:"Ant1Davis", replacement: false}]],
+  //  [{pref:0}, [{player:"Kyrie1", replacement: true}, {player:"Dur1ant", replacement: true}]],
+  // [{pref:0}, [{player:"Majerle1", replacement: false}]],
+  // [{pref:0}, [{player:"Kawhi1", replacement: false}, {player:"PG113", replacement: false}]],
+  //  [{pref:0}, [{player:'Larr1y', replacement: false}, {player:'Pa1rish', replacement: false}]], 
+  //   [{pref:0}, [{player:'Kidd1', replacement: false}]]
+  //   ,
+  //     [{pref:0}, [{player: "Le2bron", replacement: false}, {player:"Ant2Davis", replacement: false}]],
+  //  [{pref:0}, [{player:"Ky2rie", replacement: true}, {player:"Dura2nt", replacement: true}]],
+  // [{pref:0}, [{player:"Majer2le", replacement: false}]],
+  // [{pref:0}, [{player:"Kawh2i", replacement: false}, {player:"P2G13", replacement: false}]],
+  //  [{pref:0}, [{player:'Lar2ry', replacement: false}, {player:'Par2ish', replacement: false}]], 
+  //   [{pref:0}, [{player:'Ki2dd', replacement: false}]]
           ]  
 
 

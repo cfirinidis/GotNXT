@@ -115,7 +115,7 @@ export default StyleSheet.create({
             color:'white',
           },
 
-
+// logout button
         
           logOutText:{
             fontSize: 18,
@@ -142,6 +142,34 @@ export default StyleSheet.create({
             borderRadius: 50,
           },
 
+//  main menu button 
+
+mainMenuText:{
+  fontSize: 18,
+  textAlign: "center",
+  color: 'red',
+ 
+},
+mainMenu:{
+  width: '40%',
+  // backgroundColor: 'gray',
+  justifyContent: 'center',
+  alignItems: 'center',
+  alignSelf:'flex-end',
+  position:'absolute',
+  padding:'4%',
+},
+mainMenuButton:{
+  backgroundColor:'pink',
+  width: "80%",
+
+  height: 45,
+  justifyContent: 'center',
+  alignItems: 'center',
+  borderWidth: 6,
+  borderColor:'black',
+  borderRadius: 50,
+},
 
 
 
@@ -205,7 +233,113 @@ export default StyleSheet.create({
         waiting : {
           justifyContent:'center',
           backgroundColor:'yellow',
-        }
+        },
+
+
+
+
+
+          wrapper: {
+            flex: 1,
+            backgroundColor: '#e8eae7',
+            paddingTop: 10,
+            paddingLeft: 5,
+            paddingRight: 5,
+            width: '100%',
+            height: '100%',
+          },
+          titleSetup: {
+            fontSize: 40,
+            paddingTop:18,
+            marginBottom: 10,
+            color: 'gray',
+            fontWeight: 'bold',
+            textAlign:'center',
+          },
+          footer:{
+            fontSize:14,
+            position:'absolute',
+            textAlign:'center',
+            top: "100%",
+            width:"100%",
+          },
+          textInput: {
+            padding: 18,
+            marginBottom: 10,
+            fontSize: 24,
+            color: "red",
+            backgroundColor: '#e8eae7',
+            textAlign:"center"
+          },
+          text: {
+            fontSize:28,
+            color: "black",
+            fontWeight:'bold',
+            textAlign:"center",
+            // justifyContent: 'center',
+            // alignItems:'center',
+          },
+          info:{
+            backgroundColor: 'lightgray',
+            width: '100%',
+          },
+          textBox:{
+            fontSize:24,
+            textAlign:"left",
+            color:'orange',
+          },
+          resetButton: {
+            fontSize: 26,
+            justifyContent: 'center',
+            backgroundColor: '#ffe6e4',
+            alignItems: 'center',
+            borderColor: 'red',
+            borderWidth: 4,
+            borderRadius: 50,
+            marginVertical: 12,
+            width: "45%",
+            height: 60,
+          },
+           doneButton: {
+            fontSize: 26,
+            justifyContent: 'center',
+            backgroundColor: '#e8ffdd',
+            borderColor: '#51ff00',
+            borderWidth: 4,
+            alignItems: 'center',
+            borderRadius: 50,
+            marginVertical: 12,
+            width: "45%",
+            height: 60,
+          },
+           loadButton: {
+            fontSize: 26,
+            justifyContent: 'center',
+            borderRadius: 50,
+            alignItems: 'center',
+            backgroundColor: '#fff2d3',
+            borderColor: '#ffd800',
+            borderWidth: 4,
+            marginVertical: 12,
+            width: "45%",
+            height: 60,
+          },
+            modalStyle:{
+            marginTop: 20,
+            marginBottom:130,
+          },
+          modalButtons:{
+            width: '40%',
+            height: 60,
+            left: '50%',
+            backgroundColor: 'pink',
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+           modalText: {
+            fontSize:30,
+            color: 'black',
+          }
 
    
   });

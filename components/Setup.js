@@ -15,6 +15,7 @@ import configureStore from './store';
 import { connect } from 'react-redux';
 import { setupArena, addCourtToCompList } from '../store/actions';
 import firebase from '../elements/Firebase';
+import styles from './generalStyle';
 import SelectMultiple from 'react-native-select-multiple';
 
 class Setup extends React.Component {
@@ -60,6 +61,10 @@ class Setup extends React.Component {
      else{return 0}
   }
 
+  componentDidMount(){
+    console.log("component did mount SETUP: ", this.state.courtName)
+  }
+
   loadData = async() =>{
     try{
       // let mas = await AsyncStorage.getItem('master');
@@ -69,17 +74,31 @@ class Setup extends React.Component {
       let cArray = await AsyncStorage.getItem('courtA');
       let mlr = await AsyncStorage.getItem('masterList');
       let cl = await AsyncStorage.getItem('compList')
-      configureStore.getState().compListReducer = JSON.parse(cl)
-      configureStore.getState().masterListReducer = JSON.parse(mlr);
-      configureStore.getState().arenaReducer = JSON.parse(are);
+ 
       this.state.capacity = JSON.parse(cap);
       this.state.courtsNum = JSON.parse(cNum);
       this.state.courtArr = JSON.parse(cArray);
-      this.setState({capacity:this.state.capacity});
-      this.setState({courtsNum:this.state.courtsNum});
-      this.setState({courtArr:this.state.courtArr});
-      this.props.navigation.navigate("MainActivity", { cap:this.state.capacity, 
-      courtsNum:this.state.courtsNum, courtArr: this.state.courtArr, courtName: this.state.courtName});
+
+      console.log(this.state.capacity, "- ", this.state.courtsNum, " ", this.state.courtArr)
+      console.log("complete list : " , JSON.parse(cl) )
+      console.log( "master list : ", JSON.parse(mlr) )
+      console.log( "arena : ", JSON.parse(are) )
+
+      if (this.state.capacity === null || this.state.courtsNum === null || this.state.courtArr === null
+          || JSON.parse(cl) === null || JSON.parse(cl) === null ||JSON.parse(cl) === null){
+            console.log("NOT VALID")
+          }
+      else{
+        this.setState({capacity:this.state.capacity});
+        this.setState({courtsNum:this.state.courtsNum});
+        this.setState({courtArr:this.state.courtArr});
+        configureStore.getState().compListReducer = JSON.parse(cl)
+        configureStore.getState().masterListReducer = JSON.parse(mlr);
+        configureStore.getState().arenaReducer = JSON.parse(are);
+        this.props.navigation.navigate("MainActivity", { cap:this.state.capacity, 
+        courtsNum:this.state.courtsNum, courtArr: this.state.courtArr, courtName: this.state.courtName});
+      }
+    
     }
     catch(error){
       console.log("ERROR")
@@ -107,6 +126,13 @@ class Setup extends React.Component {
         courtsNum:this.state.courtsNum, courtArr: this.state.courtArr, courtName: this.state.courtName});     
   }//end of func
 
+goToMain=()=>{
+  this.props.navigation.navigate("User", { test: this.state.courtName});
+}
+
+
+
+
   async SetupCourt(){
     AsyncAlert = (title, msg) => new Promise((resolve, reject) => {  
         Alert.alert(
@@ -125,6 +151,7 @@ class Setup extends React.Component {
     }
     else if(configureStore.getState().arenaReducer.length>0){
       Alert.alert("Already Setup, to erase press RESET")
+      // console.log("Setup COURTNAME ". this.state.courtName)
       this.props.navigation.navigate("MainActivity", { cap:this.state.capacity, 
       courtsNum:this.state.courtsNum, courtArr: this.state.courtArr, courtName: this.state.courtName });
     }
@@ -161,7 +188,13 @@ class Setup extends React.Component {
           </Text>
         </Text>
 
+      <View style={styles.mainMenu }>
+          <TouchableOpacity style={styles.mainMenuButton} onPress={this.goToMain.bind(this)}>
+              <Text style={styles.mainMenuText}> Main Menu  </Text>
+          </TouchableOpacity>
       </View>
+    </View>
+
       <Text style={styles.title}> GotNXT </Text>
     
             <TextInput
@@ -221,109 +254,7 @@ class Setup extends React.Component {
 }
 
 
-const styles = StyleSheet.create({
-	wrapper: {
-    flex: 1,
-		backgroundColor: '#e8eae7',
-    paddingTop: 10,
-    paddingLeft: 5,
-    paddingRight: 5,
-    width: '100%',
-    height: '100%',
-	},
-  title: {
-    fontSize: 40,
-    paddingTop:18,
-    marginBottom: 10,
-    color: 'gray',
-    fontWeight: 'bold',
-    textAlign:'center',
-  },
-  footer:{
-    fontSize:14,
-    position:'absolute',
-    textAlign:'center',
-    top: "100%",
-    width:"100%",
-  },
-	textInput: {
-		padding: 18,
-    marginBottom: 10,
-		fontSize: 24,
-		color: "red",
-		backgroundColor: '#e8eae7',
-    textAlign:"center"
-	},
-  text: {
-    fontSize:28,
-    color: "black",
-    fontWeight:'bold',
-    textAlign:"center",
-    // justifyContent: 'center',
-    // alignItems:'center',
-  },
-  info:{
-    backgroundColor: 'lightgray',
-    width: '50%',
-  },
-  textBox:{
-    fontSize:24,
-    textAlign:"left",
-    color:'orange',
-  },
-  resetButton: {
-    fontSize: 26,
-    justifyContent: 'center',
-    backgroundColor: '#ffe6e4',
-    alignItems: 'center',
-    borderColor: 'red',
-    borderWidth: 4,
-    borderRadius: 50,
-    marginVertical: 12,
-    width: "45%",
-    height: 60,
-  },
-   doneButton: {
-    fontSize: 26,
-    justifyContent: 'center',
-    backgroundColor: '#e8ffdd',
-    borderColor: '#51ff00',
-    borderWidth: 4,
-    alignItems: 'center',
-    borderRadius: 50,
-    marginVertical: 12,
-    width: "45%",
-    height: 60,
-  },
-   loadButton: {
-    fontSize: 26,
-    justifyContent: 'center',
-    borderRadius: 50,
-    alignItems: 'center',
-    backgroundColor: '#fff2d3',
-    borderColor: '#ffd800',
-    borderWidth: 4,
-    marginVertical: 12,
-    width: "45%",
-    height: 60,
-  },
-    modalStyle:{
-    marginTop: 20,
-    marginBottom:130,
-  },
-  modalButtons:{
-    width: '40%',
-    height: 60,
-    left: '50%',
-    backgroundColor: 'pink',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-   modalText: {
-    fontSize:30,
-    color: 'black',
-  },
-});	
+
 
 
 const mapStateToProps = (state) => {

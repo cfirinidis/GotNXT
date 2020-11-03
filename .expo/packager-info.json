@@ -1,9 +1,10 @@
 {
-  "expoServerPort": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null,
+  "expoServerPort": 19000,
+  "expoServerNgrokUrl": "https://wf-rig.conz.gotnxt.exp.direct",
+  "packagerNgrokUrl": "https://packager.wf-rig.conz.gotnxt.exp.direct",
+  "ngrokPid": 183420,
   "devToolsPort": 19002,
-  "packagerPort": null,
-  "packagerPid": null
+  "packagerPort": 19001,
+  "packagerPid": 183284,
+  "webpackServerPort": null
 }

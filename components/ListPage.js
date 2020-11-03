@@ -6,7 +6,6 @@ import{
   Modal,
 	FlatList,
   TouchableHighlight,
-  ScrollView,
 } from 'react-native';
 import configureStore from './store';
 import SelectMultiple from 'react-native-select-multiple';
@@ -112,18 +111,20 @@ let currentList = Object.values(configureStore.getState().masterListReducer).map
 this.state.playerList = this.getNames()
 
 return (
-<ScrollView>
-<View>  
-    
-<Text style={styles.header}>WAITING LIST: {this.state.playerCount}</Text>
+<View style={{marginBottom:10}}>
+    <View>  
+        
+    <Text style={styles.header}>WAITING LST: {this.state.playerCount}</Text>
 
-<FlatList
-    data={currentList} style={styles.textList}
-    renderItem={({item}) => 
-    <TouchableHighlight onPress={()=>{this.setPref(item.key)} } >
-    <Text style={{fontSize:28, color:'#000bef', marginBottom: 12}} >{item.key}</Text>
-    </TouchableHighlight>
-  }/>
+    <FlatList
+        data={currentList} style={styles.textList}
+        renderItem={({item}) => 
+        <TouchableHighlight onPress={()=>{this.setPref(item.key)} } >
+        <Text style={{fontSize:28, color:'#000bef', marginBottom: 12}} >{item.key}</Text>
+        </TouchableHighlight>
+      }/>
+
+</View>
 
 <Modal visible={this.state.modalVisible}>
       <View style={styles.modalStyle}>
@@ -172,7 +173,6 @@ return (
       </View>
   </Modal>
 </View>
-</ScrollView>
     );
   }
 }

@@ -49,7 +49,7 @@
   "android": {
     "package": "com.conzstructions.GotNXT",
     "icon": "badLogo.png",
-    "versionCode": 3
+    "versionCode": 4
   },
   "ios": {
       "bundleIdentifier": "com.conzstructions.GotNXT",

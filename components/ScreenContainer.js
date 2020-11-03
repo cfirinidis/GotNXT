@@ -23,11 +23,14 @@ const MainNavigator = createStackNavigator({
         screen: Login,
         navigationOptions:  {
             headerShown: null,
-            gestureEnabled: false,
          }
     },
     SignUp:{
-        screen: SignUp
+        screen: SignUp,
+        navigationOptions: {
+            headerBackTitle: 'A much too long text for back button from B to A',
+            headerTruncatedBackTitle: `to A`
+        }
     },
     Setup: { 
         screen: Setup,
@@ -51,7 +54,7 @@ const MainNavigator = createStackNavigator({
         screen: UserPage,
         navigationOptions:  {
             headerShown: null,
-            gestureEnabled: false,
+
          }
     },
     UserList: {
@@ -59,6 +62,9 @@ const MainNavigator = createStackNavigator({
     },
     activeCourts: {
         screen: activeCourts,
+        navigationOptions: {
+            headerTitle: "SOMETHING"
+        }
     },
     activeCourtList: {
         screen: activeCourtList,

@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/GotNXT.iml" filepath="$PROJECT_DIR$/GotNXT.iml" group="GotNXT" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/conz-GotNXT.iml" filepath="$PROJECT_DIR$/.idea/modules/conz-GotNXT.iml" group="GotNXT" />
     </modules>
   </component>

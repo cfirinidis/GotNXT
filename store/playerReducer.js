@@ -15,7 +15,7 @@ const compListReducer=(origCompList = temp, action)=>{
 	}
 
 	if(action.type==="CREATE_PLAYER"){
-		//  console.log(' complistreducer ',action ,  origCompList)
+		console.log(' complistreducer ',action ,  origCompList)
 	
 		if(!( action.payload.data in origCompList)) {
 			// console.log("ADDED", origCompList[action.payload.court])

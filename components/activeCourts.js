@@ -103,8 +103,6 @@ this.props.navigation.navigate("activeCourtList", {courtName: this.state.courtNa
   return(
       <KeyboardAvoidingView >
           <View >
-
-
           <View style={styles.topPart}>
             <View style={styles.info}>
              

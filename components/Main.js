@@ -63,10 +63,16 @@ class MainActivity extends React.Component {
        };
      }
 
+
   AddItemsToArray(){
     // let san = this.state.Name.replace(/\s/g, '').toLowerCase()
     let san = this.state.Name.toLowerCase()
-    console.log("SAN CUZ CRASH: ", san, this.state.courtName, configureStore.getState().compListReducer)
+    console.log("SAN CUZ CRASH: ", san, this.state.courtName)
+    console.log( "COMPLIST ",configureStore.getState().compListReducer)
+    if (!(configureStore.getState().compListReducer.hasOwnProperty(this.state.courtName))){
+      console.log('NO DATA')    
+      return
+    }
     // console.log(san, "TESTG", /\s/.test(san), configureStore.getState().compListReducer, this.state.members)
     if (!(configureStore.getState().compListReducer[this.state.courtName].hasOwnProperty(san))){
       if (san.length != 0 && !/\s/.test(san) ){
@@ -117,7 +123,9 @@ class MainActivity extends React.Component {
   }//good
 
   componentDidMount(){
-    console.log("MAIN COMPONENT DID MOUNT")
+    console.log("MAIN COMPONENT DID MOUNT", this.state.courtName)
+    this.print()
+  
         let c = firebase.database().ref('users')
         return c.once('value', snapshot => {
           // console.log(snapshot)
@@ -229,8 +237,10 @@ updateMaster=()=>{
   }
 
   extractFromList=(names)=>{
+    console.log("extract called", names,configureStore.getState().masterListReducer[names][1])
     let set = [];
     for (name in configureStore.getState().masterListReducer[names][1]){ 
+      console.log(name)
         set.push(configureStore.getState().masterListReducer[names][1][name])
         }
     return set
@@ -242,6 +252,7 @@ updateMaster=()=>{
 
   saveData=()=>{
     let ML = JSON.stringify(configureStore.getState().masterListReducer);
+    console.log("Before Save complistreducer", configureStore.getState().compListReducer)
     let CL = JSON.stringify(configureStore.getState().compListReducer);
     let AR  = JSON.stringify(configureStore.getState().arenaReducer);
     let CAP = JSON.stringify(this.state.cap);
@@ -348,7 +359,8 @@ updateMaster=()=>{
   }
 
   async replacePlayer(num, team, players){
-      replaceAlert = (title, msg) => new Promise((resolve) => {  
+    console.log("RE{LACE PLAYER")
+      this.replacePop = (title, msg) => new Promise((resolve) => {  
         Alert.alert(
             title,
             msg,
@@ -359,8 +371,8 @@ updateMaster=()=>{
             { cancelable: true},
             );
       });
-
-      let sub = await replaceAlert("Replace Player", "Replacement / Correction")
+      console.log('CZNT FIND')
+      let sub = await this.replacePop("Replace Player", "Replacement / Correction")
       this.state.tempNum = num
       this.state.team = team
       if (sub =="WIN"){
@@ -387,7 +399,7 @@ updateMaster=()=>{
       alert("Game has not started");
       return
     }
-    makeSure = () => new Promise((resolve) => {  
+    this.makeSure = () => new Promise((resolve) => {  
             Alert.alert(
                     "Are you Sure: ",
                     winner + " WON?",
@@ -395,7 +407,7 @@ updateMaster=()=>{
                     { cancelable: false},
                     );
             });
-    let winnerConfirmation = await makeSure();
+    let winnerConfirmation = await this.makeSure();
     if (winnerConfirmation== "NO"){
       return
     }
@@ -410,7 +422,7 @@ updateMaster=()=>{
         // console.log("WINNNNNN", arenaRedx[this.state.courtName][courtNum-1][winner][i][0]['player'])
         if (arenaRedx[this.state.courtName][courtNum-1][winner][i][0]['member'] == true){
           //  console.log("winloss: ", arenaRedx[this.state.courtName][courtNum-1][winner][i][0]['player'])
-          winLoss[this.state.members[arenaRedx[this.state.courtName][courtNum-1][winner][i][0]['player'].toLowerCase()]] = 'won' 
+          winLoss[this.state.members[arenaRedx[this.state.courtName][courtNum-1][winner][i][0]['player'].toLowerCase()]] = 'win' 
         }
         // configureStore.getState().arenaReducer[courtNum-1][winner][i][0]['replacement'] = false 
         arenaRedx[this.state.courtName][courtNum-1][winner][i][0]['replacement'] = false
@@ -421,7 +433,7 @@ updateMaster=()=>{
         if (arenaRedx[this.state.courtName][courtNum-1][loser][i][0]['member'] == true){
           // console.log("winloss: ", arenaRedx[this.state.courtName][courtNum-1][loser][i][0]['player'].toLowerCase())
 
-          winLoss[this.state.members[arenaRedx[this.state.courtName][courtNum-1][loser][i][0]['player'].toLowerCase()]] = 'lost' 
+          winLoss[this.state.members[arenaRedx[this.state.courtName][courtNum-1][loser][i][0]['player'].toLowerCase()]] = 'loss' 
         }
         if (arenaRedx[this.state.courtName][courtNum-1][loser][i][0]['replacement'] == false){
             temp.push(arenaRedx[this.state.courtName][courtNum-1][loser][i][0])
@@ -433,8 +445,6 @@ updateMaster=()=>{
         else{
           arenaRedx[this.state.courtName][courtNum-1][loser][i][0]['replacement'] = false  
         }
-
-
 
       } //end
 
@@ -551,34 +561,35 @@ winnersWinners(){
         return t
       });
    return (
-      <KeyboardAvoidingView style={styles.wrapper}>
-      <ScrollView>
-      <View >
-          <Text style={styles.topInfo}> Court Name: 
-          <Text style={{color: "black", fontSize:20}}> { this.state.courtName} </Text>
-        </Text>
-      </View>
-      <View>
-          <EnterName onPress={this.AddItemsToArray.bind(this)} 
-              onChangeText={(Name) => this.setState({ Name})} value={this.state.Name}>ADD +</EnterName>
-          <View>
-              <ListAndStartButton GoToListMethod={this.GoToLists.bind(this)} StartMethod={this.StartGame.bind(this)} /> 
-             <NameBox  data={pending} clearListMethod={this.clearList.bind(this)} AddMasterMethod={this.doneAddingFunc.bind(this)} />  
+     <View style={styles.wrapper}>
+            {/* scrol */}
+      
+          <View >
+              <Text style={styles.topInfo}> Court Name: 
+              <Text style={{color: "black", fontSize:20}}> { this.state.courtName} </Text>
+              </Text>
           </View>
-
-          <Text style={styles.curGameStyle}>Current Games</Text>
-   <View>
-           <FlatList
-              data={Game} 
-              renderItem={({ item }) => (
+       
+            <EnterName onPress={this.AddItemsToArray.bind(this)} 
+                    onChangeText={(Name) => this.setState({ Name})} value={this.state.Name}>ADD +</EnterName>
               <View>
-                <Text style={styles.gameBottonText}> Game {item.key} </Text>
-              <View>
+                  <ListAndStartButton GoToListMethod={this.GoToLists.bind(this)} StartMethod={this.StartGame.bind(this)} /> 
+                  <NameBox  data={pending} clearListMethod={this.clearList.bind(this)} AddMasterMethod={this.doneAddingFunc.bind(this)} />  
+              </View>
 
-              
-                    <TouchableHighlight onPress={()=>this.replacePlayer(item.key, "teamA", this.state.curPlayersA) } style={styles.teamStyleA}>  
-                        
-                        <FlatList
+              <Text style={styles.curGameStyle}>Current Games</Text>
+        {/* flatlists start */}
+          <View style={{flex:1}}>
+          <FlatList
+            data={Game} 
+            renderItem={({ item }) => (
+            <View>
+              <Text style={styles.gameBottonText}> Game {item.key} </Text>
+              <View>
+            
+                  <TouchableHighlight onPress={()=>this.replacePlayer(item.key, "teamA", this.state.curPlayersA) } style={styles.teamStyleA}>  
+                      
+                      <FlatList
                         style={styles.nameList}
                         data={item.teamAInfo} 
                         listKey={(item) => { return item.player }}
@@ -586,18 +597,16 @@ winnersWinners(){
                         <Text style={[
                           (item.member == true ) ?   styles.colors : styles.namesSection,
                           (item.member == false ) ? styles.colorsSub : styles.namesSection, styles.namesSection,
-          
-                          ] }>{item.player}  </Text>}
-                        />
-                    </TouchableHighlight>
-
-                  <TouchableHighlight onPress={()=>this.endGame(item.key, "teamB", "teamA", 'reg')} style={styles.teamAWonStyle}>
-                    <Text style={{color:"white", fontSize:26}}>Team A Won</Text>
+                        ] }>{item.player}  </Text>}
+                      />
                   </TouchableHighlight>
-           
 
-          
-              <TouchableHighlight onPress={()=>this.replacePlayer(item.key, "teamB", this.state.curPlayersB) } style={styles.teamStyleB}>
+                <TouchableHighlight onPress={()=>this.endGame(item.key, "teamB", "teamA", 'reg')} style={styles.teamAWonStyle}>
+                  <Text style={{color:"white", fontSize:26}}>Team A Won</Text>
+                </TouchableHighlight>
+
+                
+                <TouchableHighlight onPress={()=>this.replacePlayer(item.key, "teamB", this.state.curPlayersB) } style={styles.teamStyleB}>
 
                       <FlatList
                         style={styles.nameList}
@@ -611,98 +620,95 @@ winnersWinners(){
                           ] }>{item.player}  </Text>}
                         />
 
-              </TouchableHighlight>
-
-
-              <TouchableHighlight onPress={()=>this.endGame(item.key, "teamA", "teamB", 'reg') } style={styles.teamBWonStyle}>
-                <Text style={{color:"white", fontSize:26}}>Team B Won</Text>
-              </TouchableHighlight>
-         
-      </View>
-          
-          </View>
-          )}/>
-          
-
-
-
-</View>
-
-      </View>
-      <View>
-          <Modal 
-          visible={this.state.modalVisible}>
-            <View style={styles.modalStyle}>
-              <Text style={{fontSize:30, backgroundColor:'gray', color:'white'}}>{this.state.title} </Text>
-              <SelectMultiple
-                maxSelect= {this.state.diff}
-                items={configureStore.getState().shooterReducer}
-                style={styles.modalStyle}
-                selectedItems={ this.state.hitShot }
-                onSelectionsChange={this.onSelectionsChange} />
-              <TouchableHighlight   onPress={() => 
-                  this.setModalVisible( 'modalVisible', !this.state.modalVisible, "something").then(this.AddMaster2())}
-                   style={styles.modalButton}>
-                  <Text style={styles.modalText}>Done</Text>
-              </TouchableHighlight>
-            </View>
-          </Modal>
-
-          <Modal 
-          visible={this.state.modalPlayerVisible}>
-            <View  style={styles.modalStyle }>
-              <Text style={{fontSize:30, backgroundColor:'red', color:'white'}} >{this.state.title} </Text>
-              <SelectMultiple
-                maxSelect= {1}
-                items={this.state.tempCourt}
-                selectedItems={ this.state.remPlayer }
-                onSelectionsChange={this.onSelectionsChangePlayer} />
-              <TouchableHighlight   onPress={() => 
-                  this.setModalVisible('modalPlayerVisible',!this.state.modalPlayerVisible, "something").then(this.CorrectionOrSub())}
-                   style={styles.modalButton}>
-                  <Text style={styles.modalText}>Done</Text>
-              </TouchableHighlight>
-            </View>
-          </Modal>
-
-          <Modal 
-            visible={this.state.modalRepPlayerVisible}>
-            <View  style={styles.modalStyle }>
-              <Text style={{fontSize:30, backgroundColor:'yellow', color:'black'}}>{this.state.title} </Text>
-              <SelectMultiple
-                maxSelect= {1}        
-                items={ this.state.allAvailable }
-                selectedItems={ this.state.move }
-                onSelectionsChange={this.onSelectionsChangePlayerTop} />
-                <TouchableHighlight   onPress={() => 
-                    this.setModalVisible('modalRepPlayerVisible', !this.state.modalRepPlayerVisible, "Replacements").then(this.updateMaster())} 
-                    style={styles.modalButton}>
-                  <Text style={styles.modalText}>Done</Text>
                 </TouchableHighlight>
-                 </View>
-           
+
+                <TouchableHighlight onPress={()=>this.endGame(item.key, "teamA", "teamB", 'reg') } style={styles.teamBWonStyle}>
+                  <Text style={{color:"white", fontSize:26}}>Team B Won</Text>
+                </TouchableHighlight>
+              
+              </View>
+                
+            </View>
+                )}/>
+          {/* flatlist end */}
+          </View>    
+
+        {/* modal views */}
+        <View>
+              <Modal 
+              visible={this.state.modalVisible}>
+                <View style={styles.modalStyle}>
+                  <Text style={{fontSize:30, backgroundColor:'gray', color:'white'}}>{this.state.title} </Text>
+                  <SelectMultiple
+                    maxSelect= {this.state.diff}
+                    items={configureStore.getState().shooterReducer}
+                    style={styles.modalStyle}
+                    selectedItems={ this.state.hitShot }
+                    onSelectionsChange={this.onSelectionsChange} />
+                  <TouchableHighlight   onPress={() => 
+                      this.setModalVisible( 'modalVisible', !this.state.modalVisible, "something").then(this.AddMaster2())}
+                      style={styles.modalButton}>
+                      <Text style={styles.modalText}>Done</Text>
+                  </TouchableHighlight>
+                </View>
+              </Modal>
+
+              <Modal 
+              visible={this.state.modalPlayerVisible}>
+                <View  style={styles.modalStyle }>
+                  <Text style={{fontSize:30, backgroundColor:'red', color:'white'}} >{this.state.title} </Text>
+                  <SelectMultiple
+                    maxSelect= {1}
+                    items={this.state.tempCourt}
+                    selectedItems={ this.state.remPlayer }
+                    onSelectionsChange={this.onSelectionsChangePlayer} />
+                  <TouchableHighlight   onPress={() => 
+                      this.setModalVisible('modalPlayerVisible',!this.state.modalPlayerVisible, "something").then(this.CorrectionOrSub())}
+                      style={styles.modalButton}>
+                      <Text style={styles.modalText}>Done</Text>
+                  </TouchableHighlight>
+                </View>
+              </Modal>
+
+              <Modal 
+                visible={this.state.modalRepPlayerVisible}>
+                <View  style={styles.modalStyle }>
+                  <Text style={{fontSize:30, backgroundColor:'yellow', color:'black'}}>{this.state.title} </Text>
+                  <SelectMultiple
+                    maxSelect= {1}        
+                    items={ this.state.allAvailable }
+                    selectedItems={ this.state.move }
+                    onSelectionsChange={this.onSelectionsChangePlayerTop} />
+                    <TouchableHighlight   onPress={() => 
+                        this.setModalVisible('modalRepPlayerVisible', !this.state.modalRepPlayerVisible, "Replacements").then(this.updateMaster())} 
+                        style={styles.modalButton}>
+                      <Text style={styles.modalText}>Done</Text>
+                    </TouchableHighlight>
+                    </View>
+              
+              </Modal>
+
+          <Modal 
+              visible={this.state.modalPrefVisible}>
+                <View style={styles.modalStyle}>
+                  <Text style={{fontSize:30, backgroundColor:'orange', color:'white'}}>{this.state.title} </Text>
+                  <SelectMultiple
+                    items={this.state.courtArr}
+                    maxSelect = {1}
+                    selectedItems={ this.state.prefCourt }
+                    onSelectionsChange={this.onSelectionsChangePref} />
+                  <TouchableHighlight   onPress={ () => {
+                      this.setModalVisible('modalPrefVisible',!this.state.modalPrefVisible, "something").then(this.winnersWinners()); 
+                    }} style={styles.modalButton}>
+                      <Text style={styles.modalText} >DONE</Text>
+                  </TouchableHighlight>
+                </View>
           </Modal>
 
-      <Modal 
-          visible={this.state.modalPrefVisible}>
-            <View style={styles.modalStyle}>
-              <Text style={{fontSize:30, backgroundColor:'orange', color:'white'}}>{this.state.title} </Text>
-              <SelectMultiple
-                items={this.state.courtArr}
-                maxSelect = {1}
-                selectedItems={ this.state.prefCourt }
-                onSelectionsChange={this.onSelectionsChangePref} />
-              <TouchableHighlight   onPress={ () => {
-                  this.setModalVisible('modalPrefVisible',!this.state.modalPrefVisible, "something").then(this.winnersWinners()); 
-                }} style={styles.modalButton}>
-                  <Text style={styles.modalText} >DONE</Text>
-              </TouchableHighlight>
-            </View>
-      </Modal>
+       </View>
 
-      </View>
-       </ScrollView>
-      </KeyboardAvoidingView>
+  </View>
+
    );
  }
 }

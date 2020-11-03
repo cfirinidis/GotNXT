@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
 	    flexDirection: 'row-reverse',
 	    borderRadius: 50,
 	    height: 50,
-	     top:10,
+	     top:20,
 	    alignItems: 'center',
 	    justifyContent: 'center',
 	  	position:'relative'

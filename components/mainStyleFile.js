@@ -3,9 +3,11 @@ import { StyleSheet } from 'react-native';
 export default StyleSheet.create({
   wrapper: {
     flex: 1,
+
     backgroundColor: '#e8eae7',
+    // backgroundColor: 'green',
     padding: "2%",
-    marginBottom: 13
+    marginBottom: 1
   },
 
 
@@ -40,8 +42,6 @@ export default StyleSheet.create({
      color:'black',
      backgroundColor: '#e8eae7',
    },
-
-
    
   topInfo:{
     fontSize: 20,
@@ -69,11 +69,11 @@ export default StyleSheet.create({
   curGameStyle:{
     fontSize:40, 
     backgroundColor:'black', 
-    color:'white', 
+    color:'maroon',
+    textShadowRadius : 3,
+     textShadowColor:  'white', 
     justifyContent: 'center',
     textAlign: 'center',
-    flexDirection:'row', 
-    justifyContent:'flex-end'
   },
    modalText: {
     fontSize:30,

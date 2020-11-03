@@ -124,7 +124,7 @@ database=()=>{
           firebase.database().ref('users/'+ this.state.handle.toString()+"/overall-record").set({
             win:0, loss:0
           }),
-          firebase.database().ref('users/'+ this.state.handle+"/historical record/"+ this.state.date+'/'+
+          firebase.database().ref('users/'+ this.state.handle+"/historical-record/"+ this.state.date+'/'+
           this.state.loc).set({
             win:0, loss:0
           })

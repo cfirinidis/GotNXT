@@ -45,7 +45,7 @@ class addCourtPage extends React.Component {
   }
 
   componentDidMount(){
-    //   console.log("COMPONENT DID MOUNT", this.state.loading)
+     console.log("COMPONENT DID MOUNT - Add Courtt", this.state.loading)
     //   let c = firebase.database().ref('courts')
     //   let handle = firebase.auth().currentUser.displayName
     //   return c.once('value', snapshot => {
@@ -78,7 +78,6 @@ class addCourtPage extends React.Component {
     })
     this.props.navigation.navigate("Setup", {courtName: this.state.newCourtName}); 
   }
-
 
 //RENDER
 
@@ -137,12 +136,9 @@ class addCourtPage extends React.Component {
             value={this.state.newCourtName}
             />
 
-
             <TouchableOpacity style={styles.button} onPress={()=>this.onPressCreateCourt(handle)}>
                 <Text style={styles.buttonText}>ADD COURT</Text>
             </TouchableOpacity>
-
-
 
       </View>
       </KeyboardAvoidingView>

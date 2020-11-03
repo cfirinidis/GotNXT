@@ -28,6 +28,7 @@ class UserPage extends React.Component {
           DUMB: [],
           wrong: ["blue", "pink", 'orange'],
           courtName: '',
+          test: this.props.navigation.getParam("courtName", "blank")
        };
      }
 
@@ -53,10 +54,10 @@ class UserPage extends React.Component {
   }
 
   componentDidMount(){
-      console.log("COMPONENT DID MOUNT", this.state.loading)
+      console.log("COMPONENT DID MOUNT USER PAGE", this.state.loading)
       let c = firebase.database().ref('courts')
       let handle = firebase.auth().currentUser.displayName
-      return c.once('value', snapshot => {
+      return c.on('value', snapshot => {
           let x =  snapshot.val()
           let all = []
           let y = []
@@ -70,19 +71,23 @@ class UserPage extends React.Component {
       this.props.readCourts(all)
       this.setState({courts: y});
       this.setState({loading: false})
-      BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
-      console.log("COMPONENET DID MOUNT   BAKCKCKCKCKCKC")
+    BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
+     console.log("COMPONENET DID MOUNT _b -> USER PAGE", this.state.loading)
       });
   }
 
   componentWillUnmount() {
-    console.log("WILL UNMOUNTTTTTT")
-    BackHandler.removeEventListener('hardwareBackPress', this.onBackPress);
+    console.log("WILL UNMOUNTTTTTT -> USERPAGE")
+    // BackHandler.removeEventListener('hardwareBackPress', this.onBackPress);
   }
+
+  // componentDidUpdate(){
+  //   console.log("COMPNENT DID UPDATE -> USERPAGE")
+  // }
 
   onBackPress = () => {
 
-    console.log("ONBACKPRESS")
+    console.log("ONBACKPRESS -> USERPAGE")
     return true; 
   }
 
@@ -101,19 +106,21 @@ class UserPage extends React.Component {
 courtSelected=(item)=>{
 console.log("coiurt selected ",item)
 this.state.courtName = item
+this.componentWillUnmount()
 this.props.navigation.navigate("UserList", {courtName: this.state.courtName} )
+
 }
 
 //RENDER
 
   renderCurrentState(){
-    console.log("RENDER CURRENT STATE")
+    console.log("RENDER CURRENT STATE ->USER PAGE")
     console.log(this.state.loading)
     let user = firebase.auth().currentUser;
     let handle = user.providerData[0]['displayName']
  
     if(this.state.loading){
-      console.log("LOADING RENDER")
+      console.log("LOADING RENDER -> USER PAGE")
       // this.something()
       return(
         <View style={styles.waiting}>
@@ -157,7 +164,7 @@ this.props.navigation.navigate("UserList", {courtName: this.state.courtName} )
           </View>
 
               <View style={styles.body}>
-                <Text style={styles.banner}>YOUR COURTS</Text>
+                <Text style={styles.banner}>YOUR - COURTS</Text>
                   {this.state.courts.map((item, key)=>(
                       <Text  key={key} style={styles.managedList}
                         onPress={()=>this.courtSelected(item) }>
