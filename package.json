@@ -27,7 +27,7 @@
     "react-navigation-stack": "^1.10.3",
     "react-redux": "^7.2.0",
     "redux": "^4.0.5",
-    "ws": "^7.2.3",
+    "ws": "^7.4.6",
     "yarn": "^1.22.10"
   },
   "devDependencies": {
